@@ -1,0 +1,7 @@
+plugin:
+    name: 'bishopm.church::lang.plugin.name'
+    description: 'bishopm.church::lang.plugin.description'
+    author: 'Michael Bishop'
+    icon: wn-icon-users
+    homepage: 'https://github.com/bishopm/church'
+    replaces: {  }

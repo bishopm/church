@@ -1,2 +1,8 @@
 1.0.1:
-    - Initialize plugin.
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table bishopm_church_households'
+    - builder_table_create_bishopm_church_households.php
+1.0.3:
+    - 'Created table bishopm_church_individuals'
+    - builder_table_create_bishopm_church_individuals.php

@@ -1,0 +1,12 @@
+list: $/bishopm/church/models/individual/columns.yaml
+modelClass: Bishopm\Church\Models\Individual
+title: Individuals
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'bishopm/church/individuals/update/:id'

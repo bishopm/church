@@ -24,4 +24,9 @@ class Individual extends Model
      */
     public $rules = [
     ];
+    
+    /**
+     * @var array Attribute names to encode and decode using JSON.
+     */
+    public $jsonable = [];
 }

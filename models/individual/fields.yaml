@@ -1,0 +1,23 @@
+fields:
+    title:
+        label: Title
+        options:
+            Ms: Ms
+            Mr: Mr
+            Mrs: Mrs
+            Dr: Dr
+            Rev: Rev
+        showSearch: true
+        span: storm
+        cssClass: 'col-xs-12 col-sm-4 col-lg-3'
+        type: dropdown
+    firstname:
+        label: 'First name'
+        span: storm
+        cssClass: 'col-xs-12 col-sm-4 col-lg-3'
+        type: text
+    surname:
+        label: Surname
+        span: storm
+        cssClass: 'col-xs-12 col-sm-4 col-lg-3'
+        type: text

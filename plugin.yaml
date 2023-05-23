@@ -5,3 +5,8 @@ plugin:
     icon: wn-icon-users
     homepage: 'https://github.com/bishopm/church'
     replaces: {  }
+navigation:
+    church-menu-item:
+        label: Church
+        url: bishopm/church/individuals
+        icon: icon-group

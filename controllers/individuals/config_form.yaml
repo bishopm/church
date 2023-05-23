@@ -1,0 +1,10 @@
+name: Individuals
+form: $/bishopm/church/models/individual/fields.yaml
+modelClass: Bishopm\Church\Models\Individual
+defaultRedirect: bishopm/church/individuals
+create:
+    redirect: 'bishopm/church/individuals/update/:id'
+    redirectClose: bishopm/church/individuals
+update:
+    redirect: bishopm/church/individuals
+    redirectClose: bishopm/church/individuals

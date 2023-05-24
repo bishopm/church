@@ -1,0 +1,258 @@
+tabs:
+    fields:
+        church_name:
+            tab: General
+            label: 'Church name'
+            span: left
+            type: text
+            commentAbove: 'This name will appear in the frontend theme and backend forms'
+        abbreviation:
+            tab: General
+            label: 'Church name abbreviation'
+            span: right
+            type: text
+            commentAbove: 'This abbreviation will appear in the frontend theme and backend forms'
+        website:
+            tab: General
+            label: 'Church website'
+            span: left
+            type: text
+            commentAbove: 'Full website (including https://)'
+        services:
+            tab: General
+            label: Services
+            span: right
+            type: text
+            commentAbove: 'Comma-separated list of service times (eg 08h00,09h30,18h00)'
+        email:
+            tab: General
+            label: 'Church email address'
+            span: left
+            type: text
+            commentAbove: 'Contact email and address from which system mails will be sent'
+        phone:
+            tab: General
+            label: 'Church phone'
+            span: right
+            type: text
+            commentAbove: 'Contact phone number'
+        address:
+            tab: General
+            label: 'Church physical address'
+            span: left
+            type: text
+            commentAbove: 'This will appear in the frontend'
+        postal:
+            tab: General
+            label: 'Church postal address'
+            span: right
+            type: text
+            commentAbove: 'This will appear in the frontend'
+        meetingdefaults:
+            tab: General
+            label: 'Meeting agenda defaults (array key is group id)'
+            type: textarea
+            size: large
+            span: full
+        youtube:
+            tab: Website
+            label: 'Youtube channel'
+            span: left
+            type: text
+            commentAbove: 'Church''s YouTube channel'
+        twitter:
+            tab: Website
+            label: 'Twitter feed'
+            span: right
+            type: text
+            commentAbove: 'Church''s Twitter feed'
+        facebook:
+            tab: Website
+            label: 'Facebook page'
+            span: left
+            type: text
+            commentAbove: 'Church''s Facebook page'
+        instagram:
+            tab: Website
+            label: 'Instagram account'
+            span: right
+            type: text
+            commentAbove: 'Church''s Instagram account'
+        youversion:
+            tab: Website
+            label: 'YouVersion page'
+            span: left
+            type: text
+            commentAbove: 'Church''s YouVersion page'
+        timezone:
+            tab: Website
+            label: TimeZone
+            span: right
+            type: text
+            commentAbove: 'PHP timezone - needed for streaming videos'
+        textlogo:
+            tab: Website
+            label: 'Text logo'
+            span: left
+            type: text
+            commentAbove: 'Text to appear in top left corner'
+        coordinates:
+            tab: Website
+            label: 'Church co-ordinates'
+            span: full
+            type: map
+            commentAbove: 'Click on the map to add or move marker. Refresh the page if the map is only partly displayed'
+        bulksms_user:
+            label: 'Bulk SMS username / client ID'
+            span: left
+            type: text
+            commentAbove: 'For community.bulksms.com'
+            tab: Communication
+        bulksms_password:
+            label: 'Bulk SMS password / API secret'
+            span: right
+            type: text
+            commentAbove: 'For community.bulksms.com'
+            tab: Communication
+        smtpemail:
+            tab: Communication
+            label: 'Email address for sending mail from system'
+            span: left
+            type: text
+            commentAbove: 'SMTP email address'
+        welcomemsg:
+            tab: Communication
+            label: 'Welcome email'
+            type: textarea
+            size: large
+            span: full
+        welcomewhatsapp:
+            tab: Communication
+            label: 'Welcome WhatsApp'
+            type: textarea
+            size: large
+            span: full
+        user_details_section:
+            tab: Communication
+            label: Email
+            type: section
+            url: 'Backend::url(''/'')'
+            comment: 'Email is set up through the Mail Configuration settings tab.'
+        pastors:
+            tab: Features
+            label: 'Pastor group'
+            showSearch: true
+            type: dropdown
+            span: left
+            commentAbove: 'Members of this group may be added as pastors on pastoral notes'
+        enable_bookshop:
+            tab: Features
+            label: 'Enable bookshop'
+            type: switch
+            span: right
+            comment: 'Flick this switch to enable the bookshop feature'
+            'on': 'on'
+            'off': 'off'
+        bookshopgroup:
+            tab: Features
+            label: 'Bookshop group'
+            type: dropdown
+            span: left
+            commentAbove: 'Members of this group will receive a monthly bookshop email'
+        birthdaysgroup:
+            tab: Features
+            label: 'Birthday email group'
+            type: dropdown
+            span: right
+            commentAbove: 'Members of this group will receive a weekly list of birthdays by email'
+        birthdayemailday:
+            tab: Features
+            label: 'Day to send birthday email'
+            type: dropdown
+            span: left
+            commentAbove: 'Birthday email will be sent on this day for birthdays in the next week'
+            options:
+                1: Monday
+                2: Tuesday
+                3: Wednesday
+                4: Thursday
+                5: Friday
+                6: Saturday
+                7: Sunday
+        tasksgroup:
+            label: 'Task group'
+            showSearch: true
+            span: right
+            type: dropdown
+            commentAbove: 'Members of this group may be assigned tasks'
+            tab: Features
+        maintenancegroup:
+            label: 'Maintenance email group'
+            showSearch: true
+            span: left
+            type: dropdown
+            commentAbove: 'Members of this group receive a weekly maintenance email'
+            tab: Features
+        givingreports:
+            tab: Giving
+            label: 'Giving reports per year'
+            type: dropdown
+            span: left
+            commentAbove: 'Number of email giving reports to be sent out annually'
+            options:
+                1: 1
+                2: 2
+                3: 3
+                4: 4
+                6: 6
+                12: 12
+        givinglagtime:
+            tab: Giving
+            label: 'Giving report lag time'
+            type: number
+            span: right
+            commentAbove: 'How many days after the end of the month the report is mailed'
+        givingadmin:
+            tab: Giving
+            label: 'Giving administrator email'
+            type: text
+            span: left
+            commentAbove: 'Email address of planned giving administrator'
+        givingmessage:
+            tab: Giving
+            label: 'Giving email content'
+            type: textarea
+            size: large
+            span: full
+        givingending:
+            tab: Giving
+            label: 'Giving email conclusion'
+            type: textarea
+            size: large
+            span: full
+        enable_worship:
+            tab: Worship
+            label: 'Enable worship site'
+            span: left
+            type: switch
+            comment: 'Flick this switch to enable the worship site feature'
+            'on': 'on'
+            'off': 'off'
+        worshipemail:
+            tab: Worship
+            label: 'Worship email address'
+            type: text
+            span: right
+            commentAbove: 'Worship sets can optionally be sent to this email address'
+        servicedefaults:
+            tab: Worship
+            label: 'Order of service defaults'
+            type: textarea
+            size: large
+            span: full
+        society_id:
+            tab: Worship
+            label: 'methodist.church.net.za Society id'
+            type: text
+            span: left
+            commentAbove: 'For use in accessing preaching plan for worship sets'

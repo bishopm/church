@@ -6,3 +6,6 @@
 1.0.3:
     - 'Created table bishopm_church_individuals'
     - builder_table_create_bishopm_church_individuals.php
+1.0.4:
+    - 'Created table bishopm_church_groups'
+    - builder_table_create_bishopm_church_groups.php

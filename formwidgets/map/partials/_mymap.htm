@@ -1,0 +1,36 @@
+<div id="mapid" style="height:350px;"></div>
+<input type="hidden" class="form-control" name="Settings[coordinates]" id="Form-field-Settings-coordinates" value="<?php echo $this->model->coordinates ?>">
+<script>
+    var currentMarker;
+    var mymap;
+    <?php if ($this->model->coordinates){
+        print "mymap = L.map('mapid').setView([" . $this->model->coordinates . "], 13);";
+    } else {
+        print "mymap = L.map('mapid').setView([30,30], 13);";
+    }
+    ?>
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', 
+    {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiY2h1cmNobmV0IiwiYSI6ImNrd3J5YTZkNzBrNTEycWxzczBueWNrNWsifQ.Sl8LQfScNeiFhxkqJoYSRg'
+    }).addTo(mymap);
+    $(document).ready(function(){
+        mymap.invalidateSize();
+    });
+    <?php if ($this->model->coordinates){
+        echo "currentMarker=new L.marker([" . $this->model->coordinates . "]).addTo(mymap);";
+    }
+    ?>
+    mymap.on('click', function(e) {
+        if (currentMarker){
+            currentMarker.setLatLng(e.latlng)
+        } else {
+            currentMarker = new L.marker(e.latlng).addTo(mymap);
+        };
+        $('#Form-field-Settings-coordinates').val(e.latlng.lat + ','  +e.latlng.lng);
+    });
+</script>

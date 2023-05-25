@@ -1,23 +1,92 @@
-fields:
-    title:
-        label: Title
-        options:
-            Ms: Ms
-            Mr: Mr
-            Mrs: Mrs
-            Dr: Dr
-            Rev: Rev
-        showSearch: true
-        span: storm
-        cssClass: 'col-xs-12 col-sm-3 col-lg-1'
-        type: dropdown
-    firstname:
-        label: 'First name'
-        span: storm
-        cssClass: 'col-xs-12 col-sm-3 col-lg-2'
-        type: text
-    surname:
-        label: Surname
-        span: storm
-        cssClass: 'col-xs-12 col-sm-3 col-lg-2'
-        type: text
+tabs:
+    fields:
+        title:
+            label: Title
+            options:
+                Ms: Ms
+                Mr: Mr
+                Mrs: Mrs
+                Dr: Dr
+                Rev: Rev
+            showSearch: true
+            span: auto
+            cssClass: 'col-xs-12 col-sm-3 col-lg-1'
+            type: dropdown
+            tab: Personal
+        firstname:
+            label: 'First name'
+            span: auto
+            cssClass: 'col-xs-12 col-sm-3 col-lg-2'
+            type: text
+            tab: Personal
+        surname:
+            label: Surname
+            span: auto
+            cssClass: 'col-xs-12 col-sm-3 col-lg-2'
+            type: text
+            tab: Personal
+        sex:
+            label: Sex
+            span: auto
+            type: text
+            tab: Personal
+        image:
+            label: Image
+            span: auto
+            type: text
+            tab: Personal
+        notes:
+            label: Notes
+            span: auto
+            type: textarea
+            tab: Personal
+        birthdate:
+            label: 'Date of birth'
+            mode: date
+            format: Y-m-d
+            span: auto
+            type: datepicker
+            tab: Personal
+        household:
+            label: Household
+            nameFrom: addressee
+            descriptionFrom: description
+            span: auto
+            type: relation
+            tab: Personal
+        cellphone:
+            label: Cellphone
+            span: auto
+            type: text
+            tab: Contact
+        email:
+            label: Email
+            span: auto
+            type: text
+            tab: Contact
+        officephone:
+            label: Officephone
+            span: auto
+            type: text
+            tab: Contact
+        memberstatus:
+            label: 'Membership status'
+            options:
+                member: member
+                child: child
+                non-member: non-member
+            showSearch: true
+            span: auto
+            default: member
+            type: dropdown
+            tab: Church
+        giving:
+            label: Giving
+            span: auto
+            type: text
+            tab: Church
+        welcome_email:
+            label: 'Welcome email sent'
+            span: auto
+            type: switch
+            tab: Church

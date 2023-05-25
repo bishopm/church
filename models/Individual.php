@@ -19,6 +19,10 @@ class Individual extends Model
      */
     public $table = 'bishopm_church_individuals';
 
+    public $belongsTo = [
+        'household' => ['Bishopm\Church\Models\Household']
+    ];
+
     /**
      * @var array Validation rules
      */

@@ -10,3 +10,16 @@ navigation:
         label: Church
         url: bishopm/church/individuals
         icon: icon-group
+        permissions:
+            - bishopm.church.manage
+        sideMenu:
+            members-menu-item:
+                label: Members
+                url: bishopm/church/individuals
+                icon: icon-child
+                permissions:
+                    - bishopm.church.manage
+permissions:
+    bishopm.church.manage:
+        tab: Church
+        label: Manage

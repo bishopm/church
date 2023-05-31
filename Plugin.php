@@ -29,7 +29,8 @@ class Plugin extends PluginBase
         return [
             'bishopm.church.manage' => [
                 'label' => 'Manage church plugin',
-                'tab' => 'Church'
+                'tab' => 'Church',
+                'roles' => [\Backend\Models\UserRole::CODE_DEVELOPER, \Backend\Models\UserRole::CODE_PUBLISHER],
             ],
             'bishopm.church.members.manage' => [
                 'label' => 'Manage church membership',

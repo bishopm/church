@@ -13,5 +13,6 @@ class Individuals extends Controller
     public function __construct()
     {
         parent::__construct();
+        BackendMenu::setContext('Bishopm.Church', 'church-menu-item');
     }
 }

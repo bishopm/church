@@ -9,6 +9,7 @@ Route::controller('\Bishopm\Church\Http\Controllers\HomeController')->group(func
     Route::get('/blog/{slug}', 'blogger');
     Route::get('/books/{id}', 'book');
     Route::get('/books', 'books');
+    Route::get('/giving', 'giving');
     Route::get('/people/{slug}', 'person');
     Route::get('/projects/{id}', 'project');
     Route::get('/projects', 'projects');

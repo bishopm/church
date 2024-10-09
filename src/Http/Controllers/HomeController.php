@@ -68,6 +68,10 @@ class HomeController extends Controller
         return view('church::website.books',$data);
     }
 
+    public function giving(){
+        return view('church::website.giving');
+    }
+
     public function project($id){
         $data['project']=Project::find($id);
         return view('church::website.project',$data);

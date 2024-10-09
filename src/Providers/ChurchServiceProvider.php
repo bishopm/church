@@ -8,6 +8,7 @@ use Bishopm\Church\Church;
 use Bishopm\Church\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -84,6 +85,11 @@ class ChurchServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true: null;     
         });
+        Artisan::call('vendor:publish',
+            [
+                '--force'=> true,
+                '--provider' => 'Bishopm\Church\Providers\ChurchServiceProvider'
+            ]);
     }
 
     /**

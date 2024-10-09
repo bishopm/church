@@ -24,6 +24,10 @@ class HomeController extends Controller
         return view('church::website.home',$data);
     }
 
+    public function login(){
+        return view('church::website.login');
+    }
+
     public function blogpost($yr,$mth,$slug){
         $data['post']=Post::where('slug',$slug)->first();
         $relatedBlogs=Post::withAnyTags($data['post']->tags)->where('published',1)->orderBy('published_at','DESC')->get();

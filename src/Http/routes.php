@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home');
+    Route::get('/login', 'login');
     Route::get('/blog/{year}/{month}/{slug}', 'blogpost');
     Route::get('/blog', 'blog');
     Route::get('/blog/{slug}', 'blogger');

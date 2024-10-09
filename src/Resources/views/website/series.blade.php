@@ -1,5 +1,5 @@
-<x-church::website.layout pageName="Blog post">
-<div class="container">
+<x-church::website.layout pageName="Sermon series: {{$series->series}}">
+<div class="container my-3">
     <div style="min-height: 240px;">
         <div><img style="float: left; padding-right:10px;" width="400px" src="{{url('/public/storage/' . $series->image)}}" alt="Image" class="img-fluid rounded"></div>
         <h3>{{$series->series}}</h3>

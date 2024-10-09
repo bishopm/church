@@ -1,5 +1,5 @@
-<x-church::website.layout pageName="Blog post">
-<div class="container">
+<x-church::website.layout pageName="Sermon archives">
+<div class="container my-3">
     @foreach ($series as $serie)
         <div class="row pb-3">
             <div class="col-12">

@@ -44,7 +44,7 @@
 
 <body class="index-page">
 
-  <header id="header" class="header d-flex align-items-center sticky-top">
+  <header id="header" class="dark-background header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
       <a href="{{url('/')}}" class="logo d-flex align-items-center">
@@ -61,6 +61,7 @@
           <li><a href="{{url('/')}}#connecting">Connecting</a></li>
           <li><a href="{{url('/')}}#serving">Getting involved</a></li>
           <li><a href="{{url('/')}}#contact">Contact</a></li>
+          <li><a href="{{url('/')}}/login">Login</a></li>
           <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="{{url('/')}}#faqs">FAQ's</a></li>
@@ -91,49 +92,39 @@
   <footer id="footer" class="footer light-background">
     <div class="container">
       <div class="row g-4">
-        <div class="col-md-6 col-lg-3 mb-3 mb-md-0">
-          <div class="widget">
-            <h3 class="widget-heading">About Us</h3>
+        <div class="col-md-4 mb-md-0">
+          <div class="widget text-start">
+            <h3 class="widget-heading">Login</h3>
             <p class="mb-4">
-              There live the blind texts. Separated they live in Bookmarksgrove
-              right at the coast of the Semantics, a large language ocean.
+              Log in using your cellphone number and get access to member content
             </p>
             <p class="mb-0">
-              <a href="#" class="btn-learn-more">Learn more</a>
+              <a href="#" class="btn-learn-more">Login</a>
             </p>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3 ps-lg-5 mb-3 mb-md-0">
+        <div class="col-md-4 mb-md-0">
           <div class="widget">
-            <h3 class="widget-heading">Navigation</h3>
-            <ul class="list-unstyled float-start me-5">
-              <li><a href="#">Overview</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Find Buyers</a></li>
-            </ul>
-            <ul class="list-unstyled float-start">
-              <li><a href="#">Overview</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Services</a></li>
-            </ul>
+            <div class="footer-subscribe">
+              <h3 class="widget-heading">Subscribe to Staying Connected</h3>
+              <form action="forms/newsletter.php" method="post" class="php-email-form">
+                <div class="mb-2">
+                  <input type="text" class="form-control" name="email" placeholder="Enter your email">
+
+                  <button type="submit" class="btn btn-link">
+                    <span class="bi bi-arrow-right"></span>
+                  </button>
+                </div>
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">
+                  Your subscription request has been sent. Thank you!
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3 pl-lg-5">
-          <div class="widget">
-            <h3 class="widget-heading">Recent Posts</h3>
-            <ul class="list-unstyled footer-blog-entry">
-              <li>
-                <span class="d-block date">May 3, 2020</span>
-                <a href="#">There live the Blind Texts</a>
-              </li>
-              <li>
-                <span class="d-block date">May 3, 2020</span>
-                <a href="#">Separated they live in Bookmarksgrove right</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 pl-lg-5">
+        <div class="col-md-4 mb-md-0">
           <div class="widget">
             <h3 class="widget-heading">Connect</h3>
             <ul class="list-unstyled social-icons light mb-3">
@@ -153,26 +144,6 @@
                 <a target="_blank" title="WhatsApp" href="https://wa.me/27{{substr(setting('communication.whatsapp'),1)}}"><span class="bi bi-whatsapp"></span></a>
               </li>
             </ul>
-          </div>
-
-          <div class="widget">
-            <div class="footer-subscribe">
-              <h3 class="widget-heading">Subscribe to Staying Connected</h3>
-              <form action="forms/newsletter.php" method="post" class="php-email-form">
-                <div class="mb-2">
-                  <input type="text" class="form-control" name="email" placeholder="Enter your email">
-
-                  <button type="submit" class="btn btn-link">
-                    <span class="bi bi-arrow-right"></span>
-                  </button>
-                </div>
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">
-                  Your subscription request has been sent. Thank you!
-                </div>
-              </form>
-            </div>
           </div>
         </div>
       </div>
@@ -205,10 +176,7 @@
   <script src="/public/church/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="/public/church/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="/public/church/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-
-  <!-- Main JS File -->
   <script src="/public/church/js/main.js"></script>
-
 </body>
 
 </html>

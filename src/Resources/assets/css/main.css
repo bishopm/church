@@ -22,19 +22,19 @@
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #212529; /* Default color used for the majority of the text content across the entire website */
   --heading-color: #2d465e; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #159CA0; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --accent-color:#159CA0; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: white;  /* The default color of the main navmenu links */
-  --nav-hover-color: #159CA0; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-color: lightgrey;  /* The default color of the main navmenu links */
+  --nav-hover-color:#159CA0; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #34bf49; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: #159CA0; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -45,7 +45,7 @@
 }
 
 .dark-background {
-  --background-color: #060606;
+  --background-color: #161b33;
   --default-color: #ffffff;
   --heading-color: #ffffff;
   --surface-color: #252525;
@@ -67,13 +67,13 @@ body {
 }
 
 a {
-  color: #159CA0;
+  color: var(--accent-color);
   text-decoration: none;
   transition: 0.3s;
 }
 
 a:hover {
-  color: color-mix(in srgb, #159CA0, transparent 25%);
+  color: color-mix(in srgb, var(--accent-color), transparent 25%);
   text-decoration: none;
 }
 
@@ -124,7 +124,7 @@ h6 {
   width: 24px;
   height: 24px;
   margin: 0 10px -6px 0;
-  border: 3px solid #159CA0;
+  border: 3px solid var(--accent-color);
   border-top-color: var(--surface-color);
   animation: php-email-form-loading 1s linear infinite;
 }
@@ -139,19 +139,12 @@ h6 {
   }
 }
 
-#pills-audio-tab, #pills-video-tab {
-  background-color: #159CA0;
-  color: white;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
 /*--------------------------------------------------------------
 # Global Header
 --------------------------------------------------------------*/
 .header {
   color: var(--default-color);
-  background-color: midnightblue;
+  background-color: var(--background-color);
   padding: 20px 0;
   transition: all 0.5s;
   z-index: 997;
@@ -170,7 +163,7 @@ h6 {
   font-size: 30px;
   margin: 0;
   font-weight: 300;
-  color: white;
+  color: var(--heading-color);
 }
 
 .scrolled .header {
@@ -200,7 +193,7 @@ h6 {
 
   .navmenu a,
   .navmenu a:focus {
-    color: white;
+    color: var(--nav-color);
     padding: 18px 15px;
     font-size: 16px;
     font-family: var(--nav-font);
@@ -290,7 +283,7 @@ h6 {
 /* Navmenu - Mobile */
 @media (max-width: 1199px) {
   .mobile-nav-toggle {
-    color: white;
+    color: var(--nav-color);
     font-size: 28px;
     line-height: 0;
     margin-right: 10px;
@@ -320,7 +313,7 @@ h6 {
 
   .navmenu a,
   .navmenu a:focus {
-    color: white;
+    color: var(--nav-color);
     padding: 10px 20px;
     font-family: var(--nav-font);
     font-size: 17px;
@@ -344,12 +337,12 @@ h6 {
     justify-content: center;
     border-radius: 50%;
     transition: 0.3s;
-    background-color: color-mix(in srgb, #159CA0, transparent 90%);
+    background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
   }
 
   .navmenu a i:hover,
   .navmenu a:focus i:hover {
-    background-color: #159CA0;
+    background-color: var(--accent-color);
     color: var(--contrast-color);
   }
 
@@ -361,7 +354,7 @@ h6 {
 
   .navmenu .active i,
   .navmenu .active:focus i {
-    background-color: #159CA0;
+    background-color: var(--accent-color);
     color: var(--contrast-color);
     transform: rotate(180deg);
   }
@@ -440,7 +433,7 @@ h6 {
 }
 
 .footer a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .footer .copyright {
@@ -456,7 +449,7 @@ h6 {
 }
 
 .footer .btn-learn-more {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   border-radius: 30px;
   padding: 8px 30px;
   border: 2px solid transparent;
@@ -466,9 +459,9 @@ h6 {
 }
 
 .footer .btn-learn-more:hover {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: transparent;
-  color: #159CA0 !important;
+  color: var(--accent-color) !important;
 }
 
 .footer .widget .widget-heading {
@@ -519,7 +512,7 @@ h6 {
 }
 
 .footer .social-icons li a:hover {
-  background: #159CA0;
+  background: var(--accent-color);
 }
 
 .footer .social-icons li a:hover span {
@@ -590,7 +583,7 @@ h6 {
   top: calc(50% - 30px);
   left: calc(50% - 30px);
   border: 6px solid #ffffff;
-  border-color: #159CA0 transparent #159CA0 transparent;
+  border-color: var(--accent-color) transparent var(--accent-color) transparent;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -617,7 +610,7 @@ h6 {
   right: 15px;
   bottom: 15px;
   z-index: 99999;
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   width: 40px;
   height: 40px;
   border-radius: 4px;
@@ -631,7 +624,7 @@ h6 {
 }
 
 .scroll-top:hover {
-  background-color: color-mix(in srgb, #159CA0, transparent 20%);
+  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
   color: var(--contrast-color);
 }
 
@@ -730,7 +723,7 @@ section,
 # About Section
 --------------------------------------------------------------*/
 .about .btn-get-started {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
   border-radius: 30px;
   padding: 8px 30px;
@@ -740,9 +733,9 @@ section,
 }
 
 .about .btn-get-started:hover {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: transparent;
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .about h1 {
@@ -767,7 +760,7 @@ section,
 }
 
 .about .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background: #159CA0;
+  background: var(--accent-color);
   opacity: 1;
 }
 
@@ -806,7 +799,7 @@ section,
 }
 
 .about-2 .btn-get-started {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
   border-radius: 30px;
   padding: 8px 30px;
@@ -816,9 +809,9 @@ section,
 }
 
 .about-2 .btn-get-started:hover {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: transparent;
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .about-2 .lead {
@@ -837,7 +830,7 @@ section,
 }
 
 .services .services-item .services-icon {
-  color: #159CA0;
+  color: var(--accent-color);
   margin-bottom: 20px;
 }
 
@@ -884,7 +877,7 @@ section,
 }
 
 .stats .btn-get-started {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
   border-radius: 30px;
   padding: 8px 30px;
@@ -894,9 +887,9 @@ section,
 }
 
 .stats .btn-get-started:hover {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: transparent;
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .stats .count-numbers .number {
@@ -915,7 +908,7 @@ section,
   position: absolute;
   width: 20px;
   height: 2px;
-  background: #159CA0;
+  background: var(--accent-color);
 }
 
 /*--------------------------------------------------------------
@@ -980,7 +973,7 @@ section,
 }
 
 .blog-posts .post-entry .post-content h3 a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .blog-posts .author .pic {
@@ -1014,7 +1007,7 @@ section,
   flex: 0 0 40px;
   border-radius: 4px;
   position: relative;
-  color: #159CA0;
+  color: var(--accent-color);
   background-color: color-mix(in srgb, var(--default-color), transparent 95%);
   margin-right: 20px;
   font-size: 16px;
@@ -1053,7 +1046,7 @@ section,
 }
 
 .tabs .service-item.link.active .service-icon {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
 }
 
@@ -1086,7 +1079,7 @@ section,
 }
 
 .services-2 .btn-get-started {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
   border-radius: 30px;
   padding: 8px 30px;
@@ -1096,13 +1089,13 @@ section,
 }
 
 .services-2 .btn-get-started:hover {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: transparent;
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .services-2 .services-item .services-icon {
-  color: #159CA0;
+  color: var(--accent-color);
   margin-bottom: 20px;
 }
 
@@ -1137,7 +1130,7 @@ section,
 }
 
 .pricing .pricing-item h4 {
-  color: #159CA0;
+  color: var(--accent-color);
   font-size: 42px;
   font-family: var(--default-font);
   font-weight: 500;
@@ -1178,9 +1171,9 @@ section,
 }
 
 .pricing .pricing-item .btn-buy {
-  color: #159CA0;
+  color: var(--accent-color);
   background-color: transparent;
-  border: 2px solid #159CA0;
+  border: 2px solid var(--accent-color);
   display: inline-block;
   padding: 10px 40px 12px 40px;
   border-radius: 50px;
@@ -1191,18 +1184,18 @@ section,
 }
 
 .pricing .pricing-item .btn-buy:hover {
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
 }
 
 .pricing .recommended .btn-buy {
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
 }
 
 .pricing .recommended .btn-buy:hover {
-  background: color-mix(in srgb, #159CA0, transparent 20%);
-  border-color: color-mix(in srgb, #159CA0, transparent 20%);
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+  border-color: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
 
 .pricing .recommended-badge {
@@ -1213,8 +1206,8 @@ section,
   z-index: 1;
   font-size: 13px;
   padding: 3px 25px 6px 25px;
-  background: color-mix(in srgb, #159CA0, transparent 92%);
-  color: #159CA0;
+  background: color-mix(in srgb, var(--accent-color), transparent 92%);
+  color: var(--accent-color);
   border-radius: 50px;
 }
 
@@ -1279,14 +1272,14 @@ section,
 }
 
 .faq .custom-accordion .accordion-item .btn-link[aria-expanded=true] {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .faq .custom-accordion .accordion-item .btn-link[aria-expanded=true]:before {
   font-family: "bootstrap-icons" !important;
   content: "\f286";
   position: absolute;
-  color: #159CA0;
+  color: var(--accent-color);
   top: 50%;
   transform: translateY(-50%);
 }
@@ -1333,7 +1326,7 @@ section,
 }
 
 .testimonials .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background: #159CA0;
+  background: var(--accent-color);
   opacity: 1;
 }
 
@@ -1364,7 +1357,7 @@ section,
 .portfolio .portfolio-filters li:hover,
 .portfolio .portfolio-filters li.filter-active {
   color: var(--contrast-color);
-  background-color: #159CA0;
+  background-color: var(--accent-color);
 }
 
 .portfolio .portfolio-filters li:first-child {
@@ -1425,7 +1418,7 @@ section,
 
 .portfolio .portfolio-item .portfolio-info .preview-link:hover,
 .portfolio .portfolio-item .portfolio-info .details-link:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .portfolio .portfolio-item .portfolio-info .details-link {
@@ -1495,7 +1488,7 @@ section,
 }
 
 .portfolio-details .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #159CA0;
+  background-color: var(--accent-color);
 }
 
 .portfolio-details .portfolio-info h3 {
@@ -1512,7 +1505,7 @@ section,
   display: block;
   width: 50px;
   height: 3px;
-  background: #159CA0;
+  background: var(--accent-color);
   left: 0;
   bottom: 0;
 }
@@ -1538,14 +1531,14 @@ section,
 
 .portfolio-details .portfolio-info .btn-visit {
   padding: 8px 40px;
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
   border-radius: 50px;
   transition: 0.3s;
 }
 
 .portfolio-details .portfolio-info .btn-visit:hover {
-  background: color-mix(in srgb, #159CA0, transparent 20%);
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
 
 .portfolio-details .portfolio-description h2 {
@@ -1588,7 +1581,7 @@ section,
 
 .portfolio-details .portfolio-description .testimonial-item .quote-icon-left,
 .portfolio-details .portfolio-description .testimonial-item .quote-icon-right {
-  color: color-mix(in srgb, #159CA0, transparent 50%);
+  color: color-mix(in srgb, var(--accent-color), transparent 50%);
   font-size: 26px;
   line-height: 0;
 }
@@ -1677,7 +1670,7 @@ section,
 }
 
 .team .more:hover span {
-  background: #159CA0;
+  background: var(--accent-color);
 }
 
 .team .more.dark {
@@ -1689,12 +1682,12 @@ section,
 }
 
 .team .more.dark:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .team .more.dark:hover span {
   color: var(--contrast-color);
-  background: #159CA0;
+  background: var(--accent-color);
 }
 
 .team .swiper-wrapper {
@@ -1705,7 +1698,7 @@ section,
   width: 40px;
   height: 40px;
   position: relative;
-  background: #159CA0;
+  background: var(--accent-color);
   border-radius: 4px;
   transition: 0.2s all ease;
   display: flex;
@@ -1718,7 +1711,7 @@ section,
 }
 
 .team .slider-nav a:hover {
-  background-color: color-mix(in srgb, #159CA0 90%, white 15%);
+  background-color: color-mix(in srgb, var(--accent-color) 90%, white 15%);
 }
 
 .team .slider-nav a:first-child {
@@ -1750,7 +1743,7 @@ section,
 }
 
 .blog-posts-2 .title a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .blog-posts-2 .meta-top {
@@ -1810,7 +1803,7 @@ section,
 
 .blog-pagination li a.active,
 .blog-pagination li a:hover {
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
 }
 
@@ -1880,7 +1873,7 @@ section,
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -1933,7 +1926,7 @@ section,
 }
 
 .blog-details .meta-bottom a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .blog-details .meta-bottom .cats {
@@ -2008,7 +2001,7 @@ section,
 }
 
 .blog-comments .comment h5 a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .blog-comments .comment h5 .reply {
@@ -2067,7 +2060,7 @@ section,
   color: var(--default-color);
   background-color: var(--surface-color);
   box-shadow: none;
-  border-color: #159CA0;
+  border-color: var(--accent-color);
 }
 
 .comment-form form input::placeholder {
@@ -2087,7 +2080,7 @@ section,
 .comment-form form textarea:focus {
   color: var(--default-color);
   box-shadow: none;
-  border-color: #159CA0;
+  border-color: var(--accent-color);
   background-color: var(--surface-color);
 }
 
@@ -2103,13 +2096,13 @@ section,
   border-radius: 4px;
   padding: 10px 20px;
   border: 0;
-  background-color: #159CA0;
+  background-color: var(--accent-color);
   color: var(--contrast-color);
 }
 
 .comment-form form .btn-primary:hover {
   color: var(--contrast-color);
-  background-color: color-mix(in srgb, #159CA0, transparent 20%);
+  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
 
 /*--------------------------------------------------------------
@@ -2141,7 +2134,7 @@ section,
 
 .contact .info-item i {
   font-size: 24px;
-  color: #159CA0;
+  color: var(--accent-color);
   transition: all 0.3s ease-in-out;
   margin-right: 20px;
 }
@@ -2183,7 +2176,7 @@ section,
 .contact .php-email-form input[type=text]:focus,
 .contact .php-email-form input[type=email]:focus,
 .contact .php-email-form textarea:focus {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
 }
 
 .contact .php-email-form input[type=text]::placeholder,
@@ -2204,7 +2197,7 @@ section,
 }
 
 .contact .php-email-form button[type=submit] {
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
   border: 0;
   padding: 13px 50px;
@@ -2213,7 +2206,7 @@ section,
 }
 
 .contact .php-email-form button[type=submit]:hover {
-  background: color-mix(in srgb, #159CA0 90%, black 15%);
+  background: color-mix(in srgb, var(--accent-color) 90%, black 15%);
 }
 
 /*--------------------------------------------------------------
@@ -2229,7 +2222,7 @@ section,
   font-weight: 600;
   padding: 0 0 0 10px;
   margin: 0 0 20px 0;
-  border-left: 4px solid #159CA0;
+  border-left: 4px solid var(--accent-color);
 }
 
 .widget-item {
@@ -2267,7 +2260,7 @@ section,
 }
 
 .blog-author-widget .social-links a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .blog-author-widget p {
@@ -2317,11 +2310,11 @@ section,
 }
 
 .search-widget form button:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .search-widget form:is(:focus-within) {
-  border-color: #159CA0;
+  border-color: var(--accent-color);
 }
 
 .recent-posts-widget .post-item {
@@ -2346,7 +2339,7 @@ section,
 }
 
 .recent-posts-widget .post-item h4 a:hover {
-  color: #159CA0;
+  color: var(--accent-color);
 }
 
 .recent-posts-widget .post-item time {
@@ -2378,7 +2371,7 @@ section,
 }
 
 .tags-widget ul a:hover {
-  background: #159CA0;
+  background: var(--accent-color);
   color: var(--contrast-color);
 }
 

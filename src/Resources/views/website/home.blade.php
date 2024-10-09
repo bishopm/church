@@ -83,6 +83,7 @@
                     on our <a href="{{setting('website.youtube_channel')}}" target="_blank">YouTube channel</a>.
                 </p>
             </div>
+            @if (isset($sermon))
             <div class="col-lg-6 order-lg-1">                
                 <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -125,6 +126,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </section>
@@ -133,6 +135,7 @@
     <h2>Blog Posts</h2>
     </div>
     <div class="container">
+        @if (isset($blogs))
         <div class="row gy-4">
             @foreach ($blogs as $blog)
                 <div class="col-md-4 col-sm-12">
@@ -154,6 +157,7 @@
                 </div>
             @endforeach
         </div>
+        @endif
     </div>
 </section><!-- /Blog Posts Section -->
 

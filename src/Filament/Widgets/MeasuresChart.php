@@ -19,31 +19,33 @@ class MeasuresChart extends ChartWidget
                 $data['labels'][]=date('M',strtotime($measure->measuredate));
             }
         }
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Serve',
-                    'data' => $data['serve'],
-                    'borderColor' => 'blue'
+        if (count($data)){
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Serve',
+                        'data' => $data['serve'],
+                        'borderColor' => 'blue'
+                    ],
+                    [
+                        'label' => 'Worship',
+                        'data' => $data['worship'],
+                        'borderColor' => 'red'
+                    ],
+                    [
+                        'label' => 'Connect',
+                        'data' => $data['connect'],
+                        'borderColor' => 'green'
+                    ],
+                    [
+                        'label' => 'Give',
+                        'data' => $data['give'],
+                        'borderColor' => 'orange'
+                    ]
                 ],
-                [
-                    'label' => 'Worship',
-                    'data' => $data['worship'],
-                    'borderColor' => 'red'
-                ],
-                [
-                    'label' => 'Connect',
-                    'data' => $data['connect'],
-                    'borderColor' => 'green'
-                ],
-                [
-                    'label' => 'Give',
-                    'data' => $data['give'],
-                    'borderColor' => 'orange'
-                ]
-            ],
-            'labels' => $data['labels'],
-        ];
+                'labels' => $data['labels'],
+            ];
+        }
     }
 
     protected function getType(): string

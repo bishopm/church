@@ -1,0 +1,53 @@
+{
+    "name": "bishopm/church",
+    "description": "Laravel based church management software",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Bishop",
+            "email": "michael@westvillemethodist.co.za",
+            "homepage": "http://learningchurch.org"
+        }
+    ],
+    "homepage": "https://github.com/bishopm/church",
+    "keywords": ["Laravel", "Church"],
+    "require": {
+        "illuminate/support": "~11",
+	    "livewire/livewire": "~3",
+    	"filament/filament": "~3",
+        "guava/calendar": "~1",
+        "outerweb/filament-settings": "~1",
+        "codedge/laravel-fpdf": "~1",
+        "joaopaulolndev/filament-pdf-viewer": "~1",
+        "hugomyb/filament-media-action": "~3",
+        "filament/spatie-laravel-tags-plugin": "~3",
+        "silviolleite/laravelpwa": "~2",
+        "dotswan/filament-map-picker": "~1",
+        "stechstudio/filament-impersonate": "~3",
+        "althinect/filament-spatie-roles-permissions": "~2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bishopm\\Church\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bishopm\\Church\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bishopm\\Church\\Providers\\ChurchServiceProvider"
+            ],
+            "aliases": {
+                "Church": "Bishopm\\Church\\Facades\\Church"
+            }
+        }
+    }
+}

@@ -2,10 +2,10 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
+use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
 use Illuminate\Http\Request;
@@ -66,6 +66,16 @@ class HomeController extends Controller
     public function books(){
         $data['books']=Book::orderBy('title')->paginate(10);
         return view('church::website.books',$data);
+    }
+
+    public function project($id){
+        $data['project']=Project::find($id);
+        return view('church::website.project',$data);
+    }
+
+    public function projects(){
+        $data['projects']=Project::orderBy('project')->paginate(10);
+        return view('church::website.projects',$data);
     }
 
     public function series($year,$slug){

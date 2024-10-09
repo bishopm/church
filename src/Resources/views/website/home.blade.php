@@ -52,10 +52,7 @@
             Welcome to Westville Methodist Church
         </h1>
         <p data-aos="fade-up">
-            Far far away, behind the word mountains, far from the countries
-            Vokalia and Consonantia, there live the blind texts. Separated they
-            live in Bookmarksgrove right at the coast of the Semantics, a large
-            language ocean.
+            We don't always get it right :) but we aspire to worship God with all we have, love all people who come our way, take children seriously and serve helpfully. Come and join us!
         </p>
         </div>
     </div>

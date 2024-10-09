@@ -10,6 +10,8 @@ Route::controller('\Bishopm\Church\Http\Controllers\HomeController')->group(func
     Route::get('/books/{id}', 'book');
     Route::get('/books', 'books');
     Route::get('/people/{slug}', 'person');
+    Route::get('/projects/{id}', 'project');
+    Route::get('/projects', 'projects');
     Route::get('/sermons', 'sermons');
     Route::get('/sermons/{slug}', 'preacher');
     Route::get('/sermons/{year}/{slug}', 'series');

@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use Bishopm\Church\Http\Controllers\Controller;
 use Bishopm\Church\Models\Chord;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Group;

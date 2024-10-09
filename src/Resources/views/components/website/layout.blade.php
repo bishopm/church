@@ -184,7 +184,7 @@
           <!-- You can delete the links only if you've purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-          <a style="color:lightgray"; href="https://bootstrapmade.com/">BootstrapMade</a>
+          <a style="color:lightgray"; target="_blank" href="https://bootstrapmade.com/">BootstrapMade</a>
         </div>
       </div>
     </div>

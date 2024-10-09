@@ -11,6 +11,7 @@ class MeasuresChart extends ChartWidget
 
     protected function getData(): array
     {
+        $data=array();
         $lastyear=date('Y-m-01',strtotime('-11 months'));
         $measures=Measure::where('measuredate','>',$lastyear)->orderBy('measuredate','ASC')->get();
         foreach ($measures as $measure){

@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 RecentSongs::class,
                 PastoralContact::class,
-                MeasuresChart::class,
+                // MeasuresChart::class,
                 NewMembers::class,
                 StatsOverview::class,
                 TasksToDo::class

@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{setting('general.church_name')}} - {{$pageName}}</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
@@ -16,7 +17,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-
+  
   <!-- Vendor CSS Files -->
   <link href="/public/church/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="/public/church/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -86,7 +87,9 @@
   </header>
 
   <main class="main">
-    {{$slot}}
+    <div class="container my-3">
+      {{$slot}}
+    </div>
   </main>
 
   <footer id="footer" class="footer light-background">
@@ -166,7 +169,6 @@
 
   <!-- Preloader -->
   <div id="preloader"></div>
-
   <!-- Vendor JS Files -->
   <script src="/public/church/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/public/church/vendor/php-email-form/validate.js"></script>

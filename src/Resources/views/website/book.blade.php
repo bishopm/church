@@ -1,5 +1,4 @@
 <x-church::website.layout pageName="Blog post">
-<div class="container mb-5">
     <h3 class="text-uppercase">{{$book->title}}</h3>
     <div class="row gy-2">
         <div class="col-md-6 col-sm-12">
@@ -20,6 +19,5 @@
         <div class="col-md-6 col-sm-12">
             <h4>Reviews</h4>
         </div>
-</div>
-
+    </div>
 </x-church::layout>                

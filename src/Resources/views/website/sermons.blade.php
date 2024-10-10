@@ -1,5 +1,4 @@
 <x-church::website.layout pageName="Sermon archives">
-<div class="container my-3">
     @foreach ($series as $serie)
         <div class="row pb-3">
             <div class="col-12">
@@ -15,6 +14,4 @@
     <div>
         {{$series->links()}}
     </div>
-</div>
-
 </x-church::layout>                

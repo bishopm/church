@@ -1,5 +1,4 @@
 <x-church::website.layout pageName="Blog post">
-<div class="container mb-5">
     <h1>{{$post->title}}</h1>
     <div class="meta mb-3">
         <span class="date">{{date('j F Y',strtotime($post->published_at))}}</span> •
@@ -31,6 +30,4 @@
             @endif
         </div>
     </div>
-</div>
-
 </x-church::layout>                

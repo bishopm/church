@@ -1,5 +1,4 @@
 <x-church::website.layout pageName="Blogger">
-<div class="container mb-5">
     <h1>Blog</h1>
     @foreach ($posts as $post)
         <div class="mb-4 row">
@@ -11,6 +10,4 @@
         </div>
     @endforeach
     {{$posts->links()}}
-</div>
-
 </x-church::layout>                

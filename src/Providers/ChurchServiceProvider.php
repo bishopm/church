@@ -5,12 +5,14 @@ namespace Bishopm\Church\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
+use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,7 +53,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.model_directories',[base_path('vendor/bishopm/church/src/Models')]);
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
-        
+        Livewire::component('login', LoginForm::class);
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }

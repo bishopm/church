@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
+Route::controller('\Bishopm\Church\Http\Controllers\HomeController')->middleware(['web'])->group(function () {
     Route::get('/', 'home');
     Route::get('/login', 'login');
     Route::get('/blog/{year}/{month}/{slug}', 'blogpost');

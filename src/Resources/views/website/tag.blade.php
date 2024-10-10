@@ -1,5 +1,4 @@
 <x-church::website.layout pageName="Blog post">
-<div class="container mb-5">
     <h1 class="text-uppercase">{{$tag->name}}</h1>
     @if (count($posts))
         <h4>Blog posts</h4>
@@ -19,6 +18,4 @@
             <a href="{{url('/')}}/books/{{$book->id}}">{{$book->title}}</a> ({{$book->allauthors}})<br>
         @endforeach
     @endif
-</div>
-
 </x-church::layout>                

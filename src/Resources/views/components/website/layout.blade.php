@@ -41,6 +41,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  @laravelPWA
 </head>
 
 <body class="index-page">
@@ -62,7 +63,7 @@
           <li><a href="{{url('/')}}#connecting">Connecting</a></li>
           <li><a href="{{url('/')}}#serving">Getting involved</a></li>
           <li><a href="{{url('/')}}#contact">Contact</a></li>
-          <li><a href="{{url('/')}}/login">Login</a></li>
+          @if (!count($member))<li><a href="{{url('/')}}/login">Login</a></li>@endif
           <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="{{url('/')}}#faqs">FAQ's</a></li>
@@ -97,12 +98,24 @@
       <div class="row g-4">
         <div class="col-md-4 mb-md-0">
           <div class="widget text-start">
-            <h3 class="widget-heading">Login</h3>
+            @if (count($member))
+              <h3 class="widget-heading">User details</h3>
+            @else
+              <h3 class="widget-heading">Login</h3>
+            @endif
             <p class="mb-4">
-              Log in using your cellphone number and get access to member content
+              @if (count($member))
+                Logged in as {{$member['fullname']}}
+              @else
+                Log in using your cellphone number and get access to member content
+              @endif
             </p>
             <p class="mb-0">
-              <a href="#" class="btn-learn-more">Login</a>
+              @if (count($member))
+                <a href="{{url('/')}}/logout" class="btn-learn-more">Logout</a>
+              @else 
+                <a href="{{url('/')}}/login" class="btn-learn-more">Login</a>
+              @endif
             </p>
           </div>
         </div>

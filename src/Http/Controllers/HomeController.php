@@ -8,11 +8,11 @@ use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
-use Illuminate\Http\Request;
 use Spatie\Tags\Tag;
 
 class HomeController extends Controller
 {
+
      /**
      * Display a listing of the resource.
      */
@@ -73,7 +73,7 @@ class HomeController extends Controller
     }
 
     public function giving(){
-        return view('church::website.giving');
+        return view('church::website.giving',$data);
     }
 
     public function project($id){

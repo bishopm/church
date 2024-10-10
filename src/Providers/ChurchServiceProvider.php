@@ -6,12 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
 use Bishopm\Church\Livewire\LoginForm;
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -85,6 +87,18 @@ class ChurchServiceProvider extends ServiceProvider
         Gate::policy(\Bishopm\Church\Models\Employee::class, \Bishopm\Church\Filament\Policies\EmployeePolicy::class);
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true: null;     
+        });
+        View::composer(['church::components.website.layout'], function ($view) {
+            $phone=$_COOKIE['wmc-mobile'];
+            $uid=$_COOKIE['wmc-access'];
+            $member=array();
+            $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
+            if ($indiv){
+                $member['id']=$indiv->id;
+                $member['firstname']=$indiv->firstname;
+                $member['fullname']=$indiv->fullname;
+            }
+            $view->with('member', $member);
         });
     }
 

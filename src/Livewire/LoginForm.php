@@ -37,9 +37,13 @@ class LoginForm extends Component
                 $this->error = "";
                 $this->message = "Hello, " . $indiv[0]->firstname . "! We are sending you an SMS now.";
                 $this->pin = rand(1000,9999);
-                $this->hashed = hash('sha256', $this->pin);
-                $indiv[0]->uid=$this->hashed;
-                $indiv[0]->save();
+                if ($indiv->uid<>''){
+                    $this->hashed=$indiv->uid;
+                } else {
+                    $this->hashed = hash('sha256', $this->pin);
+                    $indiv[0]->uid=$this->hashed;
+                    $indiv[0]->save();
+                }
                 $this->status = "pinsent";
             } else {
                 $this->error = "";

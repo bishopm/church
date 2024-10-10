@@ -89,14 +89,16 @@ class ChurchServiceProvider extends ServiceProvider
             return $user->isSuperAdmin() ? true: null;     
         });
         View::composer(['church::components.website.layout'], function ($view) {
-            $phone=$_COOKIE['wmc-mobile'];
-            $uid=$_COOKIE['wmc-access'];
             $member=array();
-            $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
-            if ($indiv){
-                $member['id']=$indiv->id;
-                $member['firstname']=$indiv->firstname;
-                $member['fullname']=$indiv->fullname;
+            if (isset($_COOKIE['wmc-mobile']) and (isset($_COOKIE['wmc-access']))){
+                $phone=$_COOKIE['wmc-mobile'];
+                $uid=$_COOKIE['wmc-access'];
+                $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
+                if ($indiv){
+                    $member['id']=$indiv->id;
+                    $member['firstname']=$indiv->firstname;
+                    $member['fullname']=$indiv->fullname;
+                }    
             }
             $view->with('member', $member);
         });

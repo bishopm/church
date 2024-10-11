@@ -11,6 +11,8 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/books/{id}', 'book')->name('book');
     Route::get('/books', 'books')->name('books');
     Route::get('/giving', 'giving')->name('giving');
+    Route::get('/groups', 'groups')->name('groups');
+    Route::get('/groups/{id}', 'group')->name('group');
     Route::get('/mymenu', 'mymenu')->name('mymenu');
     Route::get('/people/{slug}', 'person')->name('person');
     Route::get('/projects/{id}', 'project')->name('project');

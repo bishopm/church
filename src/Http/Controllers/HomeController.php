@@ -87,6 +87,16 @@ class HomeController extends Controller
         return view('church::website.giving');
     }
 
+    public function group($id){
+        $data['group']=Group::with('individual')->where('id',$id)->first();
+        return view('church::website.group',$data);
+    }
+
+    public function groups(){
+        $data['groups']=Group::where('grouptype','fellowship')->orderBy('groupname')->where('publish',1)->get();
+        return view('church::website.groups',$data);
+    }
+
     public function mymenu(){
         $data=array();
         $data['indiv']=Individual::find($this->member['id']);
@@ -107,6 +117,7 @@ class HomeController extends Controller
         ksort($data['worship']);
         $today=date('Y-m-d');
         $roster=Individual::with('rosteritems.rostergroup.group')->where('id',$this->member['id'])->first();
+        $data['roster']=array();
         foreach ($roster->rosteritems as $ri){
             if ($ri->rosterdate>$today){
                 $data['roster'][$ri->rosterdate][]=$ri->rostergroup->group->groupname;

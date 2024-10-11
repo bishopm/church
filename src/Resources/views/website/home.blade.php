@@ -72,7 +72,7 @@
                     We have three services every Sunday:
                     <ul>
                         <li>07h30 (traditional hymns)</li>
-                        <li>09h00 (family service with teen church)</li>
+                        <li>09h00 (family service with children's church and youth)</li>
                         <li>18h30 (informal, contemporary)</li>
                     </ul>
 
@@ -167,7 +167,7 @@
         <div class="row gy-4">
             <div class="col-md-4 text-center">
                 <img src="{{url('/public/church/images/smallgroups.png')}}" height="80px" alt="Image">
-                <h4>Groups</h4>Great as it is to be all together on Sundays, it is in small groups that we experience the best of community life - friendships, encouragement and a shared journey following Jesus in the midst of ordinary life. Contact us if you'd like to join a group, or visit our groups page for news and more info.
+                <h4>Groups</h4>Great as it is to be all together on Sundays, it is in small groups that we experience the best of community life - friendships, encouragement and a shared journey following Jesus in the midst of ordinary life. Contact us if you'd like to join a group, or visit our <a href="{{url('/')}}/groups">groups</a> page for news and more info.
             </div>
             <div class="col-md-4 text-center">
                 <img src="{{url('/public/church/images/meet.png')}}" height="80px" alt="Image"><h4>Come and meet us</h4>It's easy to feel anonymous in a church community, but we really want to get to know all our people. We serve tea and eats at every service and would love to meet you! If you're new, sign up for one of our regular Newcomers Tea's.
@@ -188,7 +188,7 @@
         <div class="row gy-4">
             <div class="col-md-4 text-center">
                 <img src="{{url('/public/church/images/outreach.png')}}" height="80px" alt="Image">
-                <h4>Mission projects</h4>We support many worthwhile causes in our area and host two relief projects on our property - the Westville Churches Food Bank and our Soup Kitchen. Plan to come and visit these projects and find out where you can play your part.
+                <h4>Mission projects</h4>We support many worthwhile causes in our area and host two relief projects on our property - the Westville Churches Food Bank and our Soup Kitchen. Plan to come and visit these <a href="{{url('/')}}/projects">projects</a> and find out where you can play your part.
             </div>
             <div class="col-md-4 text-center">
                 <img src="{{url('/public/church/images/serve.png')}}" height="80px" alt="Image">

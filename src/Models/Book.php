@@ -4,6 +4,7 @@ namespace Bishopm\Church\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Tags\HasTags;
+use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
 
 class Book extends Model
 {

@@ -24,7 +24,8 @@
         "silviolleite/laravelpwa": "~2",
         "dotswan/filament-map-picker": "~1",
         "stechstudio/filament-impersonate": "~3",
-        "althinect/filament-spatie-roles-permissions": "~2"
+        "althinect/filament-spatie-roles-permissions": "~2",
+        "parallax/filament-comments":  "~1"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

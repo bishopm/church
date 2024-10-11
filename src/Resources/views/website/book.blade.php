@@ -19,7 +19,7 @@
         <div class="col-md-6 col-sm-12">
             <h4>Reviews</h4>
             @if (count($member))
-                @livewire('bookreview')
+                @livewire('bookreview',['book'=>$book,'key'=>$book->id])
             @else
                 To rate or view books, please <a href="{{url('/')}}/login">login</a>
             @endif

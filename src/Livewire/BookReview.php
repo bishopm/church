@@ -6,14 +6,19 @@ use Livewire\Component;
  
 class BookReview extends Component
 {
-    public $rating;
+    public $rating=0;
     public $avgRating;
     public $book;
+    public $key;
+    public $member;
 
-    public function mount($book) {
+    public function mount($book, $key, $member) {
+
         $this->book = $book;
-        $userRating = $this->book->users()
-            ->where('user_id', auth()->user()->id)->first();
+        $this->member= $member;
+        $this->key = $key;
+        $userRating = $this->book->comments()
+            ->where('individual_id', $member)->first();
 
         if (!$userRating) {
             $this->rating = 0;
@@ -25,12 +30,12 @@ class BookReview extends Component
     }
 
     private function calculateAverageRating() {
-        $this->avgRating = round($this->book->users()->avg('rating'), 1);
+        $this->avgRating = round($this->book->comments()->avg('rating'), 1);
     }
 
     public function render()
     {
-        return view('livewire.rating');
+        return view('church::livewire.bookreview');
     }
 
     public function setRating($val)
@@ -41,11 +46,10 @@ class BookReview extends Component
             $this->rating = $val;
         }
 
-        $userId = auth()->user()->id;
-        $userRating = $this->book->users()->where('user_id', $userId)->first();
-
+        $userRating = $this->book->comments()->where('individual_id', $this->member)->first();
+        /*
         if (!$userRating) {
-            $userRating = $this->book->users()->attach($userId, [
+            $userRating = $this->book->comments()->attach($this->member, [
                 'rating' => $val
             ]);
         } else {
@@ -53,7 +57,7 @@ class BookReview extends Component
                 'rating' => $val
             ], false);
         }
-
+        */
         $this->calculateAverageRating();
     }
 }

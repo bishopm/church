@@ -99,7 +99,8 @@ class ChurchServiceProvider extends ServiceProvider
                 $member['id']=$indiv->id;
                 $member['firstname']=$indiv->firstname;
                 $member['fullname']=$indiv->fullname;
-            }    
+            }
+            Config::set('member',$member);
         }
         View::share('member',$member);
     }

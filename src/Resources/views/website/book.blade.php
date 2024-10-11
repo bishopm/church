@@ -19,7 +19,13 @@
         <div class="col-md-6 col-sm-12">
             <h4>Reviews</h4>
             @if (count($member))
-                @livewire('bookreview',['book'=>$book,'key'=>$book->id])
+                @livewire('bookreview',['book'=>$book,'key'=>$book->id,'member'=>$member['id']])
+                @foreach ($book->comments as $comment)
+                    <div class="mt-3">
+                        {{$comment->comment}}
+                        <div><a href="#">{{$comment->individual->firstname}} {{$comment->individual->surname}}</a> <small>{{$comment->created_at->diffForHumans()}}</small></div>
+                    </div>
+                @endforeach
             @else
                 To rate or view books, please <a href="{{url('/')}}/login">login</a>
             @endif

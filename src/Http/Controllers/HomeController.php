@@ -2,16 +2,27 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
+use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
+use Bishopm\Church\Models\Gift;
+use Bishopm\Church\Models\Group;
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
+use Illuminate\Support\Facades\Config;
 use Spatie\Tags\Tag;
 
 class HomeController extends Controller
 {
+
+    public $member;
+
+    public function __construct(){
+        $this->member=Config::get('member');
+    }
 
      /**
      * Display a listing of the resource.
@@ -78,6 +89,30 @@ class HomeController extends Controller
 
     public function mymenu(){
         $data=array();
+        $data['indiv']=Individual::find($this->member['id']);
+        $data['servicegroups']=Group::where('grouptype','service')->whereHas('individuals', function ($q) {
+            $q->where('individuals.id',$this->member['id']); })->get();
+        $data['fellowship']=Group::where('grouptype','fellowship')->whereHas('individuals', function ($q) {
+            $q->where('individuals.id',$this->member['id']); })->get();
+        $lastyear=date('Y-m-d',strtotime('-1 year'));
+        $data['giving']=Gift::where('pgnumber',$data['indiv']->giving)->where('paymentdate','>=',$lastyear)->get();
+        $worships=Attendance::where('individual_id',$this->member['id'])->where('attendancedate','>=',$lastyear)->get();
+        foreach ($worships as $worship){
+            if (isset($data['worship'][$worship->service])){
+                $data['worship'][$worship->service]++;
+            } else {
+                $data['worship'][$worship->service]=1;
+            }
+        }
+        ksort($data['worship']);
+        $today=date('Y-m-d');
+        $roster=Individual::with('rosteritems.rostergroup.group')->where('id',$this->member['id'])->first();
+        foreach ($roster->rosteritems as $ri){
+            if ($ri->rosterdate>$today){
+                $data['roster'][$ri->rosterdate][]=$ri->rostergroup->group->groupname;
+            }
+        }
+        ksort($data['roster']);
         return view('church::website.mymenu',$data);
     }
 

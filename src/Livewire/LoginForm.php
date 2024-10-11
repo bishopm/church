@@ -16,10 +16,7 @@ class LoginForm extends Component
     public $error = '';
     public $pin = '';
     public $hashed = '';
-    public $pinsent = false;
     public $userpin = '';
-    public $result = '';
-    public $final = false;
     public $status = "start";
  
     public function send(){
@@ -31,14 +28,19 @@ class LoginForm extends Component
             $this->status= "phoneok";
             $indiv=Individual::where('cellphone',$this->phone)->get();
             if (count($indiv)>1){
-                $this->error="This number is associated with more than one person. Please contact our office and we'll help you to complete your registration.";
+                $names='';
+                foreach ($indiv as $ind){
+                    $names = $names . $ind->firstname . " / ";
+                }
+                $this->error="Sorry, " . substr($names,0,-2) . "this number is associated with more than one person. Please contact our office and we'll help you to complete your registration.";
                 $this->status="toomany";
             } elseif (count($indiv)==1){
                 $this->error = "";
+                $this->firstname=$indiv[0]->firstname;
                 $this->message = "Hello, " . $indiv[0]->firstname . "! We are sending you an SMS now.";
                 $this->pin = rand(1000,9999);
-                if ($indiv->uid<>''){
-                    $this->hashed=$indiv->uid;
+                if ($indiv[0]->uid<>''){
+                    $this->hashed=$indiv[0]->uid;
                 } else {
                     $this->hashed = hash('sha256', $this->pin);
                     $indiv[0]->uid=$this->hashed;
@@ -76,7 +78,8 @@ class LoginForm extends Component
         if ($this->userpin == $this->pin){
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');
-            return redirect('/')->with('status', 'Welcome! You are now logged in');
+            session()->flash('message', 'Welcome, ' . $this->firstname . '! You are now logged in on this device.');
+            return redirect('/');
         } else {
             $this->result = "Wrong! Please try again!";
         }

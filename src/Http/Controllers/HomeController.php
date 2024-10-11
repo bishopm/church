@@ -73,7 +73,12 @@ class HomeController extends Controller
     }
 
     public function giving(){
-        return view('church::website.giving',$data);
+        return view('church::website.giving');
+    }
+
+    public function mymenu(){
+        $data=array();
+        return view('church::website.mymenu',$data);
     }
 
     public function project($id){

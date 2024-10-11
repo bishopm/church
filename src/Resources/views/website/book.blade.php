@@ -18,6 +18,11 @@
         </div>
         <div class="col-md-6 col-sm-12">
             <h4>Reviews</h4>
+            @if (count($member))
+                @livewire('bookreview')
+            @else
+                To rate or view books, please <a href="{{url('/')}}/login">login</a>
+            @endif
         </div>
     </div>
 </x-church::layout>                

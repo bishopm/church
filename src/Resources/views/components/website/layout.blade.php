@@ -63,7 +63,8 @@
           <li><a href="{{url('/')}}#connecting">Connecting</a></li>
           <li><a href="{{url('/')}}#serving">Getting involved</a></li>
           <li><a href="{{url('/')}}#contact">Contact</a></li>
-          @if (!count($member))<li><a href="{{url('/')}}/login">Login</a></li>@endif
+          @if (!count($member))<li><a href="{{url('/')}}/login">Login</a></li>@else
+          <li><a href="{{url('/')}}/mymenu">My menu</a></li>@endif
           <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="{{url('/')}}#faqs">FAQ's</a></li>
@@ -89,6 +90,12 @@
 
   <main class="main">
     <div class="container my-3">
+      @if (session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">  
+          <p>{{ session('message') }}</p>          
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
       {{$slot}}
     </div>
   </main>

@@ -35,7 +35,7 @@ class BookResource extends Resource
                             $url="https://www.googleapis.com/books/v1/volumes?key=" . setting('features.google_books_key'). "&q=isbn:" . $state;
                             $response=Http::get($url);
                             $book=json_decode($response->body())->items[0]->volumeInfo;
-                            if ($book->subtitle){
+                            if (isset($book->subtitle)){
                                 $set('title', $book->title . ": " . $book->subtitle);
                             } else {
                                 $set('title', $book->title);

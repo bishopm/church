@@ -5,6 +5,7 @@ namespace Bishopm\Church\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
+use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\User;
@@ -56,6 +57,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
         Livewire::component('login', LoginForm::class);
+        Livewire::component('bookreview', BookReview::class);
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -88,20 +90,18 @@ class ChurchServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true: null;     
         });
-        View::composer(['church::components.website.layout'], function ($view) {
-            $member=array();
-            if (isset($_COOKIE['wmc-mobile']) and (isset($_COOKIE['wmc-access']))){
-                $phone=$_COOKIE['wmc-mobile'];
-                $uid=$_COOKIE['wmc-access'];
-                $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
-                if ($indiv){
-                    $member['id']=$indiv->id;
-                    $member['firstname']=$indiv->firstname;
-                    $member['fullname']=$indiv->fullname;
-                }    
-            }
-            $view->with('member', $member);
-        });
+        $member=array();
+        if (isset($_COOKIE['wmc-mobile']) and (isset($_COOKIE['wmc-access']))){
+            $phone=$_COOKIE['wmc-mobile'];
+            $uid=$_COOKIE['wmc-access'];
+            $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
+            if ($indiv){
+                $member['id']=$indiv->id;
+                $member['firstname']=$indiv->firstname;
+                $member['fullname']=$indiv->fullname;
+            }    
+        }
+        View::share('member',$member);
     }
 
     /**

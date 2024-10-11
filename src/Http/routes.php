@@ -3,22 +3,23 @@
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
-    Route::get('/', 'home');
-    Route::get('/login', 'login');
-    Route::get('/blog/{year}/{month}/{slug}', 'blogpost');
-    Route::get('/blog', 'blog');
-    Route::get('/blog/{slug}', 'blogger');
-    Route::get('/books/{id}', 'book');
-    Route::get('/books', 'books');
-    Route::get('/giving', 'giving');
-    Route::get('/people/{slug}', 'person');
-    Route::get('/projects/{id}', 'project');
-    Route::get('/projects', 'projects');
-    Route::get('/sermons', 'sermons');
-    Route::get('/sermons/{slug}', 'preacher');
-    Route::get('/sermons/{year}/{slug}', 'series');
-    Route::get('/sermons/{year}/{slug}/{id}', 'sermon');
-    Route::get('/subject/{slug}', 'subject');
+    Route::get('/', 'home')->name('home');
+    Route::get('/login', 'login')->name('login');
+    Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('blogpost');
+    Route::get('/blog', 'blog')->name('blog');
+    Route::get('/blog/{slug}', 'blogger')->name('blogger');
+    Route::get('/books/{id}', 'book')->name('book');
+    Route::get('/books', 'books')->name('books');
+    Route::get('/giving', 'giving')->name('giving');
+    Route::get('/mymenu', 'mymenu')->name('mymenu');
+    Route::get('/people/{slug}', 'person')->name('person');
+    Route::get('/projects/{id}', 'project')->name('project');
+    Route::get('/projects', 'projects')->name('projects');
+    Route::get('/sermons', 'sermons')->name('sermons');
+    Route::get('/sermons/{slug}', 'preacher')->name('preacher');
+    Route::get('/sermons/{year}/{slug}', 'series')->name('series');
+    Route::get('/sermons/{year}/{slug}/{id}', 'sermon')->name('sermon');
+    Route::get('/subject/{slug}', 'subject')->name('subject');
 });
 
 Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);

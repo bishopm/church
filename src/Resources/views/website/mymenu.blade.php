@@ -2,16 +2,29 @@
     <h1>{{$member['fullname']}}</h1>         
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-serve-tab" data-bs-toggle="pill" data-bs-target="#pills-serve" type="button" role="tab" aria-controls="pills-serve" aria-selected="true">Serve</button>
+            <button class="nav-link active" id="pills-serve-tab" data-bs-toggle="pill" data-bs-target="#pills-serve" type="button" role="tab" aria-controls="pills-serve" aria-selected="true">
+                <i class="bi bi-hourglass-split"> </i>Serve
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-connect-tab" data-bs-toggle="pill" data-bs-target="#pills-connect" type="button" role="tab" aria-controls="pills-connect" aria-selected="false">Connect</button>
+            <button class="nav-link" id="pills-connect-tab" data-bs-toggle="pill" data-bs-target="#pills-connect" type="button" role="tab" aria-controls="pills-connect" aria-selected="false">
+                <i class="bi bi-people"> </i>Connect
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-give-tab" data-bs-toggle="pill" data-bs-target="#pills-give" type="button" role="tab" aria-controls="pills-give" aria-selected="false">Give</button>
+            <button class="nav-link" id="pills-give-tab" data-bs-toggle="pill" data-bs-target="#pills-give" type="button" role="tab" aria-controls="pills-give" aria-selected="false">
+                <i class="bi bi-wallet2"> </i>Give
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-worship-tab" data-bs-toggle="pill" data-bs-target="#pills-worship" type="button" role="tab" aria-controls="pills-worship" aria-selected="false">Worship</button>
+            <button class="nav-link" id="pills-worship-tab" data-bs-toggle="pill" data-bs-target="#pills-worship" type="button" role="tab" aria-controls="pills-worship" aria-selected="false">
+                <i class="bi bi-person-arms-up"> </i>Worship
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-learn-tab" data-bs-toggle="pill" data-bs-target="#pills-learn" type="button" role="tab" aria-controls="pills-learn" aria-selected="false">
+                <i class="bi bi-book"> </i>Learn
+            </button>
         </li>
     </ul>
     <div class="tab-content">
@@ -19,14 +32,18 @@
             <div class="card p-3">
                 These are the service teams that you belong to:
                 <ul>
-                    @foreach ($servicegroups as $sgroup)
+                    @forelse ($servicegroups as $sgroup)
                         <li>{{$sgroup->groupname}}</li>
-                    @endforeach
+                    @empty
+                        To sign up to join a service team, click here
+                    @endforelse
                 </ul>
                 <h4>Upcoming roster dates</h4>
-                @foreach ($roster as $kk=>$rosterdate)
+                @forelse ($roster as $kk=>$rosterdate)
                     <div><b>{{$kk}}&nbsp;</b>{{implode(', ',$rosterdate)}}</div>
-                @endforeach
+                @empty
+                    You have no upcoming roster duties
+                @endforelse
             </div>
         </div>
         <div class="tab-pane fade show" id="pills-connect" role="tabpanel" aria-labelledby="pills-connect-tab">
@@ -56,6 +73,11 @@
                 @foreach ($worship as $service=>$stat)
                     <div><b>{{$service}}  </b>{{$stat}}</div>
                 @endforeach
+            </div>
+        </div>
+        <div class="tab-pane fade show" id="pills-learn" role="tabpanel" aria-labelledby="pills-learn-tab">
+            <div class="card p-3">
+                Books, devotions ...
             </div>
         </div>
     </div>

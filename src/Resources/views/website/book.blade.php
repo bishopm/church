@@ -13,7 +13,7 @@
                     <img style="float:left; height:200px; padding-right:15px;" src="{{$book->image}}">
                 </div>
                 {{$book->description}}<br>
-                <b>Publisher:</b> {{$book->publisher}}<br>
+                @if(isset($book->publisher))<b>Publisher:</b> {{$book->publisher}}<br>@endif
             </div>
         </div>
         <div class="col-md-6 col-sm-12">

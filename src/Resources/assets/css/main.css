@@ -39,6 +39,17 @@
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
+.badge a {
+  border-radius: 8px;
+  background-color: #159CA0;
+  color:white;
+  padding: 5px;
+}
+
+.badge a:hover {
+  color:lightgrey;
+}
+
 .light-background {
   --background-color: #f3f4f4;
   --surface-color: #ffffff;

@@ -42,8 +42,9 @@ class GroupResource extends Resource
                     ])
                     ->default('service')
                     ->label('Group type'),                    
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\FileUpload::make('image')
+                    ->image(),
                 Forms\Components\Select::make('individual_id')
                         ->label('Leader')
                         ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))

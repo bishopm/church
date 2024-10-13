@@ -107,6 +107,7 @@ class HomeController extends Controller
         $lastyear=date('Y-m-d',strtotime('-1 year'));
         $data['giving']=Gift::where('pgnumber',$data['indiv']->giving)->where('paymentdate','>=',$lastyear)->get();
         $worships=Attendance::where('individual_id',$this->member['id'])->where('attendancedate','>=',$lastyear)->get();
+        $data['worship']=array();
         foreach ($worships as $worship){
             if (isset($data['worship'][$worship->service])){
                 $data['worship'][$worship->service]++;

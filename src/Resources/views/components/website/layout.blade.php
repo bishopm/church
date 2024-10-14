@@ -10,8 +10,8 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="/public/church/img/favicon.png" rel="icon">
-  <link href="/public/church/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="/public/church/images/icons/favicon.png" rel="icon">
+  <link href="/public/church/images/icons/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">

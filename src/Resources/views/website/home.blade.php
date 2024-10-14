@@ -3,7 +3,7 @@
 <section id="about" class="about section light-background">
     <div class="container">
     <div class="row align-items-center justify-content-between">
-        <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2" data-aos="fade-up" data-aos-delay="400">
+        <div class="col-lg-9 mb-5 mb-lg-0 order-lg-2" data-aos="fade-up" data-aos-delay="400">
         <div class="swiper init-swiper">
             <script type="application/json" class="swiper-config">
             {
@@ -32,22 +32,22 @@
             </script>
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="{{url('/public/storage/welcomeslide.png')}}" alt="Image" class="img-fluid">
+                    <img src="{{asset('/church/images/welcomeslide.png')}}" alt="Image" class="img-fluid">
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{url('/public/storage/knowslide.png')}}" alt="Image" class="img-fluid">
+                    <img src="{{asset('/church/images/knowslide.png')}}" alt="Image" class="img-fluid">
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{url('/public/storage/growslide.png')}}" alt="Image" class="img-fluid">
+                    <img src="{{asset('/church/images/growslide.png')}}" alt="Image" class="img-fluid">
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{url('/public/storage/showslide.png')}}" alt="Image" class="img-fluid">
+                    <img src="{{asset('/church/images/showslide.png')}}" alt="Image" class="img-fluid">
                 </div>
             </div>
             <div class="swiper-pagination"></div>
         </div>
         </div>
-        <div class="col-lg-4 order-lg-1">
+        <div class="col-lg-3 order-lg-1">
         <h1 class="mb-4" data-aos="fade-up">
             Welcome to Westville Methodist Church
         </h1>
@@ -198,7 +198,7 @@
             </div>
             <div class="col-md-4 text-center">
                 <img src="{{url('/public/church/images/giving.png')}}" height="80px" alt="Image">
-                <h4>Giving</h4>Ministry is made possible at WMC through the faithful and generous giving of our people. More than that, for Jesus, giving is a discipleship issue - it reveals where our heart is. Find more details about our planned giving programme here.
+                <h4>Giving</h4>Ministry is made possible at WMC through the faithful and generous giving of our people. More than that, for Jesus, giving is a discipleship issue - it reveals where our heart is. Find more details about our planned giving programme <a href="{{url('/')}}/giving">here.</a>
             </div>
         </div>
     </div>

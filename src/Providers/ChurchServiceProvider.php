@@ -54,6 +54,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.model_directories',[base_path('vendor/bishopm/church/src/Models')]);
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
+        Config::set('laravelpwa.manifest.name',setting('general.church_name'));
         Config::set('laravelpwa.manifest.short_name',setting('general.church_abbreviation'));
         Config::set('laravelpwa.manifest.theme_color','#159CA0');
         Config::set('laravelpwa.manifest.icons.72x72.path',asset('church/images/icons/icon-72x72.png'));

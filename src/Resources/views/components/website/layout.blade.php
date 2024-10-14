@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="width=device-width, initial-scale=1.0" user-scalable="no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{setting('general.church_name')}} - {{$pageName}}</title>
   <meta name="description" content="">

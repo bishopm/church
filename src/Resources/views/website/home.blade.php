@@ -61,7 +61,7 @@
 <section id="sundays" class="blog-posts section">
     <div class="container section-title" data-aos="fade-up">
         <h2>Sundays</h2>
-        <a href="{{url('/')}}/sermons" class="content-subtitle">See all sermons</div>
+        <a href="{{url('/')}}/sermons" class="content-subtitle">See all sermons</a>
     </div>
     <div class="container">
         <div class="row gy-4">
@@ -131,7 +131,7 @@
 <section id="blog" class="blog-posts section light-background">
     <div class="container section-title" data-aos="fade-up">
     <h2>Blog Posts</h2>
-    <a href="{{url('/')}}/blog" class="content-subtitle">See all blog posts</div>
+    <a href="{{url('/')}}/blog" class="content-subtitle">See all blog posts</a>
     </div>
     <div class="container">
         @if (isset($blogs))

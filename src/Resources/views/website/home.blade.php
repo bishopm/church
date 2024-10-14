@@ -1,58 +1,47 @@
 <x-church::website.layout pageName="Home">
 <!-- About Section -->
-<section id="about" class="about section light-background">
-    <div class="container">
-    <div class="row align-items-center justify-content-between">
-        <div class="col-lg-9 mb-5 mb-lg-0 order-lg-2" data-aos="fade-up" data-aos-delay="400">
-        <div class="swiper init-swiper">
-            <script type="application/json" class="swiper-config">
-            {
-                "loop": true,
-                "speed": 600,
-                "autoplay": {
-                "delay": 5000
-                },
-                "slidesPerView": "auto",
-                "breakpoints": {
-                "320": {
-                    "slidesPerView": 1,
-                    "spaceBetween": 40
-                },
-                "1200": {
-                    "slidesPerView": 1,
-                    "spaceBetween": 1
+<div id="about" class="about light-background">
+    <div class="row align-items-center">
+        <div class="col-lg-12" data-aos="fade-up" data-aos-delay="400">
+            <div class="swiper init-swiper">
+                <script type="application/json" class="swiper-config">
+                {
+                    "loop": true,
+                    "speed": 600,
+                    "autoplay": {
+                    "delay": 5000
+                    },
+                    "slidesPerView": "auto",
+                    "breakpoints": {
+                    "320": {
+                        "slidesPerView": 1,
+                        "spaceBetween": 40
+                    },
+                    "1200": {
+                        "slidesPerView": 1,
+                        "spaceBetween": 1
+                    }
+                    }
                 }
-                }
-            }
-            </script>
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img src="{{asset('/church/images/welcomeslide.png')}}" alt="Image" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{asset('/church/images/knowslide.png')}}" alt="Image" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{asset('/church/images/growslide.png')}}" alt="Image" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{asset('/church/images/showslide.png')}}" alt="Image" class="img-fluid">
+                </script>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img width="100%" src="{{asset('/church/images/welcomeslide.png')}}" alt="Image" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide">
+                        <img width="100%" src="{{asset('/church/images/knowslide.png')}}" alt="Image" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide">
+                        <img width="100%" src="{{asset('/church/images/growslide.png')}}" alt="Image" class="img-fluid">
+                    </div>
+                    <div class="swiper-slide">
+                        <img width="100%" src="{{asset('/church/images/showslide.png')}}" alt="Image" class="img-fluid">
+                    </div>
                 </div>
             </div>
-            <div class="swiper-pagination"></div>
-        </div>
-        </div>
-        <div class="col-lg-3 order-lg-1">
-        <h1 class="mb-4" data-aos="fade-up">
-            Welcome to Westville Methodist Church
-        </h1>
-        <p data-aos="fade-up">
-            We don't always get it right :) but we aspire to worship God with all we have, love all people who come our way, take children seriously and serve helpfully. Come and join us!
-        </p>
         </div>
     </div>
-    </div>
-</section>
+</div>
 <section id="sundays" class="blog-posts section">
     <div class="container section-title" data-aos="fade-up">
         <h2>Sundays</h2>

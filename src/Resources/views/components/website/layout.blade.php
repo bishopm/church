@@ -48,7 +48,6 @@
 
   <header id="header" class="dark-background header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
       <a href="{{url('/')}}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="/public/church/img/logo.png" alt=""> -->
@@ -89,7 +88,11 @@
   </header>
 
   <main class="main">
+    @if($pageName<>"Home")
     <div class="container my-3">
+    @else
+    <div>
+    @endif
       @if (session()->has('message'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">  
           <p>{{ session('message') }}</p>          

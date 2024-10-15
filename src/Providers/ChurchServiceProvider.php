@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
+use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\Individual;
@@ -77,6 +78,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('laravelpwa.manifest.splash.2048x2732',asset('church/images/icons/splash-2048x2732.png'));
         Livewire::component('login', LoginForm::class);
         Livewire::component('bookreview', BookReview::class);
+        Livewire::component('barcodescanner', BarcodeScanner::class);
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }

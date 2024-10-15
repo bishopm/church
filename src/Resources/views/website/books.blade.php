@@ -20,15 +20,15 @@
                 target: document.querySelector("#camera"),
                 type: "LiveStream",
                 constraints: {
-                    width: { min: 320 },
-                    height: { min: 120 },
+                    width: { min: 640 },
+                    height: { min: 480 },
                     facingMode: "environment",
                     aspectRatio: { min: 1, max: 2 }
                 },
                 frequency: 1000, 
                 locator: {
                     halfSample: false,
-                    patchSize: "small", 
+                    patchSize: "small",  
                 },
             },
             decoder: {

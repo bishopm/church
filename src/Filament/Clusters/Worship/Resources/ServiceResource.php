@@ -4,7 +4,6 @@ namespace Bishopm\Church\Filament\Clusters\Worship\Resources;
 
 use Bishopm\Church\Filament\Clusters\Worship;
 use Bishopm\Church\Filament\Clusters\Worship\Resources\ServiceResource\Pages;
-use Bishopm\Church\Filament\Clusters\Worship\Resources\ServiceResource\RelationManagers;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Bishopm\Church\Models\Prayer;
@@ -12,10 +11,8 @@ use Bishopm\Church\Models\Setitem;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Repeater;
-use Livewire\Component as Livewire;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Forms\Set as FormsSet;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;

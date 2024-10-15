@@ -8,6 +8,8 @@ use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\User;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;

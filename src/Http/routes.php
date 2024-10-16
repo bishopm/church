@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
+
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/custom/liewire/update', $handle)->middleware(['web']);
+});
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
@@ -31,3 +36,4 @@ Route::get('/admin/reports/roster/{id}/{year}/{month}', ['uses' => '\Bishopm\Chu
 Route::get('/admin/reports/service/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@service','as' => 'reports.service']);
 Route::get('/admin/reports/song/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@song','as' => 'reports.song']);
 Route::get('/admin/reports/venue/{id}/{reportdate}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@venue','as' => 'reports.venue']);
+

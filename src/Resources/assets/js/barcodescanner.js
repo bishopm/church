@@ -7,7 +7,7 @@ window.addEventListener('load', function () {
         selectedDeviceId = videoInputDevices[0].deviceId
         if (videoInputDevices.length >= 1) {
         videoInputDevices.forEach((element) => {
-            if (element.label.indexOf('ront') == -1) {
+            if (element.label.indexOf('fron') == -1) {
                 const sourceOption = document.createElement('option')
                 sourceOption.text = element.label
                 sourceOption.value = element.deviceId

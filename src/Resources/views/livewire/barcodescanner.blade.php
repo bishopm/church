@@ -11,8 +11,11 @@
         <div class="col-md-6">
             <div id="bookdetails" style="display:block;">
                 <table class="table">
-                    <tr><th>Title</th><td>{{$title}}</td></tr>
-                    <tr><th>Authors</th><td>{{$authors}}</td></tr>
+                    @if ($title)
+                        <tr><td rowspan="3"><img src="{{$image}}"></td><th>Title</th><td>{{$title}}</td></tr>
+                        <tr><th>Authors</th><td>{{$authors}}</td></tr>
+                        <tr><td></td><td><button type="button" class="btn btn-primary">Borrow this book for two weeks</button></td></tr>
+                    @endif
                 </table>
             </div>
         </div>

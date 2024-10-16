@@ -12,16 +12,15 @@ class BarcodeScanner extends Component
     public $barcode="";
     public $title="";
     public $authors="";
+    public $image="";
 
     #[On('scanned')] 
     public function scanComplete($isbn) {
-        dd($isbn);
         $book=Book::where('isbn',$isbn)->first();
-        dd($book);
         if ($book){
             $this->title=$book->title;
-        } else {
-            return $this->barcode;
+            $this->authors=implode(',',$book->authors[0]);
+            $this->image=$book->image;
         }
     }
 

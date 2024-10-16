@@ -1,9 +1,19 @@
 <div>
-    <div>
-        <div class="input-group mb-3">
-            <input wire:model="barcode" id="barcode" placeholder="Click to scan barcode ->" type="text" class="form-control">
-            <div class="input-group-append">
-                <button id="startButton" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group mb-3">
+                <input wire:model="barcode" id="barcode" placeholder="Click to scan barcode ->" type="text" class="form-control">
+                <div class="input-group-append">
+                    <button id="startButton" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="bookdetails" style="display:block;">
+                <table class="table">
+                    <tr><th>Title</th><td>{{$title}}</td></tr>
+                    <tr><th>Authors</th><td>{{$authors}}</td></tr>
+                </table>
             </div>
         </div>
     </div>

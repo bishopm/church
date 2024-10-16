@@ -1,12 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
-
-Livewire::setUpdateRoute(function ($handle) {
-    return Route::post('/custom/livewire/update', $handle)
-        ->middleware(['web']);
-});
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');

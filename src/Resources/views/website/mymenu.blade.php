@@ -94,7 +94,7 @@
             <div class="card p-3">
                 <b>Books currently on loan:</b>
                 @foreach ($loans as $loan)
-                    <div>{{$loan->book->title}} ({{implode(',',$loan->book->authors[0])}})</div>
+                    <div>{{$loan->book->title}} ({{implode(',',$loan->book->authors[0])}}) <b>Due back: {{$loan->duedate}}</b></div>
                 @endforeach
             </div>
         </div>

@@ -139,7 +139,7 @@
           <div class="widget">
             <div class="footer-subscribe">
               <h3 class="widget-heading">Subscribe to Staying Connected</h3>
-              <form action="forms/newsletter.php" method="post" class="php-email-form">
+              <form action="forms/newsletter.php" method="post">
                 <div class="mb-2">
                   <input type="text" class="form-control" name="email" placeholder="Enter your email">
 
@@ -200,7 +200,6 @@
   <div id="preloader"></div>
   <!-- Vendor JS Files -->
   <script src="/public/church/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/public/church/vendor/php-email-form/validate.js"></script>
   <script src="/public/church/vendor/aos/aos.js"></script>
   <script src="/public/church/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="/public/church/vendor/purecounter/purecounter_vanilla.js"></script>

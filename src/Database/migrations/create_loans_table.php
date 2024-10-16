@@ -12,7 +12,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->date('duedate');
-            $table->date('returndate');
+            $table->date('returndate')->nullable();
             $table->integer('book_id');
             $table->integer('individual_id');
             $table->timestamp('created_at')->nullable();

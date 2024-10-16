@@ -4,6 +4,7 @@ namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
+use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
@@ -75,7 +76,10 @@ class HomeController extends Controller
     }
 
     public function book($id){
-        $data['book']=Book::find($id);
+        $data['book']=Book::with('comments')->where('id',$id)->first();
+        if (isset($this->member->id)){
+            $data['comment']=Comment::where('book_id',$id)->where('individual_id',$this->member->id)->first();
+        }
         return view('church::website.book',$data);
     }
 

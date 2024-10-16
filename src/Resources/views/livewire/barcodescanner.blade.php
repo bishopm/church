@@ -14,7 +14,7 @@
                     @if ($title)
                         <tr><td rowspan="3"><img src="{{$image}}"></td><th>Title</th><td>{{$title}}</td></tr>
                         <tr><th>Authors</th><td>{{$authors}}</td></tr>
-                        <tr><td></td><td><button type="button" class="btn btn-primary">Borrow this book for two weeks</button></td></tr>
+                        <tr><td></td><td><button wire:click="saveBorrow({{$member['id']}})" type="button" class="btn btn-primary">Borrow this book for two weeks</button></td></tr>
                     @endif
                 </table>
             </div>

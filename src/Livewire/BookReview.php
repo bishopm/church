@@ -23,7 +23,7 @@ class BookReview extends Component
         if (!$userRating) {
             $this->rating = 0;
         } else {
-            $this->rating = $userRating->pivot->rating;
+            $this->rating = $userRating->rating;
         }
 
         $this->calculateAverageRating();

@@ -7,10 +7,12 @@ window.addEventListener('load', function () {
         selectedDeviceId = videoInputDevices[0].deviceId
         if (videoInputDevices.length >= 1) {
         videoInputDevices.forEach((element) => {
-            const sourceOption = document.createElement('option')
-            sourceOption.text = element.label
-            sourceOption.value = element.deviceId
-            sourceSelect.appendChild(sourceOption)
+            if (element.label.indexOf('ront') == -1) {
+                const sourceOption = document.createElement('option')
+                sourceOption.text = element.label
+                sourceOption.value = element.deviceId
+                sourceSelect.appendChild(sourceOption)
+            }
         })
 
         sourceSelect.onchange = () => {
@@ -23,15 +25,15 @@ window.addEventListener('load', function () {
 
         document.getElementById('startButton').addEventListener('click', () => {
             document.getElementById("scanbox").style.display = "block"
-            codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-                if (result) {
-                    document.getElementById('result').value = result.text
-                    $wire.barcode.set(result.text)
+            codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (barcode, err) => {
+                if (barcode) {
+                    document.getElementById('barcode').value = barcode.text
+                    Livewire.dispatch('scanned', { isbn: barcode.text })
                     document.getElementById("scanbox").style.display = "none"
                 }
                 if (err && !(err instanceof ZXing.NotFoundException)) {
                     console.error(err)
-                    document.getElementById('result').textContent = err
+                    document.getElementById('barcode').textContent = err
                 }
             })
         })

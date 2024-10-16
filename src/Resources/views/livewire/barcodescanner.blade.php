@@ -1,7 +1,7 @@
 <div>
     <div>
         <div class="input-group mb-3">
-            <input wire:model.lazy="barcode" id="result" placeholder="Click to scan barcode ->" type="text" class="form-control">
+            <input wire:model="barcode" id="barcode" placeholder="Click to scan barcode ->" type="text" class="form-control">
             <div class="input-group-append">
                 <button id="startButton" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
             </div>

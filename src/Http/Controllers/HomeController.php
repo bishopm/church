@@ -7,6 +7,7 @@ use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Loan;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
@@ -107,6 +108,7 @@ class HomeController extends Controller
         $lastyear=date('Y-m-d',strtotime('-1 year'));
         $data['giving']=Gift::where('pgnumber',$data['indiv']->giving)->where('paymentdate','>=',$lastyear)->get();
         $worships=Attendance::where('individual_id',$this->member['id'])->where('attendancedate','>=',$lastyear)->get();
+        $data['loans']=Loan::with('book')->where('individual_id',$this->member['id'])->whereNull('returndate')->get();
         $data['worship']=array();
         foreach ($worships as $worship){
             if (isset($data['worship'][$worship->service])){

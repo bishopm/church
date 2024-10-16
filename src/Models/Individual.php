@@ -25,6 +25,11 @@ class Individual extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
+    }
+
     public function pastor(): HasOne
     {
         return $this->hasOne(Pastor::class);

@@ -1,6 +1,5 @@
 <x-church::website.layout pageName="People">
     <h1>{{$member['fullname']}} </h1> 
-    <span class="badge mb-3"><a href="#">Contact details</a></span> 
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="pills-serve-tab" data-bs-toggle="pill" data-bs-target="#pills-serve" type="button" role="tab" aria-controls="pills-serve" aria-selected="true">
@@ -25,6 +24,11 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-learn-tab" data-bs-toggle="pill" data-bs-target="#pills-learn" type="button" role="tab" aria-controls="pills-learn" aria-selected="false">
                 <i class="bi bi-book"> </i>Learn
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                <i class="bi bi-person-square"> </i>Contact details
             </button>
         </li>
     </ul>
@@ -88,7 +92,27 @@
         </div>
         <div class="tab-pane fade show" id="pills-learn" role="tabpanel" aria-labelledby="pills-learn-tab">
             <div class="card p-3">
-                Books, devotions ...
+                <b>Books currently on loan:</b>
+                @foreach ($loans as $loan)
+                    <div>{{$loan->book->title}} ({{implode(',',$loan->book->authors[0])}})</div>
+                @endforeach
+            </div>
+        </div>
+        <div class="tab-pane fade show" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <div class="card p-3">
+                <b>Contact details: {{$indiv->fullname}}</b>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>{{$indiv->household->addressee}}</div>
+                        <div>{{$indiv->cellphone}}</div>
+                        <div>{{$indiv->email}}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div>{{$indiv->household->address1}}</div>
+                        <div>{{$indiv->household->address2}}</div>
+                        <div>{{$indiv->household->address3}}</div>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>

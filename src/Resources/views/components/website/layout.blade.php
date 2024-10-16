@@ -65,7 +65,7 @@
           @if (!count($member))
           <li><a href="{{url('/')}}/login">Login</a></li>
           @else
-          <li class="dropdown"><a href="#"><span>Members</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <li class="dropdown"><a href="{{url('/')}}/mymenu"><span>Members</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
             <li><a href="{{url('/')}}/mymenu">My menu</a></li>
             <li><a href="{{url('/')}}/books">Books</a></li>

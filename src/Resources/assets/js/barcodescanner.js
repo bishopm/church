@@ -1,4 +1,17 @@
-window.onload = () => {
+window.onload = () => { 
+    initapp();    
+}
+
+async function initapp () {
+    devices = await getdevices();
+    select = document.getElementById('devices');
+    console.log(devices);
+    devices.forEach((device) => {
+        var opt = document.createElement('option');
+        opt.value = device.deviceId;
+        opt.innerHTML = device.label;
+        select.appendChild(opt);
+    });
     var Quagga = window.Quagga;
     var scanner = scanner = Quagga
     .decoder({readers: ['ean_reader']})
@@ -8,7 +21,13 @@ window.onload = () => {
         constraints: {
             width: 800,
             height: 600,
-            facingMode: "user"
+            deviceId: document.getElementById("devices").value
+        },
+        area: {
+            top: "0%",
+            right: "0%",
+            left: "0%",
+            bottom: "0%"
         }
     });
     onDetected = function (result) {
@@ -46,5 +65,8 @@ window.onload = () => {
     }
     this._overlay.style.display = "block";
     scanner.addEventListener('detected', onDetected).start();
-    
+}
+
+function getdevices() {
+    return navigator.mediaDevices.enumerateDevices({video: true, audio: false});    
 }

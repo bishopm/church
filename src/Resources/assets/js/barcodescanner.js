@@ -1,44 +1,50 @@
-window.addEventListener('load', function () {
-    let selectedDeviceId;
-    const codeReader = new ZXing.BrowserMultiFormatReader()
-    codeReader.listVideoInputDevices()
-    .then((videoInputDevices) => {
-        const sourceSelect = document.getElementById('sourceSelect')
-        selectedDeviceId = videoInputDevices[0].deviceId
-        if (videoInputDevices.length >= 1) {
-        videoInputDevices.forEach((element) => {
-            if (element.label.indexOf('fron') == -1) {
-                const sourceOption = document.createElement('option')
-                sourceOption.text = element.label
-                sourceOption.value = element.deviceId
-                sourceSelect.appendChild(sourceOption)
-            }
-        })
-
-        sourceSelect.onchange = () => {
-            selectedDeviceId = sourceSelect.value;
-        };
-
-        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-        sourceSelectPanel.style.display = 'block'
+window.onload = () => {
+    var Quagga = window.Quagga;
+    var scanner = scanner = Quagga
+    .decoder({readers: ['ean_reader']})
+    .locator({patchSize: 'medium'})
+    .fromSource({
+        target: '.overlay__content',
+        constraints: {
+            width: 800,
+            height: 600,
+            facingMode: "environment"
         }
+    });
+    onDetected = function (result) {
+        document.getElementById('isbn').value = result.codeResult.code;
+        Livewire.dispatch('scanned', { isbn: result.codeResult.code })
+        scanner.stop();  // should also clear all event-listeners?
+        scanner.removeEventListener('detected', onDetected);
+        if (this._overlay) {
+            //this._overlay.style.display = "none";
+            document.getElementById('camera').remove();
+        }
+    }.bind(this);
+    if (!this._overlay) {
+        var content = document.createElement('div'),
+            closeButton = document.createElement('div');
 
-        document.getElementById('startButton').addEventListener('click', () => {
-            document.getElementById("scanbox").style.display = "block"
-            codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (barcode, err) => {
-                if (barcode) {
-                    document.getElementById('barcode').value = barcode.text
-                    Livewire.dispatch('scanned', { isbn: barcode.text })
-                    document.getElementById("scanbox").style.display = "none"
-                }
-                if (err && !(err instanceof ZXing.NotFoundException)) {
-                    console.error(err)
-                    document.getElementById('barcode').textContent = err
-                }
-            })
-        })
-    })
-    .catch((err) => {
-        console.error(err)
-    })
-})
+        closeButton.appendChild(document.createTextNode('X'));
+        content.className = 'overlay__content';
+        closeButton.className = 'overlay__close';
+        this._overlay = document.createElement('div');
+        this._overlay.className = 'overlay';
+        this._overlay.appendChild(content);
+        content.appendChild(closeButton);
+        closeButton.addEventListener('click', function closeClick() {
+            closeButton.removeEventListener('click', closeClick);
+            cancelCb();
+        });
+        document.body.appendChild(this._overlay);
+    } else {
+        var closeButton = document.querySelector('.overlay__close');
+        closeButton.addEventListener('click', function closeClick() {
+            closeButton.removeEventListener('click', closeClick);
+            cancelCb();
+        });
+    }
+    this._overlay.style.display = "block";
+    scanner.addEventListener('detected', onDetected).start();
+    
+}

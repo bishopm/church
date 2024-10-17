@@ -1,12 +1,13 @@
-<div>
+<div id="container">
     <div class="row">
         <div class="col-md-6">
             <div class="input-group mb-3">
-                <input wire:model="barcode" id="barcode" placeholder="Click to scan barcode ->" type="text" class="form-control">
+                <input wire:model="barcode" id="isbn" placeholder="Click to scan barcode ->" type="text" class="form-control">
                 <div class="input-group-append">
-                    <button id="startButton" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
+                    <button id="startButton" onclick="scan();" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
                 </div>
             </div>
+            <div id="camera" class="overlay__content" style="display:none;"></div>
         </div>
         <div class="col-md-6">
             <div id="bookdetails" style="display:block;">
@@ -20,17 +21,18 @@
             </div>
         </div>
     </div>
-    <div id="scanbox" style="display:none;">
-        <div>
-            <video id="video" width="100%" height="320" style="border: 1px solid gray"></video>
-        </div>
-        <div id="sourceSelectPanel" style="display:none">
-            <label>Video source</label>
-            <select id="sourceSelect" class="form-control"></select>
-        </div>
-    </div>
 </div>
+<script>
+    function scan(){
+        camera=document.getElementById('camera');
+        if (camera.style.display==="block") {
+            camera.style.display="none";
+        } else {
+            camera.style.display="block";
+        }
+    }
+</script>
 @assets
-<script src="{{asset('church/js/Zxing.min.js')}}"></script>
+<script src="{{asset('church/js/quagga.js')}}"></script>
 <script src="{{asset('church/js/barcodescanner.js')}}"></script>
 @endassets

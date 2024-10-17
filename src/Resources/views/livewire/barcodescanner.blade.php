@@ -7,7 +7,7 @@
                     <button id="startButton" onclick="scan();" class="btn btn-outline-secondary" type="button"><span class="bi bi-upc-scan"></span></button>
                 </div>
             </div>
-            <div id="camera" class="overlay__content" style="display:none;"></div>
+            <div id="camera" style="width:100%;" class="overlay__content" style="display:none;"></div>
         </div>
         <div class="col-md-6">
             <div id="bookdetails" style="display:block;">

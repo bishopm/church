@@ -5,7 +5,7 @@
             <div class="pb-3">
                 {{$book->allauthors}}
                 @foreach ($book->tags as $tag)
-                    <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="">{{$tag->name}}</a></span>
+                    <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="badge">{{$tag->name}}</a></span>
                 @endforeach
                 <small>{{$book->status}}</small>
             </div>

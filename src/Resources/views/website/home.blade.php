@@ -3,66 +3,46 @@
 <div id="about" class="about light-background">
     <div class="row align-items-center">
         <div class="col-lg-12" data-aos="fade-up" data-aos-delay="400">
-            <div class="swiper init-swiper">
-                <script type="application/json" class="swiper-config">
-                {
-                    "loop": true,
-                    "speed": 600,
-                    "autoplay": {
-                    "delay": 5000
-                    },
-                    "slidesPerView": "auto",
-                    "breakpoints": {
-                    "320": {
-                        "slidesPerView": 1,
-                        "spaceBetween": 40
-                    },
-                    "1200": {
-                        "slidesPerView": 1,
-                        "spaceBetween": 1
-                    }
-                    }
-                }
-                </script>
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img width="100%" src="{{asset('/church/images/welcomeslide.png')}}" alt="Image" class="img-fluid">
-                    </div>
-                    <div class="swiper-slide">
-                        <img width="100%" src="{{asset('/church/images/knowslide.png')}}" alt="Image" class="img-fluid">
-                    </div>
-                    <div class="swiper-slide">
-                        <img width="100%" src="{{asset('/church/images/growslide.png')}}" alt="Image" class="img-fluid">
-                    </div>
-                    <div class="swiper-slide">
-                        <img width="100%" src="{{asset('/church/images/showslide.png')}}" alt="Image" class="img-fluid">
-                    </div>
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="{{asset('/church/images/welcomeslide.png')}}" class="d-block w-100">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{{asset('/church/images/knowslide.png')}}" class="d-block w-100">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{{asset('/church/images/growslide.png')}}" class="d-block w-100">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{{asset('/church/images/showslide.png')}}" class="d-block w-100">
+                  </div>
                 </div>
+              </div>
             </div>
         </div>
     </div>
 </div>
-<section id="sundays" class="blog-posts section">
+<section id="sundays" class="section">
     <div class="container section-title" data-aos="fade-up">
-        <h2>Sundays</h2>
+        <h1>Sundays</h1>
         <a href="{{url('/')}}/sermons" class="content-subtitle">See all sermons</a>
     </div>
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-6 order-lg-1">
-                <h1 class="mb-4" data-aos="fade-up">
-                    Everyone's welcome!
-                </h1>
+                <h3 class="mb-4" data-aos="fade-up">
+                    Join us on Sunday!
+                </h3>
                 <p data-aos="fade-up">
                     We have three services every Sunday:
                     <ul>
-                        <li>07h30 (traditional hymns)</li>
+                        <li>07h30 (traditional, songs from the hymn book)</li>
                         <li>09h00 (family service with children's church and youth)</li>
                         <li>18h30 (informal, contemporary)</li>
                     </ul>
 
-                    Our 09h00 service is streamed live each week <br>
-                    on our <a href="{{setting('website.youtube_channel')}}" target="_blank">YouTube channel</a>.
+                    Our 09h00 service is streamed live each week on our <a href="{{setting('website.youtube_channel')}}" target="_blank">YouTube channel</a>.
                 </p>
             </div>
             @if (isset($sermon))
@@ -114,7 +94,7 @@
 </section>
 <section id="blog" class="blog-posts section light-background">
     <div class="container section-title" data-aos="fade-up">
-    <h2>Blog Posts</h2>
+    <h1>Blog Posts</h1>
     <a href="{{url('/')}}/blog" class="content-subtitle">See all blog posts</a>
     </div>
     <div class="container">
@@ -124,12 +104,12 @@
                 <div class="col-md-4 col-sm-12">
                     <div class="post-entry" data-aos="fade-up" data-aos-delay="100">
                         <a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}" class="thumb d-block"><img src="{{url('/public/storage/' . $blog->image)}}" alt="Image" class="img-fluid rounded"></a>
-                        <div class="post-content text-justify px-0">
+                        <div class="text-justify">
                             <div class="meta mb-0">
                                 <h3 class="text-center"><a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}">{{$blog->title}}</a></h3>
                                 <a href="{{url('/people') . '/' . $blog->person->slug}}" class="cat">{{$blog->person->fullname}}</a> • <span class="date">{{date('Y-m-d',strtotime($blog->published_at))}}</span>
                                 @foreach ($blog->tags as $tag)
-                                    <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="">{{$tag->name}}</a></span>
+                                    <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="badge">{{$tag->name}}</a></span>
                                 @endforeach
                             </div>
                             <p>
@@ -147,7 +127,7 @@
 <section id="connecting" class="section">
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
-        <h2>Connecting</h2>
+        <h1>Connecting</h1>
     </div><!-- End Section Title -->
     <div class="container">
         <div class="row gy-4">
@@ -168,7 +148,7 @@
 <section id="serving" class="section light-background">
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
-        <h2>Getting involved</h2>
+        <h1>Getting involved</h1>
     </div><!-- End Section Title -->
     <div class="container">
         <div class="row gy-4">
@@ -189,75 +169,49 @@
 </section>
 
 <section id="faqs" class="faq section">
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Frequently Asked Questions</h2>
-      </div><!-- End Section Title -->
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h1>Questions</h1>
+    </div><!-- End Section Title -->
 
-      <div class="container" data-aos="fade-up">
+    <div class="container" data-aos="fade-up">
         <div class="row">
-          <div class="col-12">
-            <div class="custom-accordion" id="accordion-faq">
-              <div class="accordion-item">
-                <h2 class="mb-0">
-                  <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-1">
-                    Weddings and memorial services
-                  </button>
-                </h2>
-
-                <div id="collapse-faq-1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion-faq">
-                  <div class="accordion-body">
-                    Our minister conducts a limited number of wedding services for church members and their families. We do not able to host large receptions on our property.
-                  </div>
-                </div>
-              </div>
-              <!-- .accordion-item -->
-
-              <div class="accordion-item">
-                <h2 class="mb-0">
-                  <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-2" "="">
-                How to create your paypal account?
-              </button>
-            </h2>
-            <div id="collapse-faq-2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion-faq">
-                    <div class="accordion-body">
-                      A small river named Duden flows by their place and supplies it
-                      with the necessary regelialia. It is a paradisematic country, in
-                      which roasted parts of sentences fly into your mouth.
+            <div class="col-12">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Memorial services
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                If you need help or advice with a memorial service, please contact our office. 
+                            </div>
+                        </div>
                     </div>
-              </div>
-            </div>
-            <!-- .accordion-item -->
-
-            <div class="accordion-item">
-              <h2 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-3">
-                  How to link your paypal and bank account?
-                </button>
-              </h2>
-
-              <div id="collapse-faq-3" class="collapse" aria-labelledby="headingThree" data-parent="#accordion-faq">
-                <div class="accordion-body">
-                  When she reached the first hills of the Italic Mountains, she
-                  had a last view back on the skyline of her hometown
-                  Bookmarksgrove, the headline of Alphabet Village and the subline
-                  of her own road, the Line Lane. Pityful a rethoric question ran
-                  over her cheek, then she continued her way.
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                Weddings
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                Our minister conducts a limited number of wedding services for couples connected to our church. We are not able to host large receptions on our property. 
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <!-- .accordion-item -->
-
-          </div>
         </div>
-      </div>
-      </div>
-    </section><!-- /Faq Section -->
+    </div>
+</section><!-- /Faq Section -->
 
 <section id="contact" class="section">
     <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
-        <h2>Contact us</h2>
+        <h1>Contact us</h1>
     </div><!-- End Section Title -->
     <div class="container">
         <div class="row gy-4">
@@ -265,11 +219,20 @@
                 <h5><span class="bi bi-pin-map-fill" style="padding-right: 10px;"></span>{{setting('general.physical_address')}}</h5>
                 <h5><span class="bi bi-telephone-fill" style="padding-right: 10px;""></span>{{substr(setting('communication.church_telephone'),0,3)}} {{substr(setting('communication.church_telephone'),3,4)}} {{substr(setting('communication.church_telephone'),7,3)}}</h5>
                 <h5><span class="bi bi-envelope-fill" style="padding-right: 10px;"></span>{{setting('communication.church_email')}}</h5>
-                <h5><span class="bi bi-bank2" style="padding-right: 10px;"></span>Bank details</h5>
-                <div class="light-background">{!! nl2br(setting('admin.bank_details')) !!}</div>
+                <div class="mb-4">
+                    <a target="_blank" title="Facebook page" href="{{setting('website.facebook_page')}}"><span class="bi bi-facebook h3"></span></a>&nbsp;
+                    <a target="_blank" title="Instagram page" href="{{setting('website.instagram_page')}}"><span class="bi bi-instagram h3"></span></a>&nbsp;
+                    <a target="_blank" title="YouTube channel" href="{{setting('website.youtube_channel')}}"><span class="bi bi-youtube h3"></span></a>&nbsp;
+                    <a target="_blank" title="Youversion page" href="{{setting('website.youversion_page')}}"><span class="bi bi-bookmark-plus h3"></span></a>&nbsp;
+                    <a target="_blank" title="WhatsApp" href="https://wa.me/27{{substr(setting('communication.whatsapp'),1)}}"><span class="bi bi-whatsapp h3"></span></a>
+                </div>
+                <div class="bg-secondary p-3 rounded">
+                    <h5><span class="bi bi-bank2" style="padding-right: 10px;"></span>Bank details</h5>
+                    {!! nl2br(setting('admin.bank_details')) !!}
+                </div>
             </div>
             <div class="col-md-6 col-lg-6">    
-                <div id="mapid" style="height:250px;"></div>
+                <div id="mapid" style="height:333px;"></div>
                 <script>
                     var coords;
                     coords = [{{setting('general.map_location')['lat']}},{{setting('general.map_location')['lng']}}];

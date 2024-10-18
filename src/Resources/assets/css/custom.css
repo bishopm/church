@@ -219,3 +219,83 @@ iframe {
 }.bs-component>.btn, .bs-component>.btn-toolbar>.btn-group, .bs-component>.btn-group, #home .section-preview .card .btn-group {
     margin-bottom: .25rem;
 }
+
+section,
+.section {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  padding: 60px 0;
+  scroll-margin-top: 100px;
+  overflow: clip;
+}
+
+@media (max-width: 1199px) {
+
+  section,
+  .section {
+    scroll-margin-top: 66px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Global Section Titles
+--------------------------------------------------------------*/
+.section-title {
+  text-align: center;
+  padding-bottom: 60px;
+  position: relative;
+}
+
+.section-title h2 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.section-title p {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.navbar-brand {
+    padding-bottom: 0px;
+}
+
+.navbar {
+    padding: 0 var(--bs-nav-link-padding-x);
+}
+
+a, .btn-link, .page-link {
+    text-decoration: none;
+    color: #159CA0;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link, .active>.page-link, .page-link.active {
+    background-color: #159CA0;
+}
+
+.nav-pills .nav-link {
+    color: #159CA0;
+}
+
+.badge {
+    background-color: #159CA0;
+    padding: 0.4em 0.2em;
+}
+
+p {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+    color: var(--bs-body-color);
+    text-align: var(--bs-body-text-align);
+    background-color: var(--bs-body-bg);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a .bi {
+    color:black;
+}

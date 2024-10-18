@@ -9,6 +9,7 @@ use Filament\Forms\Components\Textarea;
 use Bishopm\Church\Filament\Clusters\Settings as SettingsCluster;
 use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
  
@@ -74,6 +75,34 @@ class Settings extends BaseSettings
                             TextInput::make('website.twitter_feed'),
                             TextInput::make('website.text_logo'),
                             TextInput::make('website.mapbox_token'),
+                            Select::make('website.theme')
+                                ->options([
+                                    'cerulean'  =>  'Cerulean',
+                                    'cosmo'     =>  'Cosmo',
+                                    'cyborg'    =>  'Cyborg',
+                                    'darkly'    =>  'Darkly',
+                                    'flatly'    =>  'Flatly',
+                                    'journal'   =>  'Journal',
+                                    'litera'    =>  'Litera',
+                                    'lumen'     =>  'Lumen',
+                                    'lux'       =>  'Lux',
+                                    'materia'   =>  'Materia',
+                                    'minty'     =>  'Minty',
+                                    'morph'     =>  'Morph',
+                                    'pulse'     =>  'Pulse',
+                                    'quartz'    =>  'Quartz',
+                                    'sandstone' =>  'Sandstone',
+                                    'simplex'   =>  'Simplex',
+                                    'sketchy'   =>  'Sketchy',
+                                    'slate'     =>  'Slate',
+                                    'solar'     =>  'Solar',
+                                    'spacelab'  =>  'Spacelab',
+                                    'superhero' =>  'Superhero',
+                                    'united'    =>  'United',
+                                    'vapor'     =>  'Vapor',
+                                    'yeti'      =>  'Yeti',
+                                    'zephyr'    =>  'Zephyr'
+                                ])
                         ]),
                     Tabs\Tab::make('Worship')
                         ->columns(2)

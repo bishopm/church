@@ -3,7 +3,7 @@
     <div class="meta mb-3">
         <span class="date">{{date('j F Y',strtotime($post->published_at))}}</span> •
         @foreach ($post->tags as $tag)
-            <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="">{{$tag->name}}</a></span>
+            <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="badge">{{$tag->name}}</a></span>
         @endforeach
         <div><a href="{{url('/people') . '/' . $post->person->slug}}" class="cat">{{$post->person->fullname}}</a></div>
     </div>

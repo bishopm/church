@@ -61,7 +61,6 @@ function runApp () {
         codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
         if (result) {
             Livewire.dispatch('scanned', { isbn: result })
-            document.getElementById('result').textContent = result.text
         }
         if (err && !(err instanceof ZXing.NotFoundException)) {
             console.error(err)

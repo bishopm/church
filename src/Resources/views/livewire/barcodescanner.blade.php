@@ -41,8 +41,8 @@ function runApp () {
     codeReader.listVideoInputDevices()
       .then((videoInputDevices) => {
         const sourceSelect = document.getElementById('sourceSelect')
-        selectedDeviceId = videoInputDevices[0].deviceId
         if (videoInputDevices.length >= 1) {
+          selectedDeviceId = videoInputDevices[videoInputDevices.length-1].deviceId
           videoInputDevices.forEach((element) => {
             const sourceOption = document.createElement('option')
             sourceOption.text = element.label

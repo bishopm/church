@@ -1,24 +1,22 @@
 <x-church::website.layout pageName="Home">
 <!-- About Section -->
-<div id="about" class="about light-background">
-    <div class="row align-items-center">
-        <div class="col-lg-12" data-aos="fade-up" data-aos-delay="400">
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
+<div id="about">
+    <div data-aos="fade-up" data-aos-delay="400">
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
                     <img src="{{asset('/church/images/welcomeslide.png')}}" class="d-block w-100">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="{{asset('/church/images/knowslide.png')}}" class="d-block w-100">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="{{asset('/church/images/growslide.png')}}" class="d-block w-100">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="{{asset('/church/images/showslide.png')}}" class="d-block w-100">
-                  </div>
                 </div>
-              </div>
+                <div class="carousel-item">
+                    <img src="{{asset('/church/images/knowslide.png')}}" class="d-block w-100">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{asset('/church/images/growslide.png')}}" class="d-block w-100">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{asset('/church/images/showslide.png')}}" class="d-block w-100">
+                </div>
+            </div>
             </div>
         </div>
     </div>

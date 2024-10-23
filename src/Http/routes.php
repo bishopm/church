@@ -9,6 +9,7 @@ Livewire::setUpdateRoute(function ($handle) {
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
+    Route::get('/app', 'app')->name('app');
     Route::get('/login', 'login')->name('login');
     Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('blogpost');
     Route::get('/blog', 'blog')->name('blog');

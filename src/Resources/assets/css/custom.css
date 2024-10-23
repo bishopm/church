@@ -1,6 +1,21 @@
-body {
-    
+@media (max-width: 367px) {
+    body {
+        padding-top: 44px;
+    }
 }
+
+@media (min-width:368px) and (max-width: 480px) {
+    body {
+        padding-top: 48px;
+    }
+}
+
+@media (min-width:481px) {
+    body {
+        padding-top: 50px;
+    }
+}
+
 iframe {
     overflow: hidden;
     border: none;

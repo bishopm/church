@@ -29,7 +29,7 @@
 
 <body>
   <div>
-    <nav class="navbar position-sticky top-0 bg-dark sticky-top" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
       <div id="container" class="container-fluid">
         <a href="{{url('/')}}" class="navbar-brand">
           <!-- Uncomment the line below if you also wish to use an image logo -->
@@ -91,7 +91,7 @@
   </div>
   <main class="main">
     @if($pageName<>"Home")
-      <div class="container" style="padding-bottom:10px;">
+      <div class="container" style="padding-bottom:10px;padding-top:50px;">
     @else
       <div style="padding-bottom:10px;">
     @endif

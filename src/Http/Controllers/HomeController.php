@@ -29,6 +29,12 @@ class HomeController extends Controller
      /**
      * Display a listing of the resource.
      */
+    
+    public function app(){
+        $data['content']['blogs']=Post::orderBy('published_at','DESC')->take(5)->get();
+        return view('church::app.home',$data);
+    }
+    
     public function home()
     {
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();

@@ -1,5 +1,6 @@
 <x-church::website.layout pageName="Sermon archives">
-    @foreach ($series as $serie)
+    <h3>Sermons</h3>
+    @forelse ($series as $serie)
         <div class="row pb-3">
             <div class="col-12">
                 <a href="{{url('/')}}/sermons/{{date('Y',strtotime($serie->startingdate))}}/{{$serie->slug}}">
@@ -10,7 +11,9 @@
                 Sermons: {{count($serie->sermons)}}
             </div>
         </div>
-    @endforeach
+    @empty
+        No sermons have been uploaded yet.
+    @endforelse
     <div>
         {{$series->links()}}
     </div>

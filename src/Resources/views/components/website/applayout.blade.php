@@ -27,7 +27,7 @@
   @laravelPWA
 </head>
 
-<body style="background-color: teal;">
+<body style="background-color: #F1FBF7;">
   <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
     <div id="container" class="container-fluid">
       <a href="{{url('/app')}}" class="navbar-brand">

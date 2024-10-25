@@ -67,7 +67,7 @@
                         </script>
                         <div class="card">
                             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/public/storage/' . $sermon->series->image)}}"
+                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
                                 alt="{{$sermon->series->series}}">
                                 </a>
                             </div>
@@ -101,7 +101,7 @@
             @foreach ($blogs as $blog)
                 <div class="col-md-4 col-sm-12">
                     <div class="post-entry" data-aos="fade-up" data-aos-delay="100">
-                        <a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}" class="thumb d-block"><img src="{{url('/public/storage/' . $blog->image)}}" alt="Image" class="img-fluid rounded"></a>
+                        <a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}" class="thumb d-block"><img src="{{url('/storage/' . $blog->image)}}" alt="Image" class="img-fluid rounded"></a>
                         <div class="text-justify">
                             <div class="meta mb-0">
                                 <h3 class="text-center"><a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}">{{$blog->title}}</a></h3>
@@ -130,14 +130,14 @@
     <div class="container">
         <div class="row gy-4">
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/smallgroups.png')}}" height="80px" alt="Image">
+                <img src="{{url('/church/images/smallgroups.png')}}" height="80px" alt="Image">
                 <h4>Groups</h4>Great as it is to be all together on Sundays, it is in small groups that we experience the best of community life - friendships, encouragement and a shared journey following Jesus in the midst of ordinary life. Contact us if you'd like to join a group, or visit our <a href="{{url('/')}}/groups">groups</a> page for news and more info.
             </div>
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/meet.png')}}" height="80px" alt="Image"><h4>Come and meet us</h4>It's easy to feel anonymous in a church community, but we really want to get to know all our people. We serve tea and eats at every service and would love to meet you! If you're new, sign up for one of our regular Newcomers Tea's.
+                <img src="{{url('/church/images/meet.png')}}" height="80px" alt="Image"><h4>Come and meet us</h4>It's easy to feel anonymous in a church community, but we really want to get to know all our people. We serve tea and eats at every service and would love to meet you! If you're new, sign up for one of our regular Newcomers Tea's.
             </div>
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/whatsapp.png')}}" height="80px" alt="Image"><h4>Staying in the loop</h4>Contact the office to be added to our WhatsApp group and/or email list to keep up to date with what is happening in our community (and have a look at our weekly Staying Connected newsletter).
+                <img src="{{url('/church/images/whatsapp.png')}}" height="80px" alt="Image"><h4>Staying in the loop</h4>Contact the office to be added to our WhatsApp group and/or email list to keep up to date with what is happening in our community (and have a look at our weekly Staying Connected newsletter).
             </div>
         </div>
     </div>
@@ -151,15 +151,15 @@
     <div class="container">
         <div class="row gy-4">
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/outreach.png')}}" height="80px" alt="Image">
+                <img src="{{url('/church/images/outreach.png')}}" height="80px" alt="Image">
                 <h4>Mission projects</h4>We support many worthwhile causes in our area and host two relief projects on our property - the Westville Churches Food Bank and our Soup Kitchen. Plan to come and visit these <a href="{{url('/')}}/projects">projects</a> and find out where you can play your part.
             </div>
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/serve.png')}}" height="80px" alt="Image">
+                <img src="{{url('/church/images/serve.png')}}" height="80px" alt="Image">
                 <h4>Serving in a team</h4>Serving forms us. It changes us from guests into hosts and really makes us feel like part of the church family. Whatever your gifts and availability, we have a team for you to join - musicians, greeters, tea / coffee pourers, tech support, maintenance gurus, designers, decorators, organisers, communicators, and more! Let us know where you'd like to help.
             </div>
             <div class="col-md-4 text-center">
-                <img src="{{url('/public/church/images/giving.png')}}" height="80px" alt="Image">
+                <img src="{{url('/church/images/giving.png')}}" height="80px" alt="Image">
                 <h4>Giving</h4>Ministry is made possible at WMC through the faithful and generous giving of our people. More than that, for Jesus, giving is a discipleship issue - it reveals where our heart is. Find more details about our planned giving programme <a href="{{url('/')}}/giving">here.</a>
             </div>
         </div>

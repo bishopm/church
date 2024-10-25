@@ -60,6 +60,7 @@ class DevotionalResource extends Resource
                 Tables\Columns\TextColumn::make('version')
                     ->searchable(),
             ])
+            ->defaultSort('publicationdate','DESC')
             ->filters([
                 //
             ])

@@ -5,6 +5,7 @@ namespace Bishopm\Church\Http\Controllers;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Comment;
+use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
@@ -31,7 +32,20 @@ class HomeController extends Controller
      */
     
     public function app(){
-        $data['content']['blogs']=Post::orderBy('published_at','DESC')->take(5)->get();
+        $monthago=date('Y-m-d',strtotime('-1 month'));
+        $sermons=Sermon::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
+        foreach ($sermons as $sermon){
+            $data['content'][strtotime($sermon->servicedate)]=$sermon;
+        }
+        $blogs=Post::where('published_at','>',$monthago)->orderBy('published_at','DESC')->get();
+        foreach ($blogs as $blog){
+            $data['content'][strtotime($blog->published_at)]=$blog;
+        }
+        $devs=Devotional::where('publicationdate','>',$monthago)->orderBy('publicationdate','DESC')->get();
+        foreach ($devs as $dev){
+            $data['content'][strtotime($dev->publicationdate)]=$dev;
+        }
+        krsort($data['content']);
         return view('church::app.home',$data);
     }
     

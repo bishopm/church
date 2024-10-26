@@ -27,7 +27,7 @@
   @laravelPWA
 </head>
 
-<body style="background-color: #F1FBF7;">
+<body style="background-color: lightblue;">
   <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
     <div id="container" class="container-fluid">
       <a href="{{url('/app')}}" class="navbar-brand">
@@ -40,9 +40,8 @@
       <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" style="padding-left:7px;" href="{{url('/')}}#about">Home
-              <span class="visually-hidden">(current)</span>
-            </a>
+            <a class="nav-link active" style="padding-left:7px;" href="{{url('/app')}}">Home</a>
+            <a class="nav-link active" style="padding-left:7px;" href="{{url('/')}}">WMC website</a>
           </li>
         </ul>
       </div>

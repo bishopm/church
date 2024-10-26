@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Sermon archives">
+<x-church::website.applayout pageName="Sermon archives">
     <h3>Sermons</h3>
     @forelse ($series as $serie)
         <div class="row pb-3">

@@ -80,6 +80,7 @@
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{$member['firstname']}}</a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="{{url('/')}}/mymenu">My menu</a>
+                  <a class="dropdown-item" href="{{url('/')}}/app">WMC App</a>
                   <a class="dropdown-item" href="{{url('/')}}/books">Books</a>
                 </div>
               </li>
@@ -105,7 +106,7 @@
     </div>
   </main>
 
-  <footer class="bg-dark text-center text-white p-5 lead">&copy;{{date('Y')}} Westville Methodist Church</footer>
+  <footer class="bg-dark text-center text-white p-3">&copy;{{date('Y')}} Westville Methodist Church</footer>
 
   <!-- Vendor JS Files -->
   <script src="/public/church/js/bootstrap-bundle.min.js"></script>

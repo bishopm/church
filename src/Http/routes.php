@@ -9,25 +9,25 @@ Livewire::setUpdateRoute(function ($handle) {
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('/app', 'app')->name('app');
+    Route::get('/app', 'app')->name('app.home');
     Route::get('/login', 'login')->name('login');
-    Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('blogpost');
-    Route::get('/blog', 'blog')->name('blog');
-    Route::get('/blog/{slug}', 'blogger')->name('blogger');
-    Route::get('/books/{id}', 'book')->name('book');
-    Route::get('/books', 'books')->name('books');
-    Route::get('/giving', 'giving')->name('giving');
-    Route::get('/groups', 'groups')->name('groups');
-    Route::get('/groups/{id}', 'group')->name('group');
-    Route::get('/mymenu', 'mymenu')->name('mymenu');
-    Route::get('/people/{slug}', 'person')->name('person');
-    Route::get('/projects/{id}', 'project')->name('project');
-    Route::get('/projects', 'projects')->name('projects');
-    Route::get('/sermons', 'sermons')->name('sermons');
-    Route::get('/sermons/{slug}', 'preacher')->name('preacher');
-    Route::get('/sermons/{year}/{slug}', 'series')->name('series');
-    Route::get('/sermons/{year}/{slug}/{id}', 'sermon')->name('sermon');
-    Route::get('/subject/{slug}', 'subject')->name('subject');
+    Route::get('/blog/{year}/{month}/{slug}/{mode?}', 'blogpost')->name('blogpost');
+    Route::get('/blog/{mode?}', 'blog')->name('blog');
+    Route::get('/blog/{slug}/{mode?}', 'blogger')->name('blogger');
+    Route::get('/books/{id}/{mode?}', 'book')->name('book');
+    Route::get('/books/{mode?}', 'books')->name('books');
+    Route::get('/giving/{mode?}', 'giving')->name('giving');
+    Route::get('/groups/{mode?}', 'groups')->name('groups');
+    Route::get('/groups/{id}/{mode?}', 'group')->name('group');
+    Route::get('/mymenu/{mode?}', 'mymenu')->name('mymenu');
+    Route::get('/people/{slug}/{mode?}', 'person')->name('person');
+    Route::get('/projects/{id}/{mode?}', 'project')->name('project');
+    Route::get('/projects/{mode?}', 'projects')->name('projects');
+    Route::get('/sermons/{mode?}', 'sermons')->name('sermons');
+    Route::get('/sermons/{slug}/{mode?}', 'preacher')->name('preacher');
+    Route::get('/sermons/{year}/{slug}/{mode?}', 'series')->name('series');
+    Route::get('/sermons/{year}/{slug}/{id}/{mode?}', 'sermon')->name('sermon');
+    Route::get('/subject/{slug}/{mode?}', 'subject')->name('subject');
 });
 
 Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);

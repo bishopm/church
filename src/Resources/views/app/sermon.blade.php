@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Sermon">
+<x-church::website.applayout pageName="Sermon">
     <div>
         <script type="module">
             import { VidstackPlayer, VidstackPlayerLayout } from 'https://cdn.vidstack.io/player';

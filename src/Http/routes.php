@@ -24,9 +24,9 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/projects/{id}/{mode?}', 'project')->name('project');
     Route::get('/projects/{mode?}', 'projects')->name('projects');
     Route::get('/sermons/{mode?}', 'sermons')->name('sermons');
-    Route::get('/sermons/{slug}/{mode?}', 'preacher')->name('preacher');
+    Route::get('/preacher/{slug}/{mode?}', 'preacher')->name('preacher');
     Route::get('/sermons/{year}/{slug}/{mode?}', 'series')->name('series');
-    Route::get('/sermons/{year}/{slug}/{id}/{mode?}', 'sermon')->name('sermon');
+    Route::get('/sermon/{year}/{slug}/{id}/{mode?}', 'sermon')->name('sermon');
     Route::get('/subject/{slug}/{mode?}', 'subject')->name('subject');
 });
 

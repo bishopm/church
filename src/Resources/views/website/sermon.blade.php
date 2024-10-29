@@ -1,15 +1,5 @@
 <x-church::website.layout pageName="Sermon">
     <div>
-        <script type="module">
-            import { VidstackPlayer, VidstackPlayerLayout } from 'https://cdn.vidstack.io/player';
-
-            const player = await VidstackPlayer.create({
-                target: '#sermon',
-                title: '{{$sermon->title}}',
-                src: '{{$sermon->audio}}',
-                layout: new VidstackPlayerLayout({}),
-            });
-        </script>
         <div class="row gy-2">
             <div class="col-md-6 col-sm-12">
                 <h3>Sermon audio</h3>
@@ -19,7 +9,12 @@
                     <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->readings)}}&version=GNT";">{{$sermon->readings}} </a>
                     ({{$sermon->person->firstname}} {{$sermon->person->surname}})
                 </p>
-                <div id="sermon" width="400px"></div>
+                <div>
+                    <audio controls>
+                        <source src="{{$sermon->audio}}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
                 @if (count($series->sermons) > 1))
                     <h3>Other sermons in the series</h3>
                 @endif
@@ -27,7 +22,7 @@
                     @foreach ($series->sermons as $ss)
                         @if ($ss->id <> $sermon->id)
                             <li>{{date('d M',strtotime($ss->servicedate))}}&nbsp;&nbsp;
-                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}">{{$ss->title}}</a> 
+                                <a href="{{url('/')}}/sermon/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}">{{$ss->title}}</a> 
                                 &nbsp;<span class="bi bi-book"></span>&nbsp;<a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($ss->readings)}}&version=GNT";">{{$ss->readings}} </a>
                                 <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$ss->person->slug}}">{{$ss->person->fullname}}</a>
                             </li>

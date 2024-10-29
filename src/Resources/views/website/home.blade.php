@@ -55,16 +55,6 @@
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
-                        <script type="module">
-                            import { VidstackPlayer, VidstackPlayerLayout } from 'https://cdn.vidstack.io/player';
-
-                            const player = await VidstackPlayer.create({
-                                target: '#sermon',
-                                title: '{{$sermon->title}}',
-                                src: '{{$sermon->audio}}',
-                                layout: new VidstackPlayerLayout({}),
-                            });
-                        </script>
                         <div class="card">
                             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                                 <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
@@ -77,6 +67,12 @@
                                 </h5>
                                 <p class="mb-0">{{$sermon->readings}} ({{$sermon->person->firstname}} {{$sermon->person->surname}})</p>
                                 <div id="sermon"></div>
+                            </div>
+                            <div class="text-center">
+                                <audio controls>
+                                    <source src="{{$sermon->audio}}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
                             </div>
                         </div>
                     </div>

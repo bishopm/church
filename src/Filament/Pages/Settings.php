@@ -69,6 +69,7 @@ class Settings extends BaseSettings
                         ->columns(2)
                         ->schema([
                             TextInput::make('website.youtube_channel'),
+                            TextInput::make('website.youtube_channel_id'),
                             TextInput::make('website.facebook_page'),
                             TextInput::make('website.youversion_page'),
                             TextInput::make('website.instagram_account'),

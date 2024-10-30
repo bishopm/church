@@ -239,7 +239,7 @@ section,
 .section {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 60px 0;
+  padding: 25px 0;
   scroll-margin-top: 100px;
   overflow: clip;
 }
@@ -257,7 +257,7 @@ section,
 --------------------------------------------------------------*/
 .section-title {
   text-align: center;
-  padding-bottom: 60px;
+  padding-bottom: 25px;
   position: relative;
 }
 

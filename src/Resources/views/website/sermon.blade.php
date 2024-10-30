@@ -32,7 +32,9 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <h3>Service video</h3>
-                <iframe width="560" height="315" src="https://youtube.com/embed/{{substr($sermon->video,8+strpos($sermon->video,'watch?v='))}}" frameborder="0" allowfullscreen></iframe>
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://youtube.com/embed/{{substr($sermon->video,8+strpos($sermon->video,'watch?v='))}}" frameborder="0" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
     </div>

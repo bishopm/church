@@ -15,6 +15,8 @@ use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
+use Bishopm\Church\Models\Service;
+use Bishopm\Church\Models\Song;
 use Illuminate\Support\Facades\Config;
 use Spatie\Tags\Tag;
 
@@ -34,6 +36,7 @@ class HomeController extends Controller
     public function app(){
         $data['content']=array();
         $monthago=date('Y-m-d',strtotime('-80 days'));
+        $today=date('Y-m-d');
         $sermons=Sermon::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
@@ -46,10 +49,18 @@ class HomeController extends Controller
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
+        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('servicetime','09h00')->orderBy('servicedate','ASC')->first();
         krsort($data['content']);
         return view('church::app.home',$data);
     }
     
+    public function song($id) {
+        $song=Song::find($id);
+        $song->lyrics=preg_replace('/\{[a-zA-Z0-9_]+?\}/','',$song->lyrics);
+        $data['song']=$song;
+        return view('church::app.song',$data);
+    }
+
     public function home()
     {
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();

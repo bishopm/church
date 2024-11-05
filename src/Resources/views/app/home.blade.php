@@ -34,7 +34,7 @@
         @elseif (isset($item->readings))
             <div class="lead pt-3">{{$item->title}}</div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
-            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
+            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}/app">
                 <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
             <div class="lead pt-3">{{$item->readings}}

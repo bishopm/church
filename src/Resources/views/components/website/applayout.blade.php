@@ -47,7 +47,7 @@
       </div>
     </div>
   </nav>
-  <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px;">
+  <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px; padding-bottom:90px;">
       {{$slot}}
   </main>
   <div class="row fixed-bottom bg-dark text-white">

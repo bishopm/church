@@ -3,7 +3,7 @@
     @if (count($posts))
         <h4>Blog posts</h4>
         @foreach ($posts as $post)
-            <a href="{{url('/blog') . '/' . date('Y',strtotime($post['published_at'])) . '/' . date('m',strtotime($post['published_at'])) . '/' . $post['slug']}}">{{$post['title']}}</a><br>
+            <a href="{{url('/blog') . '/' . date('Y',strtotime($post['published_at'])) . '/' . date('m',strtotime($post['published_at'])) . '/' . $post['slug'] . '/app'}}">{{$post['title']}}</a><br>
         @endforeach
     @endif
     @if (count($sermons))

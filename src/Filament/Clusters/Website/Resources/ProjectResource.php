@@ -4,15 +4,12 @@ namespace Bishopm\Church\Filament\Clusters\Website\Resources;
 
 use Bishopm\Church\Filament\Clusters\Website;
 use Bishopm\Church\Filament\Clusters\Website\Resources\ProjectResource\Pages;
-use Bishopm\Church\Filament\Clusters\Website\Resources\ProjectResource\RelationManagers;
 use Bishopm\Church\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProjectResource extends Resource
 {
@@ -21,6 +18,8 @@ class ProjectResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Website::class;
+
+    protected static ?string $modelLabel = 'Mission project';
 
     public static function form(Form $form): Form
     {

@@ -3,13 +3,13 @@
     @if (count($posts))
         <h4>Blog posts</h4>
         @foreach ($posts as $post)
-            <a href="{{url('/blog') . '/' . date('Y',strtotime($post['published_at'])) . '/' . date('m',strtotime($post['published_at'])) . '/' . $post['slug']}}">{{$post['title']}}</a><br>
+            <a href="{{url('/blog') . '/' . date('Y',strtotime($post['published_at'])) . '/' . date('m',strtotime($post['published_at'])) . '/' . $post['slug'] . '/app'}}">{{$post['title']}}</a><br>
         @endforeach
     @endif
     @if (count($sermons))
         <hr><h4>Sermons</h4>
         @foreach ($sermons as $sermon)
-            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->title}}</a><br>
+            <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}/app">{{$sermon->title}}</a><br>
         @endforeach
     @endif
     @if (count($books))

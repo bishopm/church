@@ -1,19 +1,28 @@
 <x-church::website.applayout pageName="App home">
-    <h3>Upcoming service</h3>
-    <div class="ratio ratio-16x9">
-        <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
-    </div>
-    <div class="py-2">
-        {{date('j F Y',strtotime($service->servicedate))}} <b>Reading:</b> {{$service->reading}}
-        <h4>Songs</h4>
-        <ul class="list-unstyled">
-            @forelse ($service->setitems as $song)
-                <li><a href="{{url('/')}}/app/songs/{{$song->setitemable_id}}">{{$song->setitemable->title}}</a></li>
-            @empty
-                No songs have been added yet
-            @endforelse
-        </ul>
-    </div>
+    @if ($service) 
+        <div class="bg-black p-2 text-white">
+            <h3>Upcoming service</h3>
+            <div class="ratio ratio-16x9">
+                @if ($service->servicedate == date('Y-m-d'))
+                    <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
+                @else
+                    Not today
+                @endif
+            </div>
+            <div class="py-2">
+                {{date('l j F Y',strtotime($service->servicedate))}}
+                <h4>Reading</h4><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a>
+                <h4>Songs</h4>
+                <ul class="list-unstyled">
+                    @forelse ($service->setitems as $song)
+                        <li><a href="{{url('/')}}/app/songs/{{$song->setitemable_id}}">{{$song->setitemable->title}}</a></li>
+                    @empty
+                        No songs have been added yet
+                    @endforelse
+                </ul>
+            </div>
+        </div>
+    @endif
     @forelse ($content as $item)
         @if (isset($item->published_at))
             <div class="lead pt-3">
@@ -25,7 +34,7 @@
         @elseif (isset($item->readings))
             <div class="lead pt-3">{{$item->title}}</div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
-            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
+            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}/app">
                 <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
             <div class="lead pt-3">{{$item->readings}}

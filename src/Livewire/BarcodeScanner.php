@@ -31,7 +31,7 @@ class BarcodeScanner extends Component
             $this->image=$book->image;
             $this->id=$book->id;
         } else {
-            $url="https://www.googleapis.com/books/v1/volumes?key=" . setting('features.google_books_key'). "&q=isbn:" . $isbn;
+            $url="https://www.googleapis.com/books/v1/volumes?key=" . setting('services.google_books_key'). "&q=isbn:" . $isbn;
             $response=Http::get($url);
             $book=json_decode($response->body())->items[0]->volumeInfo;
             $this->isbn=$isbn;

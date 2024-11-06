@@ -363,7 +363,7 @@ class ReportsController extends Controller
             if ($setitem->note=="Bible reading"){
                 return $set->reading . " (" . $this->addRoster("Bible reading",$set->servicetime,$set->servicedate) . ")";
             } elseif ($setitem->note=="Sermon"){
-                $url="https://methodist.church.net.za/preacher/" . setting('worship.society_id') . "/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
+                $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
                 $response=Http::get($url);
                 $extra = $response->body();
                 if ((isset($set->series)) and ($set->series->series !== "")) {

@@ -12,6 +12,7 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use Bishopm\Church\Models\Group;
  
 class Settings extends BaseSettings
 {
@@ -38,18 +39,20 @@ class Settings extends BaseSettings
                             KeyValue::make('admin.agendas')->columnSpanFull(),
                             Textarea::make('admin.bank_details')->columnSpanFull()->rows(4)
                         ]),
-                    Tabs\Tab::make('Communication')
+                    Tabs\Tab::make('Automation')
                         ->columns(2)
                         ->schema([
-                            TextInput::make('communication.church_email'),
-                            TextInput::make('communication.church_telephone'),
-                            TextInput::make('communication.bulksms_clientid')->label('BulkSMS Client ID'),
-                            TextInput::make('communication.bulksms_api_secret')->label('BulkSMS API Secret'),
-                            TextInput::make('communication.whatsapp'),
+                            Select::make('automation.birthday_group')->label('Send birthday emails to this group')
+                                ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
+                                ->searchable(),
+                            Select::make('automation.maintenance_group')->label('Send maintenance emails to this group')
+                                ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
+                                ->searchable()
                         ]),
                     Tabs\Tab::make('Email')
                         ->columns(2)
                         ->schema([
+                            TextInput::make('email.church_email'),
                             TextInput::make('email.mailer'),
                             TextInput::make('email.mail_host'),
                             TextInput::make('email.mail_port'),
@@ -59,15 +62,20 @@ class Settings extends BaseSettings
                             TextInput::make('email.mail_from_address'),
                             TextInput::make('email.mail_from_name')
                         ]),
-                    Tabs\Tab::make('Features')
+                    Tabs\Tab::make('Services')
                         ->columns(2)
                         ->schema([
-                            TextInput::make('features.google_email_address'),
-                            TextInput::make('features.google_books_key')
+                            TextInput::make('services.google_email_address'),
+                            TextInput::make('services.google_books_key'),
+                            TextInput::make('services.society_id')->label('methodist.church.net.za society ID'),
+                            TextInput::make('services.bulksms_clientid')->label('BulkSMS Client ID'),
+                            TextInput::make('services.bulksms_api_secret')->label('BulkSMS API Secret'),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)
                         ->schema([
+                            TextInput::make('website.church_telephone'),
+                            TextInput::make('website.whatsapp'),
                             TextInput::make('website.youtube_channel'),
                             TextInput::make('website.youtube_channel_id'),
                             TextInput::make('website.facebook_page'),
@@ -109,7 +117,6 @@ class Settings extends BaseSettings
                         ->columns(2)
                         ->schema([
                             TextInput::make('worship.worship_email'),
-                            TextInput::make('worship.society_id')->label('methodist.church.net.za society ID'),
                             KeyValue::make('worship.order_of_service')->columnSpanFull()                            
                         ]),
                 ]),

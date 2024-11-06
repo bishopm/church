@@ -221,14 +221,14 @@
         <div class="row gy-4">
             <div class="col-md-6 col-lg-6">
                 <h5><span class="bi bi-pin-map-fill" style="padding-right: 10px;"></span>{{setting('general.physical_address')}}</h5>
-                <h5><span class="bi bi-telephone-fill" style="padding-right: 10px;""></span>{{substr(setting('communication.church_telephone'),0,3)}} {{substr(setting('communication.church_telephone'),3,4)}} {{substr(setting('communication.church_telephone'),7,3)}}</h5>
-                <h5><span class="bi bi-envelope-fill" style="padding-right: 10px;"></span>{{setting('communication.church_email')}}</h5>
+                <h5><span class="bi bi-telephone-fill" style="padding-right: 10px;""></span>{{substr(setting('website.church_telephone'),0,3)}} {{substr(setting('website.church_telephone'),3,4)}} {{substr(setting('website.church_telephone'),7,3)}}</h5>
+                <h5><span class="bi bi-envelope-fill" style="padding-right: 10px;"></span>{{setting('email.church_email')}}</h5>
                 <div class="mb-4">
                     <a target="_blank" title="Facebook page" href="{{setting('website.facebook_page')}}"><span class="bi bi-facebook h3"></span></a>&nbsp;
                     <a target="_blank" title="Instagram page" href="{{setting('website.instagram_page')}}"><span class="bi bi-instagram h3"></span></a>&nbsp;
                     <a target="_blank" title="YouTube channel" href="{{setting('website.youtube_channel')}}"><span class="bi bi-youtube h3"></span></a>&nbsp;
                     <a target="_blank" title="Youversion page" href="{{setting('website.youversion_page')}}"><span class="bi bi-bookmark-plus h3"></span></a>&nbsp;
-                    <a target="_blank" title="WhatsApp" href="https://wa.me/27{{substr(setting('communication.whatsapp'),1)}}"><span class="bi bi-whatsapp h3"></span></a>
+                    <a target="_blank" title="WhatsApp" href="https://wa.me/27{{substr(setting('website.whatsapp'),1)}}"><span class="bi bi-whatsapp h3"></span></a>
                 </div>
                 <div class="bg-secondary p-3 rounded">
                     <h5><span class="bi bi-bank2" style="padding-right: 10px;"></span>Bank details</h5>

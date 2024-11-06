@@ -31,7 +31,7 @@ class ChordResource extends Resource
                 Forms\Components\TextInput::make('chord')
                     ->required()
                     ->maxLength(50),
-                Forms\Components\TextInput::make('s1')->label('E string')
+                Forms\Components\TextInput::make('s1')->label('E string (treble)')
                     ->maxLength(10),
                 Forms\Components\TextInput::make('s2')->label('B string')
                     ->maxLength(10),

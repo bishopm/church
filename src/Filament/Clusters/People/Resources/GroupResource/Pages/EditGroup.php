@@ -29,8 +29,8 @@ class EditGroup extends EditRecord
             Actions\Action::make('Group SMS')->label('Group SMS')
                 ->form([
                     Placeholder::make('Credits')->content(function (){
-                        $smss = new BulksmsService(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
-                        return "Available credits: " . $smss->get_credits(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
+                        $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+                        return "Available credits: " . $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
                     }),
                     Textarea::make('message')
                 ])
@@ -73,8 +73,8 @@ class EditGroup extends EditRecord
         $group=Group::with('individuals')->where('id',$this->record->id)->first();
         $send = false;
         foreach ($group->individuals as $indiv){
-            $smss = new BulksmsService(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
-            $credits = $smss->get_credits(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
+            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+            $credits = $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
             if ($indiv->cellphone){
                 $messages = array();
                 $msisdn = "+27" . substr($indiv->cellphone, 1);
@@ -88,7 +88,7 @@ class EditGroup extends EditRecord
             }
         }
         if ($send == true){
-            $smss->send_message($messages,setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
+            $smss->send_message($messages,setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
             $count=count($messages);
             if ($count > 1){
                 Notification::make('SMS sent')->title('SMSes sent to ' . $count . ' individuals')->send();

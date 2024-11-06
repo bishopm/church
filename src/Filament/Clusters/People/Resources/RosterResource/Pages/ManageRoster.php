@@ -96,8 +96,8 @@ class ManageRoster extends Page implements HasForms
             }
         }
         $schema[] = Placeholder::make('Bulksms Credits')->label('')->content(function (){
-            $smss = new BulksmsService(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
-            return "Available BulkSMS credits: " . $smss->get_credits(setting('communication.bulksms_clientid'), setting('communication.bulksms_api_secret'));
+            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+            return "Available BulkSMS credits: " . $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
         });
         $schema[] = Placeholder::make('Preview')->content(new HtmlString($messages))->label('');
         return $schema;

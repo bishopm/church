@@ -41,7 +41,8 @@ class IndividualsRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make()->recordSelectSearchColumns(['firstname', 'surname'])->label('Add group member'),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make(),
+                Tables\Actions\Action::make('view')->url(fn ($record): string => route('filament.admin.people.resources.individuals.edit', $record))->icon('heroicon-m-eye'),
+                Tables\Actions\DetachAction::make()->label('Remove'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

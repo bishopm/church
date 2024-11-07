@@ -8,6 +8,7 @@ use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\User;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
@@ -125,6 +126,9 @@ class ChurchServiceProvider extends ServiceProvider
             Config::set('member',$member);
         }
         View::share('member',$member);
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
+        });
     }
 
     /**

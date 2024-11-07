@@ -246,7 +246,7 @@ class IndividualResource extends Resource
         $data['url'] = "https://westvillemethodist.co.za";
         $data['firstname'] = $indiv['firstname'];
         if ($indiv['email']){
-            Mail::to($indiv['email'])->send(new ChurchMail($data));
+            Mail::to($indiv['email'])->queue(new ChurchMail($data));
         }
         Notification::make('Email sent')->title('Email sent to ' . $indiv->firstname . " " . $indiv->surname)->send();
     }

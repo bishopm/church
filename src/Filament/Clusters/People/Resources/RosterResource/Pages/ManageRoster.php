@@ -4,6 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\People\Resources\RosterResource\Pages
 
 use Bishopm\Church\Classes\BulksmsService;
 use Bishopm\Church\Filament\Clusters\People\Resources\RosterResource;
+use Bishopm\Church\Jobs\SendSMS;
 use Bishopm\Church\Models\Rostergroup;
 use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Service;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\HtmlString;
+use Filament\Notifications\Notification;
 
 class ManageRoster extends Page implements HasForms
 {
@@ -30,6 +32,8 @@ class ManageRoster extends Page implements HasForms
     protected ?string $subheading = 'Subtitle';
 
     public ?array $data;
+
+    public $credits, $smss;
 
     public function mount(int | string $record): void
     {
@@ -52,6 +56,7 @@ class ManageRoster extends Page implements HasForms
             Action::make('Preview messages')
                 ->modalHeading($this->record->roster . ": Preview messages")
                 ->form($schema)
+                ->modalSubmitActionLabel('Send messages')
                 ->action(fn () => self::sendMessages()),
             Action::make('report')
                 ->url(fn (): string => route('reports.roster', [
@@ -96,15 +101,25 @@ class ManageRoster extends Page implements HasForms
             }
         }
         $schema[] = Placeholder::make('Bulksms Credits')->label('')->content(function (){
-            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
-            return "Available BulkSMS credits: " . $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+            $this->smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+            $this->credits = $this->smss->get_credits();
+            return "Available BulkSMS credits: " . $this->credits;
         });
         $schema[] = Placeholder::make('Preview')->content(new HtmlString($messages))->label('');
         return $schema;
     }
 
     public function sendMessages() {
-        dd($this->data['allmessages']);
+        if ($this->credits >= count($this->data['allmessages'])) {
+            SendSMS::dispatch($this->data['allmessages']);
+            if (count($this->data['allmessages']) > 1){
+                Notification::make('SMS sent')->title('SMSes sent to ' . $this->count . ' individuals')->send();
+            } elseif (count($this->data['allmessages'])==1) {
+                Notification::make('SMS sent')->title('SMS sent to 1 individual')->send();
+            }
+        } else {
+            Notification::make('failurenote')->title('Insufficient credits - please top up your BulkSMS account')->send();
+        }
     }
 
     protected function changeMonth($start){
@@ -199,7 +214,14 @@ class ManageRoster extends Page implements HasForms
 
     private static function updateIndivs($state, $rosterdate, $rostergroup){
         $ri = Rosteritem::where('rosterdate',$rosterdate)->where('rostergroup_id',$rostergroup)->first();
-        DB::table('individual_rosteritem')->where('rosteritem_id',$ri->id)->delete();
+        if (isset($ri->id)){
+            DB::table('individual_rosteritem')->where('rosteritem_id',$ri->id)->delete();
+        } else {
+            $ri = Rosteritem::create([
+                'rostergroup_id' => $rostergroup,
+                'rosterdate' => $rosterdate
+            ]);
+        }
         if (is_array($state)){
             foreach ($state as $indiv){
                 DB::table('individual_rosteritem')->insert([

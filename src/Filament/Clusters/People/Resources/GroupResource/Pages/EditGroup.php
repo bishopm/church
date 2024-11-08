@@ -6,6 +6,7 @@ use Bishopm\Church\Filament\Clusters\People\Resources\GroupResource;
 use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Classes\BulksmsService;
+use Bishopm\Church\Jobs\SendSMS;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -70,34 +71,28 @@ class EditGroup extends EditRecord
     }
 
     public function sendSMS($data){
+        $messages = array();
+        $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+        $credits = $smss->get_credits();
         $group=Group::with('individuals')->where('id',$this->record->id)->first();
-        $send = false;
         foreach ($group->individuals as $indiv){
-            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
-            $credits = $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
             if ($indiv->cellphone){
-                $messages = array();
-                $msisdn = "+27" . substr($indiv->cellphone, 1);
-                $msg = "Hi " . $indiv['firstname'] . ". " . $data['message'];
-                if ($smss->checkcell($indiv->cellphone)) {
-                    $messages[] = array('to' => $msisdn, 'body' => $msg);
-                }
-            }
-            if ($credits >= count($messages)) {
-                $send=true;
+                $messages[$indiv->cellphone] = "Hi " . $indiv['firstname'] . ". " . $data['message'];
             }
         }
-        if ($send == true){
-            $smss->send_message($messages,setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
-            $count=count($messages);
-            if ($count > 1){
-                Notification::make('SMS sent')->title('SMSes sent to ' . $count . ' individuals')->send();
-            } elseif ($count==1) {
-                Notification::make('SMS sent')->title('SMS sent to 1 individual')->send();
+        if (count($messages)){
+            if ($credits >= count($messages)) {
+                SendSMS::dispatch($messages);
+                if (count($messages) > 1){
+                    Notification::make('SMS sent')->title('SMSes sent to ' . $count . ' individuals')->send();
+                } elseif (count($messages)==1) {
+                    Notification::make('SMS sent')->title('SMS sent to 1 individual')->send();
+                }
+            } else {
+                Notification::make('failurenote')->title('Insufficient credits - please top up your BulkSMS account')->send();
             }
         } else {
-            Notification::make('failurenote')->title('Insufficient credits - please top up your BulkSMS account')->send();
-            $count=0;
+            Notification::make('failurenote')->title('No messages were sent - check that group members have valid cellphone numbers')->send();
         }
     }
 

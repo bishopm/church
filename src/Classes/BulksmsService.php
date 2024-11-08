@@ -1,9 +1,10 @@
 <?php
-
 namespace Bishopm\Church\Classes;
-use Illuminate\Support\Facades\Log;
 
-class BulksmsService
+use Illuminate\Support\Facades\Log;
+use Livewire\Wireable;
+
+class BulksmsService implements Wireable
 {
 
     public $username, $password;
@@ -12,6 +13,22 @@ class BulksmsService
     {
         $this->username = $username;
         $this->password = $password;
+    }
+
+    public function toLivewire()
+    {
+        return [
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
+    }
+ 
+    public static function fromLivewire($value)
+    {
+        $password = $value['password'];
+        $username = $value['username'];
+ 
+        return new static($username, $password);
     }
  
     public function checkcell($cell)
@@ -56,7 +73,6 @@ class BulksmsService
     }
 
     public function get_credits () {
-        Log::info('Username: ' . $this->username);
         $ch = curl_init( );
         $headers = array(
             'Content-Type:application/json',

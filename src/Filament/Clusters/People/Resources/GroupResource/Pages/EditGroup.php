@@ -31,7 +31,7 @@ class EditGroup extends EditRecord
                 ->form([
                     Placeholder::make('Credits')->content(function (){
                         $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
-                        return "Available credits: " . $smss->get_credits(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+                        return "Available credits: " . $smss->get_credits();
                     }),
                     Textarea::make('message')
                 ])
@@ -84,7 +84,7 @@ class EditGroup extends EditRecord
             if ($credits >= count($messages)) {
                 SendSMS::dispatch($messages);
                 if (count($messages) > 1){
-                    Notification::make('SMS sent')->title('SMSes sent to ' . $count . ' individuals')->send();
+                    Notification::make('SMS sent')->title('SMSes sent to ' . count($messages) . ' individuals')->send();
                 } elseif (count($messages)==1) {
                     Notification::make('SMS sent')->title('SMS sent to 1 individual')->send();
                 }

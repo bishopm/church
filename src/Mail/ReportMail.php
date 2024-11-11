@@ -9,9 +9,8 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class ChurchMail extends Mailable
+class ReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -39,7 +38,7 @@ class ChurchMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'church::mail.templates.email',
+            markdown: 'church::mail.templates.reportemail',
             with: [
                 'firstname' => $this->data['firstname'],
                 'url' => $this->data['url'],
@@ -57,7 +56,7 @@ class ChurchMail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(storage_path('app/public/' . $this->data['attachment']))
+            Attachment::fromPath($this->data['attachment'])
         ];
     }
 }

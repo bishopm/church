@@ -5,6 +5,9 @@ namespace Bishopm\Church\Filament\Clusters\People\Resources\RosterResource\Pages
 use Bishopm\Church\Classes\BulksmsService;
 use Bishopm\Church\Filament\Clusters\People\Resources\RosterResource;
 use Bishopm\Church\Jobs\SendSMS;
+use Bishopm\Church\Models\Group;
+use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Roster;
 use Bishopm\Church\Models\Rostergroup;
 use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Service;
@@ -20,6 +23,9 @@ use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
+use Bishopm\Church\Http\Controllers\ReportsController;
+use Bishopm\Church\Mail\ReportMail;
+use Illuminate\Support\Facades\Mail;
 
 class ManageRoster extends Page implements HasForms
 {
@@ -44,6 +50,15 @@ class ManageRoster extends Page implements HasForms
     protected function getHeaderActions(): array
     {
         $schema = $this->constructPreviewSchema();
+        if (intval(date('n')) & 1){
+            $monthadd="+1 month";
+            $rosterlabel = date('M') . ' and ' . date('M',strtotime($monthadd));
+            $firstdate = date('Y-m-01');
+        } else {
+            $monthadd="-1 month";
+            $rosterlabel = date('M',strtotime($monthadd)) . ' and ' . date('M');
+            $firstdate = date('Y-m-01',strtotime('-1 month'));
+        }
         return [
             Action::make('prev')
                 ->action(fn () => self::changeMonth('prev'))
@@ -53,7 +68,10 @@ class ManageRoster extends Page implements HasForms
                 ->action(fn () => self::changeMonth('next'))
                 ->icon('heroicon-m-forward')
                 ->iconButton(),
-            Action::make('Preview messages')
+            Action::make('emails')->label('Email ' . $rosterlabel . ' rosters')
+                ->requiresConfirmation()
+                ->action(fn () => self::sendRosterEmails($firstdate)),
+            Action::make('Preview messages')->label('Preview messages (' . date('j M',strtotime('next ' . $this->record->dayofweek)) . ')')
                 ->modalHeading($this->record->roster . ": Preview messages")
                 ->form($schema)
                 ->modalSubmitActionLabel('Send messages')
@@ -70,7 +88,7 @@ class ManageRoster extends Page implements HasForms
     protected function constructPreviewSchema(){
         $record=$this->record;
         $rosterdate =date('Y-m-d',strtotime('next ' . $record->dayofweek));
-        $schema=[Placeholder::make('PreviewDate')->content(new HtmlString('<b>' . date('l d F Y',strtotime($rosterdate)) . '</b>'))->label('')];
+        $schema=[Placeholder::make('PreviewDate')->content(new HtmlString('**' . date('l d F Y',strtotime($rosterdate)) . '**'))->label('')];
         $rosteritems = Rosteritem::with('individuals','rostergroup.group')->where('rosterdate',$rosterdate)->whereHas('rostergroup', function ($q) use ($record) {
             $q->where('roster_id',$record->id);
         })->get();
@@ -96,7 +114,7 @@ class ManageRoster extends Page implements HasForms
                     }
                     $this->data['ridata'][$ri->rostergroup->group->groupname][$indiv->cellphone]=$msg;
                     $this->data['allmessages'][$indiv->cellphone]=$msg;
-                    $messages = $messages . $indiv->cellphone . ": " . $msg . "<br>";
+                    $messages = $messages . $indiv->cellphone . ": " . $msg . "\n";
                 }
             }
         }
@@ -120,6 +138,60 @@ class ManageRoster extends Page implements HasForms
         } else {
             Notification::make('failurenote')->title('Insufficient credits - please top up your BulkSMS account')->send();
         }
+    }
+    
+    public function sendRosterEmails($firstday)
+    {
+        $firstday = date('Y-m-d', strtotime($firstday));
+        $nextmonth = date('Y-m-t', strtotime($firstday. ' + 1 month'));
+        $repcontroller=new ReportsController();
+        $makepdf=$repcontroller->roster($this->record->id,date('Y',strtotime($firstday)),date('n',strtotime($firstday)),2,'F');
+        $groups = Rostergroup::with('group.individuals')->where('roster_id',$this->record->id)->get();
+        $rost = Roster::find($this->record->id);
+        $indivs = array();
+        foreach ($groups as $group){
+            if (isset($group->group)){
+                foreach ($group->group->individuals as $member){
+                    if (!isset($indivs[$member->id])){
+                        $indivs[$member->id]=array();
+                    }
+                    $indivs[$member->id][]=['group_id'=>$group->group->id,'groupname'=>$group->group->groupname,'video'=>$group->video];
+                }
+            }
+        }
+        $emailcount=0;
+        $rostertitle=date('F',strtotime($firstday)) . " and " . date('F Y',strtotime($nextmonth));
+        foreach ($indivs as $id=>$indiv){
+            $person = Individual::find($id);
+            $message = "Thank you so much for your willingness to serve at WMC. Attached is the service roster for " . $rostertitle . ".\n";
+            foreach ($indiv as $group){
+                $message.="\n**" . $group['groupname'] . "**\n\n";
+                $message.="If you are not able to serve on any given day, please contact one of the other members of the team below and arrange to swap duties:\n\n";
+                $team = Group::with('individuals')->where('id',$group['group_id'])->first();
+                foreach ($team->individuals as $tm){
+                    if ($tm->id <> $id){
+                        $message.=$tm->firstname . " " . $tm->surname . " (" . $tm->cellphone . ")\n\n";
+                    }
+                }
+                if ($group['video']) {
+                    $message.="\nIf you are new to the team, or have not seen it yet, have a look at the **<a href=\"" . $group['video'] . "\">training video</a>** we have prepared for this team. We hope it is helpful - please share any feedback you may have to help us improve!\n";
+                }
+            }
+            $message.="\nMay God bless you as you serve him here. Thank you!";
+            if ($person->email=="michael@bishop.net.za"){
+                $data=array();
+                $data['body'] = $message;
+                $data['subject'] = $rost->roster . ": " . $rostertitle . " Roster";
+                $data['firstname'] = $person->firstname;
+                $data['url'] = "https://westvillemethodist.co.za";
+                $data['firstname'] = $person->firstname;
+                $data['attachment'] = storage_path('app/public/attachments/WMCrosters.pdf');
+                $emailcount++;
+                Mail::to($person['email'])->queue(new ReportMail($data));
+            }
+            Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();
+        }
+        return "Emails sent: " . $emailcount;
     }
 
     protected function changeMonth($start){

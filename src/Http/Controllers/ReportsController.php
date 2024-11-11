@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Http;
 
 class ReportsController extends Controller
 {
-    public function roster(string $roster, int $year, int $month) {
+    public function roster(string $roster, int $year, int $month, $period=1, $output=null) {
         $reportdate = date('F Y',strtotime($year . '-' . $month . '-01'));
         $data = $this->getRosterData(date('Y-m',strtotime($year . '-' . $month . '-01')),$roster);
         $roster = Roster::find($roster);
@@ -89,7 +89,12 @@ class ReportsController extends Controller
             }
             $yy=$yy+9*($max);
         }
-        $pdf->Output();
+        if ($output){
+            $pdf->Output('F', storage_path('app/public/attachments/WMCrosters.pdf'));
+            return;
+        } else {
+            $pdf->Output();
+        }
         exit;
     }
 

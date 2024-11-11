@@ -67,7 +67,7 @@ class BulksmsService implements Wireable
         if ($output['http_status'] != 201) {
             Log::info("Error sending.  HTTP status " . $output['http_status'] . " Response was " .$output['server_response']);
         } else {
-            Log::info("Response " . $output['server_response']);
+            Log::info("Messages sent");
             // Use json_decode($output['server_response']) to work with the response further
         }
     }

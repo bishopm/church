@@ -23,6 +23,8 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Mail;
 use Bishopm\Church\Mail\ChurchMail;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 
 class IndividualResource extends Resource
 {
@@ -73,15 +75,12 @@ class IndividualResource extends Resource
                             ->email()
                             ->maxLength(255)
                             ->suffixAction(
-                                Action::make('emailForm')
+                                Action::make('emailForm')->label('Send an email')
                                 ->icon('heroicon-m-envelope')
                                 ->form([
-                                    Forms\Components\TextInput::make('subject')
-                                        ->label('Subject')
-                                        ->required(),
-                                    Forms\Components\Textarea::make('body')
-                                        ->label('Body')
-                                        ->required(),
+                                    Forms\Components\TextInput::make('subject')->label('Subject')->required(),
+                                    FileUpload::make('attachment')->preserveFilenames()->directory('attachments'),
+                                    MarkdownEditor::make('body')
                                 ])
                                 ->action(function (array $data, Individual $record): void {
                                     self::sendEmail($data,$record);
@@ -90,7 +89,7 @@ class IndividualResource extends Resource
                             ->tel()
                             ->maxLength(255)
                             ->suffixAction(
-                                Action::make('smsForm')
+                                Action::make('smsForm')->label('Send an SMS')
                                 ->icon('heroicon-m-device-phone-mobile')
                                 ->form([
                                     Forms\Components\Textarea::make('smsMessage')

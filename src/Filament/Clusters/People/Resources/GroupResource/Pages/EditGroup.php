@@ -41,7 +41,7 @@ class EditGroup extends EditRecord
             Actions\Action::make('Group email')->label('Group email')
                 ->form([
                     TextInput::make('subject'),
-                    FileUpload::make('attachment'),
+                    FileUpload::make('attachment')->preserveFilenames()->directory('attachments'),
                     MarkdownEditor::make('body')
                 ])
                 ->action(function (array $data) {

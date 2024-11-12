@@ -76,7 +76,7 @@ class ManageRoster extends Page implements HasForms
                 ->form($schema)
                 ->modalSubmitActionLabel('Send messages')
                 ->action(fn () => self::sendMessages()),
-            Action::make('report')
+            Action::make('report')->label('View Roster')
                 ->url(fn (): string => route('reports.roster', [
                     'id' => $this->record,
                     'year' => date('Y',strtotime($this->data['firstofmonth'])), 
@@ -178,7 +178,7 @@ class ManageRoster extends Page implements HasForms
                 }
             }
             $message.="\nMay God bless you as you serve him here. Thank you!";
-            if ($person->email=="michael@bishop.net.za"){
+            if ($person->email=="michael@westvillemethodist.co.za"){
                 $data=array();
                 $data['body'] = $message;
                 $data['subject'] = $rost->roster . ": " . $rostertitle . " Roster";
@@ -187,7 +187,7 @@ class ManageRoster extends Page implements HasForms
                 $data['firstname'] = $person->firstname;
                 $data['attachment'] = storage_path('app/public/attachments/WMCrosters.pdf');
                 $emailcount++;
-                Mail::to($person['email'])->queue(new ReportMail($data));
+                Mail::to($person->email)->queue(new ReportMail($data));
             }
             Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();
         }

@@ -2,17 +2,19 @@
     @if ($service) 
         <div class="bg-black p-2 text-white">
             <h3>Upcoming service</h3>
-            <div class="ratio ratio-16x9">
                 @if ($service->servicedate == date('Y-m-d'))
-                    <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
+                    <div class="ratio ratio-16x9">
+                        <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
+                    </div>
                 @else
-                    Not today
+                    <div>Live stream starts in {{ $floor }} ({{date('j M Y',strtotime($service->servicedate))}} {{$service->servicetime}})
                 @endif
             </div>
             <div class="py-2">
-                {{date('l j F Y',strtotime($service->servicedate))}}
-                <h4>Reading</h4><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a>
-                <h4>Songs</h4>
+                <h5>Reading: <small><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a></small></h5>
+                <h5>Preacher: <small>{{$preacher}}</small></h5>
+                <h5>Series: <small><a href="{{url('/')}}/sermons/{{date('Y',strtotime($service->series->startingdate))}}/{{$service->series->slug}}/app">{{$service->series->series}}</a></small></h5>
+                <h5>Songs</h5>
                 <ul class="list-unstyled">
                     @forelse ($service->setitems as $song)
                         <li><a href="{{url('/')}}/app/songs/{{$song->setitemable_id}}">{{$song->setitemable->title}}</a></li>

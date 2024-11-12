@@ -18,6 +18,7 @@ use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Spatie\Tags\Tag;
 
 class HomeController extends Controller
@@ -49,7 +50,16 @@ class HomeController extends Controller
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
-        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('servicetime','09h00')->orderBy('servicedate','ASC')->first();
+        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
+        $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
+        if ($floor == 1){
+            $data['floor'] = "1 day";
+        } else {
+            $data['floor'] = $floor . " days";
+        }
+        $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $data['service']->servicetime . "/" . substr($data['service']->servicedate,0,10);
+        $response=Http::get($url);
+        $data['preacher']=$response->body();                
         krsort($data['content']);
         return view('church::app.home',$data);
     }
@@ -97,14 +107,6 @@ class HomeController extends Controller
         $blogger=Person::where('slug',$slug)->first();
         $data['posts']=Post::where('person_id',$blogger->id)->orderBy('published_at','DESC')->paginate(10);
         return view('church::' . $mode . '.blogger',$data);
-    }
-
-    public function subject($slug,$mode="website"){
-        $data['tag']=Tag::findFromString($slug);
-        $data['posts']=Post::withAnyTags($data['tag']->name)->where('published',1)->get();
-        $data['sermons']=Sermon::withAnyTags($data['tag']->name)->where('published',1)->get();
-        $data['books']=Book::withAnyTags($data['tag']->name)->get();
-        return view('church::' . $mode . '.tag',$data);
     }
 
     public function book($id,$mode="website"){
@@ -166,6 +168,11 @@ class HomeController extends Controller
         return view('church::' . $mode . '.mymenu',$data);
     }
 
+    public function person($slug,$mode="website"){
+        $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
+        return view('church::' . $mode . '.person',$data);
+    }
+
     public function project($id,$mode="website"){
         $data['project']=Project::find($id);
         return view('church::' . $mode . '.project',$data);
@@ -192,8 +199,12 @@ class HomeController extends Controller
         return view('church::' . $mode . '.sermon',$data);
     }
 
-    public function person($slug,$mode="website"){
-        $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
-        return view('church::' . $mode . '.person',$data);
+    public function subject($slug,$mode="website"){
+        $data['tag']=Tag::findFromString($slug);
+        $data['posts']=Post::withAnyTags($data['tag']->name)->where('published',1)->get();
+        $data['sermons']=Sermon::withAnyTags($data['tag']->name)->where('published',1)->get();
+        $data['books']=Book::withAnyTags($data['tag']->name)->get();
+        return view('church::' . $mode . '.tag',$data);
     }
+
 }

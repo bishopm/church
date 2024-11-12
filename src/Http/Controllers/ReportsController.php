@@ -23,71 +23,81 @@ use Illuminate\Support\Facades\Http;
 
 class ReportsController extends Controller
 {
-    public function roster(string $roster, int $year, int $month, $period=1, $output=null) {
-        $reportdate = date('F Y',strtotime($year . '-' . $month . '-01'));
-        $data = $this->getRosterData(date('Y-m',strtotime($year . '-' . $month . '-01')),$roster);
-        $roster = Roster::find($roster);
-        $title = $roster->roster . " (" . $reportdate . ")";
+    public function roster(string $id, int $year, int $month, $period=1, $output=null) {
         $pdf = new Fpdf;
-        $pdf->SetFillColor(0,0,0);
-        $pdf->AddPage('L');
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 22);
-        $image=url('/') . "/public/church/images/colouredlogo.png";
-        $pdf-> Image($image,10,0,25,25);
-        $pdf->text(40, 12, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 20, $title);
-        $xx = 66;
-        $pdf->SetFont('Helvetica', 'B', 12);
-        if (count($data['columns'])==5){
-            $add=0;
-        } else {
-            $add=10;
-        }
-        $pdf->rect(10,26,280,11,'F');
-        $pdf->SetTextColor(255,255,255);
-        foreach ($data['columns'] as $week) {
-            $xx=$xx+$add;
-            $pdf->text($xx,33,$week);
-            $xx=$xx+44;
-        }
-        $pdf->SetTextColor(0,0,0);
-        $yy = 42;
-        $max = 1;
-        $first=true;
-        foreach ($data['rows'] as $key=>$col) {
-            $pdf->SetFont('Helvetica', 'B', 11);
-            $pdf->text(10,1+$yy,$key);
-            if ($first){
-                $first=false;
+        for ($i=0;$i<$period;$i++){
+            $reportdate = date('F Y',strtotime($year . '-' . $month . '-01'));
+            $data = $this->getRosterData(date('Y-m',strtotime($year . '-' . $month . '-01')),$id);
+            $roster = Roster::find($id);
+            $title = $roster->roster . " (" . $reportdate . ")";
+            $pdf->SetFillColor(0,0,0);
+            $pdf->AddPage('L');
+            $pdf->SetTitle($title);
+            $pdf->SetAutoPageBreak(true, 0);
+            $pdf->SetFont('Helvetica', 'B', 22);
+            $image=url('/') . "/public/church/images/colouredlogo.png";
+            $pdf-> Image($image,10,0,25,25);
+            $pdf->text(40, 12, setting('general.church_name'));
+            $pdf->SetFont('Helvetica', '', 16);
+            $pdf->text(40, 20, $title);
+            $xx = 66;
+            $pdf->SetFont('Helvetica', 'B', 12);
+            if (count($data['columns'])==5){
+                $add=0;
             } else {
-                $pdf->line(10, $yy-5, 290, $yy-5);
+                $add=10;
             }
-            $xx = 22;
-            $pdf->SetFont('Helvetica', '', 10.5);
-            $max=1;
-            foreach ($col as $kk=>$ii) {
-                if (($kk <> "id") and ($kk<>"extra")){
-                    $xx=$xx+44+$add;
-                    $count=0;
-                    foreach ($ii as $pp){
-                        if ($pp <>"-"){
-                            if (strpos($pp,", ")){
-                                $pdf->text($xx,1+$yy+$count*5,substr($pp,2+strpos($pp,',')) . " " . substr($pp,0,strpos($pp,',')));
-                            } else {
-                                $pdf->text($xx,1+$yy+$count*5,$pp);
+            $pdf->rect(10,26,280,11,'F');
+            $pdf->SetTextColor(255,255,255);
+            foreach ($data['columns'] as $week) {
+                $xx=$xx+$add;
+                $pdf->text($xx,33,$week);
+                $xx=$xx+44;
+            }
+            $pdf->SetTextColor(0,0,0);
+            $yy = 42;
+            $max = 1;
+            $first=true;
+            foreach ($data['rows'] as $key=>$col) {
+                $pdf->SetFont('Helvetica', 'B', 11);
+                $pdf->text(10,1+$yy,$key);
+                if ($first){
+                    $first=false;
+                } else {
+                    $pdf->line(10, $yy-5, 290, $yy-5);
+                }
+                $xx = 22;
+                $pdf->SetFont('Helvetica', '', 10.5);
+                $max=1;
+                foreach ($col as $kk=>$ii) {
+                    if (($kk <> "id") and ($kk<>"extra")){
+                        $xx=$xx+44+$add;
+                        $count=0;
+                        foreach ($ii as $pp){
+                            if ($pp <>"-"){
+                                if (strpos($pp,", ")){
+                                    $pdf->text($xx,1+$yy+$count*5,substr($pp,2+strpos($pp,',')) . " " . substr($pp,0,strpos($pp,',')));
+                                } else {
+                                    $pdf->text($xx,1+$yy+$count*5,$pp);
+                                }
+                                $count++;
                             }
-                            $count++;
-                        }
-                        if ($count>$max){
-                            $max=$count;
+                            if ($count>$max){
+                                $max=$count;
+                            }
                         }
                     }
                 }
+                $yy=$yy+9*($max);
             }
-            $yy=$yy+9*($max);
+            if (($period==2) && ($i==0)){
+                if ($month==12){
+                    $month=1;
+                    $year=$year+1;
+                } else {
+                    $month=$month+1;
+                }
+            }
         }
         if ($output){
             $pdf->Output('F', storage_path('app/public/attachments/WMCrosters.pdf'));
@@ -98,11 +108,10 @@ class ReportsController extends Controller
         exit;
     }
 
-    private function getRosterData($today,$roster) {
+    private function getRosterData($today,$id) {
         $firstday=date('l',strtotime($today.'-01'));
-        $lastday=date('l',strtotime($today.'-31'));
         $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        $rostermodel=Roster::find($roster);
+        $rostermodel=Roster::find($id);
         $dday = 8 - array_search($firstday,$alldays) + array_search($rostermodel->dayofweek,$alldays);
         if ($dday > 7){
             $dday=$dday-7;
@@ -119,7 +128,7 @@ class ReportsController extends Controller
         $groups = DB::table('rosters')->join('rostergroups', 'rosters.id', '=', 'rostergroups.roster_id')
             ->join('groups', 'rostergroups.group_id', '=', 'groups.id')
             ->select('groupname','groups.id','rostergroups.extrainfo')
-            ->where('rosters.id',$roster)
+            ->where('rosters.id',$id)
             ->orderBy('groupname')
             ->get();
         foreach ($groups as $group){
@@ -136,12 +145,12 @@ class ReportsController extends Controller
                     ->select('individual_rosteritem.individual_id')
                     ->where('rosteritems.rosterdate','=',$fixdate)
                     ->where('groups.id',$group->id)
-                    ->where('rosters.id','=',$roster)
+                    ->where('rosters.id','=',$id)
                     ->get();
                 if (count($dum)){
                     foreach ($dum as $individ) {
                         if ($individ->individual_id < 0){
-                            $indivextra=Rostergroup::where('roster_id',$roster)->where('group_id',$group->id)->first()->extraoptions;
+                            $indivextra=Rostergroup::where('roster_id',$id)->where('group_id',$group->id)->first()->extraoptions;
                             $eoptions=explode(",",$indivextra);
                             foreach ($eoptions as $ko=>$eo){
                                 if ($individ->individual_id == -1 * (1+$ko)){

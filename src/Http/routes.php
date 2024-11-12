@@ -15,7 +15,7 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/blog/{year}/{month}/{slug}/{mode?}', 'blogpost')->name('blogpost');
     Route::get('/blog/{mode?}', 'blog')->name('blog');
     Route::get('/blog/{slug}/{mode?}', 'blogger')->name('blogger');
-    Route::get('/books/{id}/{mode?}', 'book')->name('book');
+    Route::get('/book/{id}/{mode?}', 'book')->name('book');
     Route::get('/books/{mode?}', 'books')->name('books');
     Route::get('/giving/{mode?}', 'giving')->name('giving');
     Route::get('/groups/{mode?}', 'groups')->name('groups');

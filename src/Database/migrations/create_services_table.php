@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('servicetitle', 191)->default(null);
             $table->string('reading', 191)->default(null);
             $table->integer('series_id')->default(null);
+            $table->integer('livestream')->default(null);
         });
     }
     

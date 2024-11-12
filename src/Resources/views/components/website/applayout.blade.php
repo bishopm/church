@@ -41,7 +41,16 @@
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <a class="nav-link active" style="padding-left:7px;" href="{{url('/app')}}">Home</a>
-            <a class="nav-link active" style="padding-left:7px;" href="{{url('/')}}">WMC website</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="padding-left:7px;" href="{{url('/books/app')}}">Books</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="padding-left:7px;" href="{{url('/')}}">WMC website</a>
+          </li>
+          <li class="nav-item"><hr class="dropdown-divider"></li>
+          <li class="nav-item">
+            <a class="nav-link" style="padding-left:7px;" href="{{url('/profile')}}">My profile</a>
           </li>
         </ul>
       </div>

@@ -30,32 +30,44 @@
 <body style="background-color: lightblue;">
   <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
     <div id="container" class="container-fluid">
-      <a href="{{url('/app')}}" class="navbar-brand">
-        <i class="bi bi-house-fill text-white" style="font-size: 1.5rem;"></i>
-      </a>
-      <h2 class="text-white pt-2">{{setting('general.church_abbreviation')}}</h2>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" style="padding:0; border:0;" type="button" data-bs-toggle="collapse" data-bs-target="#appMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarColor02">
+      <h2 class="text-white mx-auto pt-2">{{setting('general.church_abbreviation')}}</h2>      
+      <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" style="padding-left:7px;" href="{{url('/app')}}">Home</a>
+            <a class="nav-link active" href="{{url('/app')}}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" style="padding-left:7px;" href="{{url('/books/app')}}">Books</a>
+            <a class="nav-link" href="{{url('/books/app')}}">Books</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" style="padding-left:7px;" href="{{url('/')}}">WMC website</a>
+            <a class="nav-link" href="{{url('/')}}">WMC website</a>
           </li>
-          <li class="nav-item"><hr class="dropdown-divider"></li>
+          <div class="dropdown-divider" style="color:grey; border:solid 1px;"></div>
+          @if (count($member))
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{$member['firstname']}}'s menu
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+          @else
           <li class="nav-item">
-            <a class="nav-link" style="padding-left:7px;" href="{{url('/profile')}}">My profile</a>
+            <a class="nav-link" href="{{url('/')}}">Login</a>
           </li>
+          @endif
         </ul>
-      </div>
+      <div>
     </div>
   </nav>
+
   <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px; padding-bottom:90px;">
       {{$slot}}
   </main>
@@ -69,7 +81,7 @@
     <div class="col-1"></div>
   </div>
   <script src="/public/church/js/bootstrap-bundle.min.js"></script>
-  <script src="/public/church/js/custom.js"></script>
+  <script src="/public/church/js/custom1.js"></script>
 </body>
 
 </html>

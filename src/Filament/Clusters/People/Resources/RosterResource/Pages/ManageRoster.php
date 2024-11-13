@@ -88,7 +88,7 @@ class ManageRoster extends Page implements HasForms
     protected function constructPreviewSchema(){
         $record=$this->record;
         $rosterdate =date('Y-m-d',strtotime('next ' . $record->dayofweek));
-        $schema=[Placeholder::make('PreviewDate')->content(new HtmlString('**' . date('l d F Y',strtotime($rosterdate)) . '**'))->label('')];
+        $schema=[Placeholder::make('PreviewDate')->content(new HtmlString('<b>' . date('l d F Y',strtotime($rosterdate)) . '</b>'))->label('')];
         $rosteritems = Rosteritem::with('individuals','rostergroup.group')->where('rosterdate',$rosterdate)->whereHas('rostergroup', function ($q) use ($record) {
             $q->where('roster_id',$record->id);
         })->get();
@@ -178,17 +178,15 @@ class ManageRoster extends Page implements HasForms
                 }
             }
             $message.="\nMay God bless you as you serve him here. Thank you!";
-            if ($person->email=="michael@westvillemethodist.co.za"){
-                $data=array();
-                $data['body'] = $message;
-                $data['subject'] = $rost->roster . ": " . $rostertitle . " Roster";
-                $data['firstname'] = $person->firstname;
-                $data['url'] = "https://westvillemethodist.co.za";
-                $data['firstname'] = $person->firstname;
-                $data['attachment'] = storage_path('app/public/attachments/WMCrosters.pdf');
-                $emailcount++;
-                Mail::to($person->email)->queue(new ReportMail($data));
-            }
+            $data=array();
+            $data['body'] = $message;
+            $data['subject'] = $rost->roster . ": " . $rostertitle . " Roster";
+            $data['firstname'] = $person->firstname;
+            $data['url'] = "https://westvillemethodist.co.za";
+            $data['firstname'] = $person->firstname;
+            $data['attachment'] = storage_path('app/public/attachments/WMCrosters.pdf');
+            $emailcount++;
+            Mail::to($person->email)->queue(new ReportMail($data));
             Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();
         }
         return "Emails sent: " . $emailcount;

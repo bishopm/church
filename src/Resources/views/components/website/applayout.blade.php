@@ -51,11 +51,14 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{$member['firstname']}}'s menu
               </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Connecting</a>
+                <a class="dropdown-item" href="#">Giving</a>
+                <a class="dropdown-item" href="#">Learning</a>
+                <a class="dropdown-item" href="#">Serving</a>
+                <a class="dropdown-item" href="#">Worshiping</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
+                <a class="dropdown-item" href="#">Personal details</a>
               </div>
             </li>
           @else

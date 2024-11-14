@@ -27,13 +27,13 @@
   @laravelPWA
 </head>
 
-<body style="background-color: lightblue;">
+<body style="background-color: #f6f6f6;">
   <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
     <div id="container" class="container-fluid">
       <button class="navbar-toggler" style="padding:0; border:0;" type="button" data-bs-toggle="collapse" data-bs-target="#appMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <h2 class="text-white mx-auto pt-2">{{setting('general.church_abbreviation')}}</h2>      
+      <h2 class="text-white ms-auto pt-2"><a href="{{url('/app')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
@@ -41,6 +41,12 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url('/books/app')}}">Books</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url('/app/devotionals')}}">Devotionals</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url('/app/songs')}}">Songs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url('/')}}">WMC website</a>
@@ -52,13 +58,9 @@
                 {{$member['firstname']}}'s menu
               </a>
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Connecting</a>
-                <a class="dropdown-item" href="#">Giving</a>
-                <a class="dropdown-item" href="#">Learning</a>
-                <a class="dropdown-item" href="#">Serving</a>
-                <a class="dropdown-item" href="#">Worshiping</a>
+                <a class="dropdown-item" href="{{url('/app/practices')}}">WMC practices</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Personal details</a>
+                <a class="dropdown-item" href="{{url('/app/details')}}">Personal details</a>
               </div>
             </li>
           @else

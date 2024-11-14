@@ -10,6 +10,10 @@ Livewire::setUpdateRoute(function ($handle) {
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('/app', 'app')->name('app.home');
+    Route::get('/app/details', 'details')->name('details');
+    Route::get('/app/devotionals', 'devotionals')->name('devotionals');
+    Route::get('/app/practices', 'practices')->name('practices');
+    Route::get('/app/songs/', 'songs')->name('songs');
     Route::get('/app/songs/{id}', 'song')->name('song');
     Route::get('/login', 'login')->name('login');
     Route::get('/blog/{year}/{month}/{slug}/{mode?}', 'blogpost')->name('blogpost');
@@ -20,7 +24,6 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/giving/{mode?}', 'giving')->name('giving');
     Route::get('/groups/{mode?}', 'groups')->name('groups');
     Route::get('/groups/{id}/{mode?}', 'group')->name('group');
-    Route::get('/mymenu/{mode?}', 'mymenu')->name('mymenu');
     Route::get('/people/{slug}/{mode?}', 'person')->name('person');
     Route::get('/projects/{id}/{mode?}', 'project')->name('project');
     Route::get('/projects/{mode?}', 'projects')->name('projects');

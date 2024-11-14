@@ -63,13 +63,6 @@ class HomeController extends Controller
         krsort($data['content']);
         return view('church::app.home',$data);
     }
-    
-    public function song($id) {
-        $song=Song::find($id);
-        $song->lyrics=preg_replace('/\{[a-zA-Z0-9_]+?\}/','',$song->lyrics);
-        $data['song']=$song;
-        return view('church::app.song',$data);
-    }
 
     public function home()
     {
@@ -122,6 +115,18 @@ class HomeController extends Controller
         return view('church::' . $mode . '.books',$data);
     }
 
+    public function devotionals(){
+        $response=Http::get('https://ffdl.co.za/feed/');
+        $items = json_decode((string) $response->getBody(), true)['rows'][0];
+        foreach ($items['elements'] as $key => $item) {
+            echo $item['duration']['text'] . ': '; 
+            echo $item['duration']['value'] . '<br>';   
+        }
+        dd();
+        $data['ffdl']=$response->body();                
+        return view('church::app.devotionals',$data);
+    }
+
     public function giving($mode="website"){
         return view('church::' . $mode . '.giving');
     }
@@ -136,7 +141,7 @@ class HomeController extends Controller
         return view('church::' . $mode . '.groups',$data);
     }
 
-    public function mymenu($mode="website"){
+    public function practices(){
         $data=array();
         $data['indiv']=Individual::find($this->member['id']);
         $data['servicegroups']=Group::where('grouptype','service')->whereHas('individuals', function ($q) {
@@ -165,12 +170,17 @@ class HomeController extends Controller
             }
         }
         ksort($data['roster']);
-        return view('church::' . $mode . '.mymenu',$data);
+        return view('church::app.practices',$data);
     }
 
     public function person($slug,$mode="website"){
         $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
         return view('church::' . $mode . '.person',$data);
+    }
+
+    public function details(){
+        $data['indiv']=Individual::find($this->member['id']);
+        return view('church::app.details',$data);
     }
 
     public function project($id,$mode="website"){
@@ -197,6 +207,18 @@ class HomeController extends Controller
         $data['sermon']=Sermon::with('person')->where('id',$id)->first();
         $data['series']=Series::with('sermons')->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $mode . '.sermon',$data);
+    }
+
+    public function song($id) {
+        $song=Song::find($id);
+        $song->lyrics=preg_replace('/\{[a-zA-Z0-9_]+?\}/','',$song->lyrics);
+        $data['song']=$song;
+        return view('church::app.song',$data);
+    }
+
+    public function songs() {
+        $data['songs']=Song::orderBy('title','ASC')->select('id','title','author')->get();
+        return view('church::app.songs',$data);
     }
 
     public function subject($slug,$mode="website"){

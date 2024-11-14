@@ -14,12 +14,15 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-ffdl" role="tabpanel" aria-labelledby="pills-ffdl-tab">
             <div class="card p-3">
+                <h4>{{$ffdl_title}}</h4>
                 {!!$ffdl!!}
             </div>
         </div>
         <div class="tab-pane fade show" id="pills-prayers" role="tabpanel" aria-labelledby="pills-prayers-tab">
             <div class="card p-3">
-                Prayers
+            <img class="card-img-top pb-3" src="{{url('/storage/' . $prayers[0]->image)}}">
+            <h6 class="text-center">{{$prayers[0]['reading']}}</h6>
+            {!!substr(strip_tags($prayers[0]['body']),1,-1)!!}
             </div>
         </div>        
     </div>

@@ -4,6 +4,7 @@ namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
+use Bishopm\Church\Models\Cache;
 use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Gift;
@@ -18,8 +19,10 @@ use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Spatie\Tags\Tag;
+use Vedmant\FeedReader\Facades\FeedReader;
 
 class HomeController extends Controller
 {
@@ -116,14 +119,29 @@ class HomeController extends Controller
     }
 
     public function devotionals(){
-        $response=Http::get('https://ffdl.co.za/feed/');
-        $items = json_decode((string) $response->getBody(), true)['rows'][0];
-        foreach ($items['elements'] as $key => $item) {
-            echo $item['duration']['text'] . ': '; 
-            echo $item['duration']['value'] . '<br>';   
+        $today=date('Y-m-d');
+        $ffdl=Cache::where('category','FFDL')->where(DB::raw('SUBSTRING(created_at,1,10)'),$today)->first();
+        if (!$ffdl){
+            $f = FeedReader::read('https://ffdl.co.za/feed/');
+            $ffdl=Cache::create([
+                'category'=>'FFDL',
+                'title'=>$f->get_items()[0]->get_title(),
+                'body'=>$f->get_items()[0]->get_content()
+            ]);
         }
-        dd();
-        $data['ffdl']=$response->body();                
+        $data['ffdl']=$ffdl->body;
+        $data['ffdl_title']=$ffdl->title;
+        $prayers=Devotional::orderBy('publicationdate','DESC')->get()->take(5);
+        foreach ($prayers as $prayer){
+            $cache=Cache::where('title',$prayer->reading)->first();
+            if (!$cache){
+                $body="Dummy text";
+            } else {
+                $body=$cache->body;
+            }
+            $prayer->body=$body;
+            $data['prayers'][] = $prayer;
+        }
         return view('church::app.devotionals',$data);
     }
 

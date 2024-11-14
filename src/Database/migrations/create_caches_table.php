@@ -11,9 +11,9 @@ return new class extends Migration
         {
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
-            $table->string('ndx', 255);
-            $table->string('translation', 25)->nullable();
-            $table->text('cached');
+            $table->string('title', 255);
+            $table->string('category', 25)->nullable();
+            $table->text('body');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

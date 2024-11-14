@@ -54,15 +54,17 @@ class HomeController extends Controller
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
         $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
-        $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
-        if ($floor == 1){
-            $data['floor'] = "1 day";
-        } else {
-            $data['floor'] = $floor . " days";
+        if ($data['service']){
+            $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
+            if ($floor == 1){
+                $data['floor'] = "1 day";
+            } else {
+                $data['floor'] = $floor . " days";
+            }
+            $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $data['service']->servicetime . "/" . substr($data['service']->servicedate,0,10);
+            $response=Http::get($url);
+            $data['preacher']=$response->body();
         }
-        $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $data['service']->servicetime . "/" . substr($data['service']->servicedate,0,10);
-        $response=Http::get($url);
-        $data['preacher']=$response->body();                
         krsort($data['content']);
         return view('church::app.home',$data);
     }

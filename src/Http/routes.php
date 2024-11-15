@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 Livewire::setUpdateRoute(function ($handle) {
-    return Route::post('/custom/liewire/update', $handle)->middleware(['web']);
+    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
 });
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
@@ -15,7 +15,7 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/app/practices', 'practices')->name('practices');
     Route::get('/app/songs/', 'songs')->name('songs');
     Route::get('/app/songs/{id}', 'song')->name('song');
-    Route::get('/login', 'login')->name('login');
+    Route::get('/login/{mode?}', 'login')->name('login');
     Route::get('/blog/{year}/{month}/{slug}/{mode?}', 'blogpost')->name('blogpost');
     Route::get('/blog/{mode?}', 'blog')->name('blog');
     Route::get('/blog/{slug}/{mode?}', 'blogger')->name('blogger');

@@ -79,9 +79,10 @@ class LoginForm extends Component
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');
             session()->flash('message', 'Welcome, ' . $this->firstname . '! You are now logged in on this device.');
-            return redirect('/');
+            return redirect('/app');
         } else {
-            $this->result = "Wrong! Please try again!";
+            session()->flash('message', 'Sorry! That PIN was not correct, you will need to try again. Contact the office if you need any help.');
+            return redirect('/login');
         }
     }
  

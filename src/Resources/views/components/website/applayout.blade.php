@@ -45,9 +45,11 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url('/app/devotionals')}}">Devotionals</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url('/app/songs')}}">Songs</a>
-          </li>
+          @if (count($member))
+            <li class="nav-item">
+              <a class="nav-link" href="{{url('/app/songs')}}">Songs</a>
+            </li>
+          @endif
           <li class="nav-item">
             <a class="nav-link" href="{{url('/')}}">WMC website</a>
           </li>
@@ -65,7 +67,7 @@
             </li>
           @else
           <li class="nav-item">
-            <a class="nav-link" href="{{url('/')}}">Login</a>
+            <a class="nav-link" href="{{url('/login/app')}}">Login</a>
           </li>
           @endif
         </ul>
@@ -74,7 +76,13 @@
   </nav>
 
   <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px; padding-bottom:90px;">
-      {{$slot}}
+    @if (session()->has('message'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">  
+        <p>{{ session('message') }}</p>          
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
+    {{$slot}}
   </main>
   <div class="row fixed-bottom bg-dark text-white">
     <div class="col-1"></div>
@@ -86,7 +94,7 @@
     <div class="col-1"></div>
   </div>
   <script src="/public/church/js/bootstrap-bundle.min.js"></script>
-  <script src="/public/church/js/custom1.js"></script>
+  <script src="/public/church/js/custom.js"></script>
 </body>
 
 </html>

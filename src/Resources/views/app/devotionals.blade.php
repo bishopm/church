@@ -14,7 +14,7 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-ffdl" role="tabpanel" aria-labelledby="pills-ffdl-tab">
             <div class="card p-3">
-                <h4>{{$ffdl_title}}</h4>
+                <h4>{!!$ffdl_title!!}</h4>
                 {!!$ffdl!!}
             </div>
         </div>

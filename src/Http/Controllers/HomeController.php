@@ -69,6 +69,11 @@ class HomeController extends Controller
         return view('church::app.home',$data);
     }
 
+    public function details(){
+        $data['indiv']=Individual::find($this->member['id']);
+        return view('church::app.details',$data);
+    }
+
     public function home()
     {
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
@@ -77,8 +82,8 @@ class HomeController extends Controller
         return view('church::website.home',$data);
     }
 
-    public function login(){
-        return view('church::website.login');
+    public function login($mode="website"){
+        return view('church::' . $mode . '.login');
     }
 
     public function blogpost($yr,$mth,$slug,$mode="website"){
@@ -196,11 +201,6 @@ class HomeController extends Controller
     public function person($slug,$mode="website"){
         $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
         return view('church::' . $mode . '.person',$data);
-    }
-
-    public function details(){
-        $data['indiv']=Individual::find($this->member['id']);
-        return view('church::app.details',$data);
     }
 
     public function project($id,$mode="website"){

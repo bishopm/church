@@ -31,7 +31,9 @@
                 <a href="{{url('/blog') . '/' . date('Y',strtotime($item->published_at)) . '/' . date('m',strtotime($item->published_at)) . '/' . $item->slug . '/app'}}">{{$item->title}}</a>
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['published_at'])->diffForHumans()}}</small> 
-            <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
+            @if ($item->image)
+                <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
+            @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
         @elseif (isset($item->readings))
             <div class="lead pt-3">{{$item->title}}</div>
@@ -42,7 +44,7 @@
             <div class="lead pt-3">{{$item->readings}}
                 <small class="text-muted">{{$item->person->fullname}}</small>
             </div>
-        @else 
+        @elseif ($item->image)
             <img class="card-img-top" src="{{url('/storage/' . $item->image)}}" alt="{{$item->reading}}">
         @endif
     @empty

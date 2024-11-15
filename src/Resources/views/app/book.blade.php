@@ -7,7 +7,9 @@
                 @foreach ($book->tags as $tag)
                     <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="badge">{{$tag->name}}</a></span>
                 @endforeach
-                <small>{{$book->status}}</small>
+                @if (count($member))
+                    <small>{{$book->status}}</small>
+                @endif
             </div>
             <div>
                 <div>
@@ -28,7 +30,7 @@
                     </div>
                 @endforeach
             @else
-                To rate or view books, please <a href="{{url('/')}}/login">login</a>
+                To rate or review books, please <a href="{{url('/')}}/login">login</a>
             @endif
         </div>
     </div>

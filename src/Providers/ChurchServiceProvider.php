@@ -79,6 +79,11 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('laravelpwa.manifest.splash.1668x2388',asset('church/images/icons/splash-1668x2388.png'));
         Config::set('laravelpwa.manifest.splash.2048x2732',asset('church/images/icons/splash-2048x2732.png'));
         Config::set('laravelpwa.manifest.shortcuts',array());
+        Config::set('laravelpwa.manifest.screenshots.src',asset('church/images/icons/screenshot.png'));
+        Config::set('laravelpwa.manifest.screenshots.sizes','640x320');
+        Config::set('laravelpwa.manifest.screenshots.type','image/png');
+        Config::set('laravelpwa.manifest.screenshots.form_factor','wide');
+        Config::set('laravelpwa.manifest.screenshots.label','WMC');
         Livewire::component('login', LoginForm::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);

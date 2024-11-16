@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="/public/church/css/custom.css">
   
   <!-- PWA -->
-  <link rel="manifest" href="http://localhost/public/church/pwa/manifest.json">
+  <link rel="manifest" href="/public/church/pwa/manifest.json" crossorigin="use-credentials" />
   <!-- Chrome for Android theme color -->
   <meta name="theme-color" content="#159CA0">
   

@@ -19,6 +19,15 @@
       "1668x2388": "http://localhost/public/church/images/icons/splash-1668x2388.png",
       "2048x2732": "http://localhost/public/church/images/icons/splash-2048x2732.png"
     },
+    "screenshots": [
+      {
+      "src": "http://localhost/public/church/images/icons/screenshot.png",
+      "sizes": "640x320",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "WMC"
+      }
+    ],
     "icons": [
       {
         "src": "http://localhost/public/church/images/icons/icon-72x72.png",

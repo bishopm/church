@@ -15,10 +15,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-  <!-- Media player -->
-  <link rel="stylesheet" href="https://cdn.vidstack.io/player/theme.css" />
-  <link rel="stylesheet" href="https://cdn.vidstack.io/player/audio.css" />
-  <script src="https://cdn.vidstack.io/player" type="module"></script>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <link rel="stylesheet" href="/public/church/css/leaflet.css">
   <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/{{setting('website.theme')}}/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +23,7 @@
   <link rel="stylesheet" href="/public/church/css/custom.css">
   
   <!-- PWA -->
-  <link rel="manifest" href="http://localhost/public/manifest.json">
+  <link rel="manifest" href="http://localhost/public/church/pwa/manifest.json">
   <!-- Chrome for Android theme color -->
   <meta name="theme-color" content="#159CA0">
   
@@ -60,8 +57,8 @@
   <script type="text/javascript">
       // Initialize the service worker
       if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/serviceworker.js', {
-              scope: '.'
+          navigator.serviceWorker.register('/public/church/pwa/serviceworker.js', {
+              scope: '/public/church/pwa/'
           }).then(function (registration) {
               // Registration was successful
               console.log('Laravel PWA: ServiceWorker registration successful with scope: ', registration.scope);

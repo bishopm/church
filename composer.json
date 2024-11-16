@@ -21,7 +21,6 @@
         "joaopaulolndev/filament-pdf-viewer": "~1",
         "hugomyb/filament-media-action": "~3",
         "filament/spatie-laravel-tags-plugin": "~3",
-        "silviolleite/laravelpwa": "~2",
         "dotswan/filament-map-picker": "~1",
         "stechstudio/filament-impersonate": "~3",
         "althinect/filament-spatie-roles-permissions": "~2",

@@ -82,8 +82,8 @@ class HomeController extends Controller
         return view('church::website.home',$data);
     }
 
-    public function login($mode="website"){
-        return view('church::' . $mode . '.login');
+    public function login(){
+        return view('church::app.login');
     }
 
     public function blogpost($yr,$mth,$slug,$mode="website"){
@@ -164,6 +164,10 @@ class HomeController extends Controller
     public function groups($mode="website"){
         $data['groups']=Group::where('grouptype','fellowship')->orderBy('groupname')->where('publish',1)->get();
         return view('church::' . $mode . '.groups',$data);
+    }
+
+    public function offline(){
+        return view('church::app.offline');
     }
 
     public function practices(){

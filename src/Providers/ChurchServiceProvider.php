@@ -104,6 +104,10 @@ class ChurchServiceProvider extends ServiceProvider
             Config::set('member',$member);
         }
         View::share('member',$member);
+        $this->publishes([
+            __DIR__.'/../Resources/pwa/manifest.json' => public_path('manifest.json'),
+            __DIR__.'/../Resources/pwa/serviceworker.js' => public_path('serviceworker.js'),
+        ]);
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
             $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
         });

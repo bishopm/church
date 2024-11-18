@@ -1,5 +1,6 @@
 <?php
 
+use Bishopm\Church\Http\Middleware\CheckLogin;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
@@ -9,13 +10,13 @@ Livewire::setUpdateRoute(function ($handle) {
 
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('/app', 'app')->name('app.home');
-    Route::get('/app/details', 'details')->name('details');
-    Route::get('/app/devotionals', 'devotionals')->name('devotionals');
-    Route::get('/app/practices', 'practices')->name('practices');
-    Route::get('/app/songs/', 'songs')->name('songs');
-    Route::get('/app/songs/{id}', 'song')->name('song');
-    Route::get('/login/{mode?}', 'login')->name('login');
+    Route::get('/app', 'app')->name('app.home')->middleware([CheckLogin::class]);
+    Route::get('/app/details', 'details')->name('details')->middleware([CheckLogin::class]);
+    Route::get('/app/devotionals', 'devotionals')->name('devotionals')->middleware([CheckLogin::class]);
+    Route::get('/app/practices', 'practices')->name('practices')->middleware([CheckLogin::class]);
+    Route::get('/app/songs/', 'songs')->name('songs')->middleware([CheckLogin::class]);
+    Route::get('/app/songs/{id}', 'song')->name('song')->middleware([CheckLogin::class]);
+    Route::get('/app/login', 'login')->name('login');
     Route::get('/blog/{year}/{month}/{slug}/{mode?}', 'blogpost')->name('blogpost');
     Route::get('/blog/{mode?}', 'blog')->name('blog');
     Route::get('/blog/{slug}/{mode?}', 'blogger')->name('blogger');
@@ -24,6 +25,7 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/giving/{mode?}', 'giving')->name('giving');
     Route::get('/groups/{mode?}', 'groups')->name('groups');
     Route::get('/groups/{id}/{mode?}', 'group')->name('group');
+    Route::get('/offline', 'offline')->name('offline');
     Route::get('/people/{slug}/{mode?}', 'person')->name('person');
     Route::get('/projects/{id}/{mode?}', 'project')->name('project');
     Route::get('/projects/{mode?}', 'projects')->name('projects');

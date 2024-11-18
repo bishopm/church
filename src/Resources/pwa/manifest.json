@@ -6,7 +6,7 @@
     "theme_color": "#159CA0",
     "background_color": "#ffffff",
     "orientation": "any",
-    "status_bar": "blue",
+    "status_bar": "black",
     "splash": {
       "640x1136": "http://localhost/public/church/images/icons/splash-640x1136.png",
       "750x1334": "http://localhost/public/church/images/icons/splash-750x1334.png",

@@ -16,7 +16,7 @@ class CheckLogin
     public function handle(Request $request, Closure $next): Response
     {
         if (!isset($_COOKIE['wmc-mobile']) or (!isset($_COOKIE['wmc-access']))){
-            return redirect('/app/login');
+            return redirect(route('app.login'));
         }
 
         return $next($request);

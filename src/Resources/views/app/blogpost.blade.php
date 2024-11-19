@@ -1,10 +1,10 @@
 <x-church::website.applayout pageName="Blog post">
     <h1>{{$post->title}}</h1>
     <div class="meta mb-3">
-        <small><span class="date">{{date('j M Y',strtotime($post->published_at))}}</span> •<a href="{{url('/people') . '/' . $post->person->slug . '/app'}}" class="cat">{{$post->person->fullname}}</a></small>
+        <small><span class="date">{{date('j M Y',strtotime($post->published_at))}}</span> •<a href="{{url('/people') . '/' . $post->person->slug}}" class="cat">{{$post->person->fullname}}</a></small>
         <div>
             @foreach ($post->tags as $tag)
-                <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}/app" class="badge">{{$tag->name}}</a></span>
+                <span class="badge text-uppercase"><a href="{{url('/')}}/subject/{{$tag->slug}}" class="badge">{{$tag->name}}</a></span>
             @endforeach
         </div>
     </div>
@@ -26,7 +26,7 @@
                     <h5>{{$y}}</h5>
                     @foreach ($year as $blog)
                         <div>
-                            <a href="{{url('/blog') . '/' . date('Y',strtotime($blog['published_at'])) . '/' . date('m',strtotime($blog['published_at'])) . '/' . $blog['slug'] . '/app'}}">{{$blog['title']}}</a>
+                            <a href="{{url('/blog') . '/' . date('Y',strtotime($blog['published_at'])) . '/' . date('m',strtotime($blog['published_at'])) . '/' . $blog['slug']}}">{{$blog['title']}}</a>
                         </div>
                     @endforeach
                 @endforeach

@@ -76,25 +76,25 @@
       <button class="navbar-toggler" style="padding:0; border:0;" type="button" data-bs-toggle="collapse" data-bs-target="#appMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <h2 class="text-white ms-auto pt-2"><a href="{{url('/app')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
+      <h2 class="text-white ms-auto pt-2"><a href="{{route('app.home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="{{url('/app')}}">Home</a>
+            <a class="nav-link active" href="{{route('app.home')}}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url('/books/app')}}">Books</a>
+            <a class="nav-link" href="{{route('app.books')}}">Books</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url('/app/devotionals')}}">Devotionals</a>
+            <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
           </li>
           @if (count($member))
             <li class="nav-item">
-              <a class="nav-link" href="{{url('/app/songs')}}">Songs</a>
+              <a class="nav-link" href="{{route('app.songs')}}">Songs</a>
             </li>
           @endif
           <li class="nav-item">
-            <a class="nav-link" href="{{url('/')}}">WMC website</a>
+            <a class="nav-link" href="{{route('web.home')}}">WMC website</a>
           </li>
           <div class="dropdown-divider" style="color:grey; border:solid 1px;"></div>
           @if (count($member))
@@ -103,14 +103,16 @@
                 {{$member['firstname']}}'s menu
               </a>
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{url('/app/practices')}}">WMC practices</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{url('/app/details')}}">Personal details</a>
+                <a class="dropdown-item" href="{{route('app.practices')}}">WMC practices</a>
+                <a class="dropdown-item" href="{{route('app.details')}}">Personal details</a>
+                @if (isset($member['pastor_id']))
+                  <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
+                @endif
               </div>
             </li>
           @else
           <li class="nav-item">
-            <a class="nav-link" href="{{url('/login/app')}}">Login</a>
+            <a class="nav-link" href="{{route('app.login')}}">Login</a>
           </li>
           @endif
         </ul>

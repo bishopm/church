@@ -1,7 +1,7 @@
 {
     "name": "Westville Methodist Church",
     "short_name": "WMC",
-    "start_url": "https://app.westvillemethodist.co.za",
+    "start_url": "http://app.localhost",
     "display": "standalone",
     "theme_color": "#159CA0",
     "background_color": "#ffffff",

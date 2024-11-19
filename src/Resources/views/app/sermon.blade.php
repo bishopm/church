@@ -27,9 +27,9 @@
                     @foreach ($series->sermons as $ss)
                         @if ($ss->id <> $sermon->id)
                             <li>{{date('d M',strtotime($ss->servicedate))}}&nbsp;&nbsp;
-                                <a href="{{url('/')}}/sermon/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}/app">{{$ss->title}}</a> 
+                                <a href="{{url('/')}}/sermon/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}">{{$ss->title}}</a> 
                                 &nbsp;<span class="bi bi-book"></span>&nbsp;<a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($ss->readings)}}&version=GNT";">{{$ss->readings}} </a>
-                                <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$ss->person->slug}}/app">{{$ss->person->fullname}}</a>
+                                <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$ss->person->slug}}">{{$ss->person->fullname}}</a>
                             </li>
                         @endif
                     @endforeach    

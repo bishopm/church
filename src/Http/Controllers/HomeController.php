@@ -21,16 +21,23 @@ use Bishopm\Church\Models\Song;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Request;
 use Spatie\Tags\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
 class HomeController extends Controller
 {
 
-    public $member;
+    public $member, $routeName;
 
     public function __construct(){
         $this->member=Config::get('member');
+        $routename = Request::route()->getName();
+        if (str_contains($routename,'app.')){
+            $this->routeName="app";
+        } else {
+            $this->routeName="web";
+        }
     }
 
      /**
@@ -69,24 +76,7 @@ class HomeController extends Controller
         return view('church::app.home',$data);
     }
 
-    public function details(){
-        $data['indiv']=Individual::find($this->member['id']);
-        return view('church::app.details',$data);
-    }
-
-    public function home()
-    {
-        $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
-        $data['sermon']=Sermon::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
-        $data['pageName'] = "Home";
-        return view('church::website.home',$data);
-    }
-
-    public function login(){
-        return view('church::app.login');
-    }
-
-    public function blogpost($yr,$mth,$slug,$mode="website"){
+    public function blogpost($yr,$mth,$slug){
         $data['post']=Post::where('slug',$slug)->first();
         $relatedBlogs=Post::withAnyTags($data['post']->tags)->where('published',1)->orderBy('published_at','DESC')->get();
         $related=array();
@@ -98,31 +88,47 @@ class HomeController extends Controller
             $related['blogs'][date('Y',strtotime($blog->published_at))][]=$dum;
         }
         $data['related']=$related;
-        return view('church::' . $mode . '.blogpost',$data);
+
+        return view('church::' . $this->routeName . '.blogpost',$data);
     }
 
-    public function blog($mode="website") {
+    public function blog() {
         $data['posts']=Post::orderBy('published_at','DESC')->paginate(10);
-        return view('church::' . $mode . '.blog',$data);
+        return view('church::' . $this->routeName . '.blog',$data);
     }
 
-    public function blogger($slug,$mode="website") {
+    public function blogger($slug) {
         $blogger=Person::where('slug',$slug)->first();
         $data['posts']=Post::where('person_id',$blogger->id)->orderBy('published_at','DESC')->paginate(10);
-        return view('church::' . $mode . '.blogger',$data);
+        return view('church::' . $this->routeName . '.blogger',$data);
     }
 
-    public function book($id,$mode="website"){
+    public function book($id){
         $data['book']=Book::with('comments')->where('id',$id)->first();
         if (isset($this->member->id)){
             $data['comment']=Comment::where('book_id',$id)->where('individual_id',$this->member->id)->first();
         }
-        return view('church::' . $mode . '.book',$data);
+        return view('church::' . $this->routeName . '.book',$data);
     }
 
-    public function books($mode="website"){
-        $data['books']=Book::orderBy('title')->paginate(10);
-        return view('church::' . $mode . '.books',$data);
+    public function books(){
+        if (isset($_GET['search'])){
+            $data['search']=$_GET['search'];
+        } else {
+            $data['search']="";
+        }
+        if ($data['search']<>""){
+            $data['books']=Book::where('title','like','%' . $data['search'] . '%')->orWhere('authors','like','%' . $data['search'] . '%')->orderBy('title')->paginate(15);
+        } else {
+            $data['books']=Book::orderBy('title')->paginate(15);
+        }
+        $data['books']->appends(['search' => $data['search']]);
+        return view('church::' . $this->routeName . '.books',$data);
+    }
+
+    public function details(){
+        $data['indiv']=Individual::find($this->member['id']);
+        return view('church::app.details',$data);
     }
 
     public function devotionals(){
@@ -152,18 +158,30 @@ class HomeController extends Controller
         return view('church::app.devotionals',$data);
     }
 
-    public function giving($mode="website"){
-        return view('church::' . $mode . '.giving');
+    public function giving(){
+        return view('church::' . $this->routeName . '.giving');
     }
 
-    public function group($id,$mode="website"){
+    public function group($id){
         $data['group']=Group::with('individual')->where('id',$id)->first();
-        return view('church::' . $mode . '.group',$data);
+        return view('church::' . $this->routeName . '.group',$data);
     }
 
-    public function groups($mode="website"){
+    public function groups(){
         $data['groups']=Group::where('grouptype','fellowship')->orderBy('groupname')->where('publish',1)->get();
-        return view('church::' . $mode . '.groups',$data);
+        return view('church::' . $this->routeName . '.groups',$data);
+    }
+
+    public function home()
+    {
+        $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
+        $data['sermon']=Sermon::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
+        $data['pageName'] = "Home";
+        return view('church::web.home',$data);
+    }
+
+    public function login(){
+        return view('church::app.login');
     }
 
     public function offline(){
@@ -202,35 +220,35 @@ class HomeController extends Controller
         return view('church::app.practices',$data);
     }
 
-    public function person($slug,$mode="website"){
+    public function person($slug){
         $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
-        return view('church::' . $mode . '.person',$data);
+        return view('church::' . $this->routeName . '.person',$data);
     }
 
-    public function project($id,$mode="website"){
+    public function project($id){
         $data['project']=Project::find($id);
-        return view('church::' . $mode . '.project',$data);
+        return view('church::' . $this->routeName . '.project',$data);
     }
 
-    public function projects($mode="website"){
+    public function projects(){
         $data['projects']=Project::orderBy('project')->paginate(10);
-        return view('church::' . $mode . '.projects',$data);
+        return view('church::' . $this->routeName . '.projects',$data);
     }
 
-    public function series($year,$slug,$mode="website"){
+    public function series($year,$slug){
         $data['series']=Series::with('sermons.person')->where('slug',$slug)->first();
-        return view('church::' . $mode . '.series',$data);
+        return view('church::' . $this->routeName . '.series',$data);
     }
     
-    public function sermons($mode="website") {
+    public function sermons() {
         $data['series']=Series::with('sermons')->orderBy('startingdate','DESC')->paginate(10);
-        return view('church::' . $mode . '.sermons',$data);
+        return view('church::' . $this->routeName . '.sermons',$data);
     }
 
-    public function sermon($year,$slug, $id,$mode="website"){
+    public function sermon($year,$slug, $id){
         $data['sermon']=Sermon::with('person')->where('id',$id)->first();
         $data['series']=Series::with('sermons')->where('id',$data['sermon']->series_id)->first();
-        return view('church::' . $mode . '.sermon',$data);
+        return view('church::' . $this->routeName . '.sermon',$data);
     }
 
     public function song($id) {
@@ -241,16 +259,26 @@ class HomeController extends Controller
     }
 
     public function songs() {
-        $data['songs']=Song::orderBy('title','ASC')->select('id','title','author')->get();
+        if (isset($_GET['search'])){
+            $data['search']=$_GET['search'];
+        } else {
+            $data['search']="";
+        }
+        if ($data['search']<>""){
+            $data['songs']=Song::whereHas('setitem')->where('title','like','%' . $data['search'] . '%')->orWhere('author','like','%' . $data['search'] . '%')->orderBy('title','ASC')->select('id','title','author')->simplePaginate(15);
+        } else {
+            $data['songs']=Song::whereHas('setitem')->orderBy('title','ASC')->select('id','title','author')->simplePaginate(15);
+        }
+        $data['songs']->appends(['search' => $data['search']]);
         return view('church::app.songs',$data);
     }
 
-    public function subject($slug,$mode="website"){
+    public function subject($slug){
         $data['tag']=Tag::findFromString($slug);
         $data['posts']=Post::withAnyTags($data['tag']->name)->where('published',1)->get();
         $data['sermons']=Sermon::withAnyTags($data['tag']->name)->where('published',1)->get();
         $data['books']=Book::withAnyTags($data['tag']->name)->get();
-        return view('church::' . $mode . '.tag',$data);
+        return view('church::' . $this->routeName . '.tag',$data);
     }
 
 }

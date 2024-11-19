@@ -7,9 +7,9 @@
             @foreach ($series->sermons as $sermon)
                 <li>
                     {{$sermon->servicedate}}&nbsp;&nbsp;
-                    <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}/app">{{$sermon->title}}</a> 
+                    <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->title}}</a> 
                     &nbsp;<span class="bi bi-book"></span>&nbsp;<a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->readings)}}&version=GNT";">{{$sermon->readings}} </a>
-                    <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$sermon->person->slug}}/app">{{$sermon->person->fullname}}</a>
+                    <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$sermon->person->slug}}">{{$sermon->person->fullname}}</a>
                 </li>
             @endforeach
         </ul>

@@ -7,6 +7,7 @@ use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -101,13 +102,24 @@ class ChurchServiceProvider extends ServiceProvider
                 $member['firstname']=$indiv->firstname;
                 $member['fullname']=$indiv->fullname;
             }
+            $pastor = Pastor::where('individual_id',$member['id'])->first();
+            if ($pastor){
+                $member['pastor_id']=$pastor->id;
+            }
             Config::set('member',$member);
         }
         View::share('member',$member);
-        $this->publishes([
-            __DIR__.'/../Resources/pwa/manifest.json' => public_path('manifest.json'),
-            __DIR__.'/../Resources/pwa/serviceworker.js' => public_path('serviceworker.js'),
-        ]);
+        if (env('APP_ENV')=="local"){
+            $this->publishes([
+                __DIR__.'/../Resources/pwa/local_manifest.json' => public_path('manifest.json'),
+                __DIR__.'/../Resources/pwa/local_serviceworker.js' => public_path('serviceworker.js'),
+            ]);
+        } else {
+            $this->publishes([
+                __DIR__.'/../Resources/pwa/manifest.json' => public_path('manifest.json'),
+                __DIR__.'/../Resources/pwa/serviceworker.js' => public_path('serviceworker.js'),
+            ]);
+        }
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
             $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
         });

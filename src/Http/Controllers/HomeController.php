@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
+use Bishopm\Church\Mail\MessageMail;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Cache;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request as FormRequest;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Tags\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
@@ -172,8 +175,14 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.groups',$data);
     }
 
-    public function home()
+    public function home(FormRequest $request)
     {
+        if (null!==$request->input('message')){
+            $data['message'] = $request->input('message');
+            $data['user'] = $request->input('user');
+            Mail::to('michael@westvillemethodist.co.za')->queue(new MessageMail($data));
+            $data['notification']="Thank you! We will reply to you by email";
+        }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
         $data['sermon']=Sermon::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";

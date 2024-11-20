@@ -21,6 +21,14 @@
         </div>
     </div>
 </div>
+@if (isset($notification))
+    <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+        {{$notification}}
+        <button type="button" class="btn close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 <section id="sundays" class="section">
     <div class="container section-title" data-aos="fade-up">
         <h1>Sundays</h1>
@@ -188,9 +196,9 @@
                                 Memorial services
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div id="collapseOne" class="accordion-collapse show collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                If you need help or advice with a memorial service, please contact our office. 
+                                If you need help or advice with a memorial service, please contact our office. Your family do not need to be linked to our church - we will do our best to help.
                             </div>
                         </div>
                     </div>
@@ -203,6 +211,18 @@
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 Our minister conducts a limited number of wedding services for couples connected to our church. We are not able to host large receptions on our property. 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                Baptism
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                We baptise adults (who have not been baptised before) and the children of members of the church. Contact our minister for more details.
                             </div>
                         </div>
                     </div>
@@ -229,6 +249,17 @@
                     <a target="_blank" title="YouTube channel" href="{{setting('website.youtube_channel')}}"><span class="bi bi-youtube h3"></span></a>&nbsp;
                     <a target="_blank" title="Youversion page" href="{{setting('website.youversion_page')}}"><span class="bi bi-bookmark-plus h3"></span></a>&nbsp;
                     <a target="_blank" title="WhatsApp" href="https://wa.me/27{{substr(setting('website.whatsapp'),1)}}"><span class="bi bi-whatsapp h3"></span></a>
+                </div>
+                <div>
+                    <h3>Send us a message</h3>
+                    <form method="post">
+                        @csrf
+                        <textarea class="form-control" name="message" placeholder="Message" rows="8" required></textarea>
+                        <div class="input-group my-2">
+                            <input name="user" type="email" class="form-control" placeholder="Email address" required>&nbsp;
+                            <button class="btn btn-dark bi bi-send"></button>
+                        </div>
+                    </form>
                 </div>
                 <div class="bg-secondary p-3 rounded">
                     <h5><span class="bi bi-bank2" style="padding-right: 10px;"></span>Bank details</h5>

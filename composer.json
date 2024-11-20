@@ -24,7 +24,8 @@
         "dotswan/filament-map-picker": "~1",
         "stechstudio/filament-impersonate": "~3",
         "althinect/filament-spatie-roles-permissions": "~2",
-        "vedmant/laravel-feed-reader": "~1"
+        "vedmant/laravel-feed-reader": "~1",
+        "google/apiclient": "~2"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

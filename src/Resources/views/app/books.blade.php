@@ -22,8 +22,10 @@
     </div>
     <form method="get">
         <div class="input-group">
-            <input class="form-control" name="search" placeholder="Search by title or author" value="{{$search}}"><div class="input-group-append">
-            &nbsp;<button class="btn btn-secondary" icon="bi bi-search"><i class="bi bi-search"></i></button>
+            <input class="form-control" name="search" placeholder="Search by title or author" value="{{$search}}">
+            <div class="input-group-append">
+                &nbsp;<button class="btn btn-secondary" icon="bi bi-search"><i class="bi bi-search"></i></button>
+            </div>
         </div>
     </form>
     <table class="table-responsive table-sm mt-2 mb-2">

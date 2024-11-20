@@ -67,6 +67,7 @@ class Settings extends BaseSettings
                         ->schema([
                             TextInput::make('services.google_email_address'),
                             TextInput::make('services.google_books_key'),
+                            TextInput::make('services.google_calendar_api'),
                             TextInput::make('services.society_id')->label('methodist.church.net.za society ID'),
                             TextInput::make('services.bulksms_clientid')->label('BulkSMS Client ID'),
                             TextInput::make('services.bulksms_api_secret')->label('BulkSMS API Secret'),

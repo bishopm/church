@@ -19,12 +19,14 @@ use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as FormRequest;
 use Illuminate\Support\Facades\Mail;
+use Spatie\GoogleCalendar\Event;
 use Spatie\Tags\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
@@ -48,9 +50,9 @@ class HomeController extends Controller
      */
     
     public function app(){
-        $data['content']=array();
-        $monthago=date('Y-m-d',strtotime('-80 days'));
         $today=date('Y-m-d');
+        $data['content']=array();
+        $monthago=date('Y-m-d',strtotime('-80 days'));      
         $sermons=Sermon::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
@@ -127,6 +129,45 @@ class HomeController extends Controller
         }
         $data['books']->appends(['search' => $data['search']]);
         return view('church::' . $this->routeName . '.books',$data);
+    }
+
+    public function calendar($full=""){
+        $today=date('Y-m-d');
+        $events=Event::get(new Carbon($today),new Carbon(date('Y-12-31',strtotime('+1 year'))));
+        foreach ($events as $event){
+            $me=$this->calendar_attend($event->description);
+            if (($full=="yes") or ($me=="yes")){
+                $data['events'][date('Y-m-d',strtotime($event->startDateTime))][]=[
+                    'name' => $event->name,
+                    'time' => date('H:i',strtotime($event->startDateTime)),
+                    'me' => $me
+                ];
+            }
+        }
+        $data['olddate']="";
+        $data['full']=$full;
+        return view('church::' . $this->routeName . '.calendar',$data);
+    }
+
+    private function calendar_attend($description){
+        if (str_contains($description,'group_id')){
+            $id=substr($description,9);
+            if ($id==0){
+                return "yes";
+            } else {
+                $result=DB::table('group_individual')
+                ->where('individual_id', $this->member['id'])
+                ->where('group_id',$id)
+                ->get();
+                if (count($result)==0){
+                    return "no";
+                } else {
+                    return "yes";
+                }
+            }
+        } else {
+            return "no";
+        }
     }
 
     public function details(){

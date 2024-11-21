@@ -34,7 +34,7 @@ class BookResource extends Resource
                     ->maxLength(199)
                     ->afterStateUpdated(function ($state, Set $set){
                         if ($state){
-                            $url="https://www.googleapis.com/books/v1/volumes?key=" . setting('services.google_books_key'). "&q=isbn:" . $state;
+                            $url="https://www.googleapis.com/books/v1/volumes?key=" . setting('services.google_api'). "&q=isbn:" . $state;
                             $response=Http::get($url);
                             $book=json_decode($response->body())->items[0]->volumeInfo;
                             if (isset($book->subtitle)){

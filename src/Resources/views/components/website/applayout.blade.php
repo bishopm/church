@@ -86,6 +86,9 @@
             <a class="nav-link" href="{{route('app.books')}}">Books</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('app.calendar')}}">Calendar</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
           </li>
           @if (count($member))
@@ -132,9 +135,9 @@
   <div class="row fixed-bottom bg-dark text-white">
     <div class="col-1"></div>
     <div class="col-10 text-center py-3 d-flex justify-content-between">
-      <i class="bi bi-book-fill"></i>
+      <a href="{{route('app.devotionals')}}"><i class="bi bi-book-fill text-white"></i></a>
       <i class="bi bi-mic"></i>
-      <i class="bi bi-calendar-week"></i>
+      <a href="{{route('app.calendar')}}"><i class="bi bi-calendar-week text-white"></i></a>
     </div>
     <div class="col-1"></div>
   </div>

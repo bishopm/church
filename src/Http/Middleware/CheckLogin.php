@@ -23,8 +23,5 @@ class CheckLogin
             }
         }
         return $next($request);
-        /* $response=$next($request);
-        $response->headers->set('Cache-Control', '');
-        return $response; */
     }
 }

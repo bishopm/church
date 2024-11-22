@@ -1,5 +1,6 @@
 {
     "name": "Westville Methodist Church",
+    "description": "Our app gives you access to everything available on our website, plus content we only share with members, as well as access to your own personal information",
     "short_name": "WMC",
     "start_url": "http://app.localhost",
     "display": "standalone",

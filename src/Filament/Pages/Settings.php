@@ -30,6 +30,7 @@ class Settings extends BaseSettings
                             TextInput::make('general.church_abbreviation')->required(),
                             TextInput::make('general.site_logo'),
                             TextInput::make('general.physical_address'),
+                            TextInput::make('general.app_version'),
                             TagsInput::make('general.services'),
                             Map::make('general.map_location')->label('Location')
                         ]),

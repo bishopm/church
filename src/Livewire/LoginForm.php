@@ -78,6 +78,7 @@ class LoginForm extends Component
         if ($this->userpin == $this->pin){
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');
+            setcookie('wmc-version',setting('general.app_version'), 2147483647,'/');
             session()->flash('message', 'Welcome, ' . $this->firstname . '! You are now logged in on this device.');
             return redirect()->route('app.home');
         } else {

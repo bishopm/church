@@ -57,7 +57,7 @@
   <script type="text/javascript">
       // Initialize the service worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/public/serviceworker.js', {
+        navigator.serviceWorker.register('/public/serviceworker.js?version={{setting("general.app_version")}}', {
             scope: '/public/'
         }).then(function (registration) {
             // Registration was successful

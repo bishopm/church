@@ -1,6 +1,11 @@
 var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
     '/',
+    '/blog',
+    '/details',
+    '/practices',
+    '/devotionals',
+    '/books',
     '/church/css/bootstrap.min.css',
     '/church/css/custom.css',
     '/church/css/leaflet.css',
@@ -40,6 +45,9 @@ self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(staticCacheName)
             .then(cache => {
+                cache.add('/').catch(error => {
+                    console.error('Failed to cache root route:', error);
+                });
                 return cache.addAll(filesToCache);
             })
     )
@@ -60,14 +68,15 @@ self.addEventListener('activate', event => {
 });
 
 // Serve from Cache
-self.addEventListener("fetch", event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                return response || fetch(event.request);
-            })
-            .catch(() => {
-                return caches.match('offline');
-            })
-    )
+self.addEventListener('fetch', (event) => {
+  event.respondWith(caches.open(staticCacheName).then((cache) => {
+    // Go to the network first
+    return fetch(event.request.url).then((fetchedResponse) => {
+      cache.put(event.request, fetchedResponse.clone());
+      return fetchedResponse;
+    }).catch(() => {
+      // If the network is unavailable, get
+      return cache.match(event.request.url);
+    });
+  }));
 });

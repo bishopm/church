@@ -2,19 +2,21 @@ var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
     '/',
     '/blog',
-    '/books',
-    '/calendar',
     '/details',
-    '/devotionals',
-    '/giving',
-    '/groups',
-    '/login',
-    '/offline',
     '/practices',
-    '/projects',
-    '/sermons',
-    '/pastoral',
-    '/songs',
+    '/devotionals',
+    '/books',
+    '/church/css/bootstrap.min.css',
+    '/church/css/custom.css',
+    '/church/css/leaflet.css',
+    '/church/css/output.css',
+    '/church/css/images/marker-icon-2x.png',
+    '/church/css/images/marker-icon.png',
+    '/church/css/images/marker-shadow.png',
+    '/church/js/barcodescanner.js',
+    '/church/js/bootstrap-bundle.min.js',
+    '/church/js/custom.js',
+    '/church/js/zxing.min.js',
     '/offline',
     '/church/images/icons/icon-72x72.png',
     '/church/images/icons/icon-96x96.png',
@@ -24,6 +26,17 @@ var filesToCache = [
     '/church/images/icons/icon-192x192.png',
     '/church/images/icons/icon-384x384.png',
     '/church/images/icons/icon-512x512.png',
+    '/church/images/aerial.png',
+    '/church/images/blacklogo.png',
+    '/church/images/blog.png',
+    '/church/images/bwidelogo.png',
+    '/church/images/calendar.png',
+    '/church/images/church.png',
+    '/church/images/circle.png',
+    '/church/images/growslide.png',
+    '/church/images/knowslide.png',
+    '/church/images/showslide.png',
+    '/church/images/welcomeslide.png'
 ];
 
 // Cache on install
@@ -32,6 +45,9 @@ self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(staticCacheName)
             .then(cache => {
+                cache.add('/').catch(error => {
+                    console.error('Failed to cache root route:', error);
+                });
                 return cache.addAll(filesToCache);
             })
     )
@@ -52,14 +68,15 @@ self.addEventListener('activate', event => {
 });
 
 // Serve from Cache
-self.addEventListener("fetch", event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                return response || fetch(event.request);
-            })
-            .catch(() => {
-                return caches.match('offline');
-            })
-    )
+self.addEventListener('fetch', (event) => {
+  event.respondWith(caches.open(staticCacheName).then((cache) => {
+    // Go to the network first
+    return fetch(event.request.url).then((fetchedResponse) => {
+      cache.put(event.request, fetchedResponse.clone());
+      return fetchedResponse;
+    }).catch(() => {
+      // If the network is unavailable, get
+      return cache.match(event.request.url);
+    });
+  }));
 });

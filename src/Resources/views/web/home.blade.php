@@ -73,7 +73,7 @@
                     <div class="tab-pane fade" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
                         <div class="card">
                             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
+                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/app/media/sermons/' . $sermon->series->image)}}"
                                 alt="{{$sermon->series->series}}">
                                 </a>
                             </div>
@@ -115,7 +115,7 @@
             @foreach ($blogs as $blog)
                 <div class="col-md-4 col-sm-12">
                     <div class="post-entry" data-aos="fade-up" data-aos-delay="100">
-                        <a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}" class="thumb d-block"><img src="{{url('/storage/' . $blog->image)}}" alt="Image" class="img-fluid rounded"></a>
+                        <a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}" class="thumb d-block"><img src="{{url('/storage/app/media/images/' . $blog->image)}}" alt="Image" class="img-fluid rounded"></a>
                         <div class="text-justify">
                             <div class="meta mb-0">
                                 <h3 class="text-center"><a href="{{url('/blog') . '/' . date('Y',strtotime($blog->published_at)) . '/' . date('m',strtotime($blog->published_at)) . '/' . $blog->slug}}">{{$blog->title}}</a></h3>

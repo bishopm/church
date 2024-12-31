@@ -1,6 +1,6 @@
 <x-church::website.layout pageName="Sermon series: {{$series->series}}">
     <div style="min-height: 240px;">
-        <div><img style="float: left; padding-right:10px;" width="400px" src="{{url('/storage/' . $series->image)}}" alt="Image" class="img-fluid rounded"></div>
+        <div><img style="float: left; padding-right:10px;" width="400px" src="{{url('/storage/app/media/sermons/' . $series->image)}}" alt="Image" class="img-fluid rounded"></div>
         <h3>{{$series->series}}</h3>
         {{$series->description}}
         <ul class="mt-3 list-unstyled">

@@ -6,9 +6,9 @@ use Livewire\Livewire;
 
 $url=substr(env('APP_URL'),3+strpos(env('APP_URL'),':'));
 
-Livewire::setUpdateRoute(function ($handle) {
-    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
-});
+// Livewire::setUpdateRoute(function ($handle) {
+//    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
+// });
 
 // Website routes
 Route::domain($url)->group(function() {

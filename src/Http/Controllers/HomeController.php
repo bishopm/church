@@ -137,11 +137,19 @@ class HomeController extends Controller
         foreach ($events as $event){
             $me=$this->calendar_attend($event->description);
             if (($full=="yes") or ($me=="yes")){
-                $data['events'][date('Y-m-d',strtotime($event->startDateTime))][]=[
-                    'name' => $event->name,
-                    'time' => date('H:i',strtotime($event->startDateTime)),
-                    'me' => $me
-                ];
+                if (is_null($event->startDateTime)){
+                    $data['events'][date('Y-m-d',strtotime($event->startDate))][]=[
+                        'name' => $event->name,
+                        'time' => "",
+                        'me' => $me
+                    ];
+                } else {
+                    $data['events'][date('Y-m-d',strtotime($event->startDateTime))][]=[
+                        'name' => $event->name,
+                        'time' => date('H:i',strtotime($event->startDateTime)),
+                        'me' => $me
+                    ];
+                }
             }
         }
         $data['olddate']="";

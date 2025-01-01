@@ -49,6 +49,7 @@ class PersonResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
                     ->directory('media/images/people')
+                    ->previewable(false)
                     ->image(),
                 Forms\Components\TextInput::make('slug')
                     ->required()

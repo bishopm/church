@@ -96,6 +96,7 @@ class PostResource extends Resource
                         Forms\Components\FileUpload::make('image')
                         ->image()
                         ->directory('media/images/blog')
+                        ->previewable(false)
                         ->imageResizeMode('cover')
                         ->imageCropAspectRatio('16:9')
                         ->imageResizeTargetWidth('960')

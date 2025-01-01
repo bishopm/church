@@ -42,6 +42,7 @@ class SeriesResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->directory('media/images/sermon')
+                    ->previewable(false)
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('slug')

@@ -62,6 +62,7 @@
               <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Resources</a>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{url('/')}}/blog">Blog archive</a>
+                <a class="dropdown-item" href="{{url('/')}}/quietmoments">Quiet Moments devotionals</a>
                 <a class="dropdown-item" href="{{url('/')}}/sermons">Sermon archives</a>
                 <a class="dropdown-item" href="{{url('/')}}/stayingconnected">Staying Connected newsletter</a>
               </div>

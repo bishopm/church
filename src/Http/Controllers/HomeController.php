@@ -294,6 +294,11 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.projects',$data);
     }
 
+    public function quietmoments() {
+        $data['scs']=Document::where('category','quiet-moments')->orderBy('created_at','DESC')->simplePaginate(15);
+        return view('church::web.quietmoments',$data);
+    }
+
     public function series($year,$slug){
         $data['series']=Series::with('sermons.person')->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);

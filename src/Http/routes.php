@@ -23,10 +23,11 @@ Route::domain($url)->group(function() {
         Route::get('/groups/{id}', 'group')->name('web.group');
         Route::get('/offline', 'offline')->name('web.offline');
         Route::get('/people/{slug}', 'person')->name('web.person');
+        Route::get('/preacher/{slug}', 'preacher')->name('web.preacher');
         Route::get('/projects/{id}', 'project')->name('web.project');
         Route::get('/projects', 'projects')->name('web.projects');
+        Route::get('/quietmoments', 'quietmoments')->name('web.quietmoments');
         Route::get('/sermons', 'sermons')->name('web.sermons');
-        Route::get('/preacher/{slug}', 'preacher')->name('web.preacher');
         Route::get('/sermons/{year}/{slug}', 'series')->name('web.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('web.sermon');
         Route::get('/stayingconnected', 'stayingconnected')->name('web.stayingconnected');
@@ -55,9 +56,9 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/people/{slug}', 'person')->name('app.person');
         Route::get('/projects/{id}', 'project')->name('app.project');
         Route::get('/projects', 'projects')->name('app.projects');
-        Route::get('/sermons', 'sermons')->name('app.sermons');
         Route::get('/pastoral', 'pastoral')->name('app.pastoral');
         Route::get('/preacher/{slug}', 'preacher')->name('app.preacher');
+        Route::get('/sermons', 'sermons')->name('app.sermons');
         Route::get('/sermons/{year}/{slug}', 'series')->name('app.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('app.sermon');
         Route::get('/songs', 'songs')->name('app.songs');

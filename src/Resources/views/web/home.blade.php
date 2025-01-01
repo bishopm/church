@@ -79,7 +79,7 @@
                             </div>
                             <div class="card-body text-center">
                                 <h5 class="h5 font-weight-bold">
-                                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->title}}</a>
+                                    <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->title}}</a>
                                 </h5>
                                 <p class="mb-0">{{$sermon->readings}} ({{$sermon->person->firstname}} {{$sermon->person->surname}})</p>
                                 <div id="sermon"></div>

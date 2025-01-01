@@ -8,6 +8,7 @@ use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Cache;
 use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Devotional;
+use Bishopm\Church\Models\Document;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
@@ -329,6 +330,11 @@ class HomeController extends Controller
         }
         $data['songs']->appends(['search' => $data['search']]);
         return view('church::app.songs',$data);
+    }
+
+    public function stayingconnected() {
+        $data['scs']=Document::where('category','staying-connected')->orderBy('created_at','DESC')->simplePaginate(15);
+        return view('church::web.stayingconnected',$data);
     }
 
     public function subject($slug){

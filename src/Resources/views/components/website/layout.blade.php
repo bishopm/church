@@ -63,6 +63,7 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{url('/')}}/blog">Blog archive</a>
                 <a class="dropdown-item" href="{{url('/')}}/sermons">Sermon archives</a>
+                <a class="dropdown-item" href="{{url('/')}}/stayingconnected">Staying Connected newsletter</a>
               </div>
             </li>          
           </ul>

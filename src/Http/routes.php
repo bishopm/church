@@ -29,6 +29,7 @@ Route::domain($url)->group(function() {
         Route::get('/preacher/{slug}', 'preacher')->name('web.preacher');
         Route::get('/sermons/{year}/{slug}', 'series')->name('web.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('web.sermon');
+        Route::get('/stayingconnected', 'stayingconnected')->name('web.stayingconnected');
         Route::get('/subject/{slug}', 'subject')->name('web.subject');
     });
 });

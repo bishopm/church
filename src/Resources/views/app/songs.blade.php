@@ -16,7 +16,6 @@
                 @else 
                     <td colspan="2"><a href="{{url('/')}}/songs/{{$song->id}}">{{$song->title}}</a></td>
                 @endif
-                </li>
             </tr>
         @empty
             No songs have been added yet

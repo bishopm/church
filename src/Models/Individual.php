@@ -48,7 +48,7 @@ class Individual extends Model
 
     public function rosteritems(): BelongsToMany
     {
-        return $this->belongsToMany(Rosteritem::class);
+        return $this->belongsToMany(Rosteritem::class,'individual_rosteritem');
     }
 
     public function getFullNameAttribute()

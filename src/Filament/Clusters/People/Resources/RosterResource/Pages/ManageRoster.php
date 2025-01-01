@@ -311,8 +311,10 @@ class ManageRoster extends Page implements HasForms
         $rosteritem=Rosteritem::with('individuals')->where('rosterdate',$wk)->where('rostergroup_id',$rg)->first();
         $ridat=array();
         if ($rosteritem){
-            foreach ($rosteritem->individuals as $indiv){
-                $ridat[]=$indiv->id;
+            if (isset($rosteritem->individuals)){
+                foreach ($rosteritem->individuals as $indiv){
+                    $ridat[]=$indiv->id;
+                }
             }
         }
         return $ridat;

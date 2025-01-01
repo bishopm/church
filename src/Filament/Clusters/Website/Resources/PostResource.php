@@ -95,6 +95,7 @@ class PostResource extends Resource
                     Tab::make('Media')->columns(2)->schema([
                         Forms\Components\FileUpload::make('image')
                         ->image()
+                        ->directory('media/images/blog')
                         ->imageResizeMode('cover')
                         ->imageCropAspectRatio('16:9')
                         ->imageResizeTargetWidth('960')

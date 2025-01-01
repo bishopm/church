@@ -41,6 +41,7 @@ class SeriesResource extends Resource
                     ->format('Y-m-d')
                     ->required(),
                 Forms\Components\FileUpload::make('image')
+                    ->directory('media/images/sermon')
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('slug')

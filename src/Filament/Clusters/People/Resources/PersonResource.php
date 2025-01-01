@@ -48,7 +48,7 @@ class PersonResource extends Resource
                 Forms\Components\Textarea::make('bio')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
-                    ->directory('media/images')
+                    ->directory('media/images/people')
                     ->image(),
                 Forms\Components\TextInput::make('slug')
                     ->required()

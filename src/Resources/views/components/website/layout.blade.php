@@ -71,7 +71,7 @@
           <ul class="navbar-nav ms-auto">
             @if (!count($member))
               <li class="nav-item">
-                <a class="nav-link" href="{{url('/')}}">Login</a>
+                <a class="nav-link" href="https://app.westvillemethodist.co.za">Login</a>
               </li>
             @else
               <li class="nav-item">

@@ -11,7 +11,7 @@
         <div class="col-md-8 col-sm-12">
             <div class="post-entry" data-aos="fade-up" data-aos-delay="100">
                 @if ($post->image)
-                    <img src="{{url('/storage/app/media/images/blog/' . $post->image)}}" alt="Image" class="img-fluid rounded">
+                    <img src="{{url('/storage/app/' . $post->image)}}" alt="Image" class="img-fluid rounded">
                 @endif
                 <div class="post-content">
                     {!!  nl2br($post->content) !!}

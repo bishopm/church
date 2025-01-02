@@ -13,7 +13,7 @@
         <div class="row gy-2">
             <div class="col-md-6 col-sm-12">
                 <h3>Sermon audio</h3>
-                <img width="400px" src="{{url('/storage/app/media/images/sermon/' . $series->image)}}" alt="{{$series->series}}">
+                <img width="400px" src="{{url('/storage/app/' . $series->image)}}" alt="{{$series->series}}">
                 <h5 class="h5 font-weight-bold"><a href="#" target="_blank">{{$sermon->title}}</a></h5>
                 <p class="mb-0">
                     <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->readings)}}&version=GNT";">{{$sermon->readings}} </a>

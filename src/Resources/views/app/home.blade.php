@@ -54,7 +54,7 @@
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['published_at'])->diffForHumans()}}</small> 
             @if ($item->image)
-                <div><img src="{{url('/storage/app/media/images/blog/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
+                <div><img src="{{url('/storage/app/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
             @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
         @elseif (isset($item->readings))
@@ -63,14 +63,14 @@
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
             <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
-                <img class="card-img-top" src="{{url('/storage/app/media/images/sermon/' . $item->series->image)}}" alt="{{$item->series->series}}">
+                <img class="card-img-top" src="{{url('/storage/app/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
             <div class="lead pt-3">{{$item->readings}}
                 <small class="text-muted">{{$item->person->fullname}}</small>
             </div>
         @elseif ($item->image)
             <a href="{{route('app.devotionals')}}">
-                <img class="card-img-top" src="{{url('/storage/app/media/images/devotional/' . $item->image)}}" alt="{{$item->reading}}">
+                <img class="card-img-top" src="{{url('/storage/app/' . $item->image)}}" alt="{{$item->reading}}">
             </a>
         @endif
     @empty

@@ -29,9 +29,12 @@ class DocumentResource extends Resource
                 Forms\Components\TextInput::make('document')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('category')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Radio::make('category')
+                    ->options([
+                        'quiet-moments' => 'Quiet Moments',
+                        'staying-connected' => 'Staying Connected',
+                    ])
+                    ->inline(),
                 Forms\Components\FileUpload::make('filename')
                     ->directory('media/documents'),
             ]);

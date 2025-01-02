@@ -32,6 +32,8 @@ class DocumentResource extends Resource
                 Forms\Components\TextInput::make('category')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('filename')
+                    ->directory('media/documents'),
             ]);
     }
 

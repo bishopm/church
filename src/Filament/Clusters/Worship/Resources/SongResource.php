@@ -77,7 +77,7 @@ class SongResource extends Resource
                             ->hiddenOn('create')
                             ->label('')
                             ->minHeight('80svh')
-                            ->fileUrl(fn (Song $record) => 'http://localhost/admin/reports/song/' . $record->id)
+                            ->fileUrl(fn (Song $record) => url('/') . '/admin/reports/song/' . $record->id)
                             ->columnSpanFull(),
                     ]),
                     Tab::make('Details')->columns(2)->schema([

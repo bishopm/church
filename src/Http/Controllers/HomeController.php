@@ -84,7 +84,7 @@ class HomeController extends Controller
 
     public function blogpost($yr,$mth,$slug){
         $data['post']=Post::where('slug',$slug)->first();
-        $relatedBlogs=Post::withAnyTags($data['post']->tags)->where('published',1)->orderBy('published_at','DESC')->get();
+        $relatedBlogs=Post::withAnyTags($data['post']->tags)->where('slug','<>',$slug)->where('published',1)->orderBy('published_at','DESC')->get();
         $related=array();
         foreach ($relatedBlogs as $blog){
             $dum=array();

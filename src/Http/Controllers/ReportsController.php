@@ -329,8 +329,11 @@ class ReportsController extends Controller
         if ($group){
             $group_id=$group->id;
             if ($label<>"Society Stewards"){
-                $rostergroup=Rostergroup::where('group_id',$group_id)->first()->id;
-                $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rostergroup)->where('rosterdate',$servicedate)->first();
+                $rgroup=Rostergroup::where('group_id',$group_id)->first();
+                if ($rgroup){
+                    $rostergroup=$rgroup->id;
+                    $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rostergroup)->where('rosterdate',$servicedate)->first();
+                } 
             } else {
                 $rostergroups=Rostergroup::with('roster')->where('group_id',$group_id)->get();
                 foreach ($rostergroups as $rg){
@@ -339,7 +342,7 @@ class ReportsController extends Controller
                     }
                 }
             }
-            if (($rosteritem) and ($rosteritem->individuals)){
+            if ((isset($rosteritem)) and ($rosteritem->individuals)){
                 $indivs=array();
                 foreach ($rosteritem->individuals as $ind){
                     $indivs[]=$ind->firstname . " " . $ind->surname;

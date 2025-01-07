@@ -62,9 +62,17 @@ class SongResource extends Resource
                             ->label('First line')
                             ->maxLength(255),
                         SpatieTagsInput::make('tags'),
-                        Placeholder::make('Services')->key('servicePlaceholder')->label(fn (Song $record) => 'Last used: ' . $record->lastused)
-                        ->hintActions(self::getServices())
-                        ->columnSpanFull(),
+                        Placeholder::make('Services')
+                            ->key('servicePlaceholder')
+                            ->label(function (Song $record = null): string {
+                                if ($record){
+                                    return 'Last used: ' . $record->lastused;
+                                } else {
+                                    return 'Last used: ';
+                                }
+                            })
+                            ->hintActions(self::getServices())
+                            ->columnSpanFull(),
                         PdfViewerField::make('file')
                             ->hiddenOn('create')
                             ->label('')
@@ -107,51 +115,55 @@ class SongResource extends Resource
                     ]),
                     Tab::make('History')->schema([
                         Forms\Components\Placeholder::make('history')->label('')
-                        ->content(function (Song $record) {
-                            $allplays=Service::whereHas('setitems', 
-                                function($q) use ($record) { 
-                                    $q->where('setitemable_id',$record->id)
-                                    ->where('setitemable_type','song'); 
-                                })
-                                ->where('servicedate','<',date('Y-m-d'))->orderBy('servicedate','DESC')->get();
-                            $history=array();
-                            foreach ($allplays as $play){
-                                $history[$play->servicetime][]=date('Y-m-d',strtotime($play->servicedate));
-                            }
-                            ksort($history);
-                            $period=date('Y-m-d',strtotime('4 months ago'));
-                            $histarray=array();
-                            foreach ($history as $stime=>$hist){
-                                asort($hist);
-                                $histarray[$stime]['latest']=$hist[0];
-                                $histarray[$stime]['recent']=0;
-                                $histarray[$stime]['total']=0;
-                                foreach ($hist as $hh){
-                                    if ($hh>$period){
-                                        $histarray[$stime]['recent']++;
-                                    }
-                                    $histarray[$stime]['total']++;
+                        ->content(function (Song $record = null) {
+                            if ($record){
+                                $allplays=Service::whereHas('setitems', 
+                                    function($q) use ($record) { 
+                                        $q->where('setitemable_id',$record->id)
+                                        ->where('setitemable_type','song'); 
+                                    })
+                                    ->where('servicedate','<',date('Y-m-d'))->orderBy('servicedate','DESC')->get();
+                                $history=array();
+                                foreach ($allplays as $play){
+                                    $history[$play->servicetime][]=date('Y-m-d',strtotime($play->servicedate));
                                 }
-                            }
-                            $historytext="";
-                            foreach ($histarray as $service=>$val){
-                                $historytext.="<b>" . $service . "</b>: Sung ";
-                                if ($val['total']==1) {
-                                    $historytext.= "once in total on " . $val['latest'];
-                                } else {
-                                    $historytext.= $val['total'] . " times in total (";
-                                    if ($val['recent'] ==1 ){
-                                        $historytext.= "once in the last four months, on " . $val['latest'] . ")<br>";
-                                    } elseif ($val['recent'] > 1) {
-                                        $historytext.= $val['recent'] . " times in the last four months) and most recently on " . $val['latest'] . "<br>";
-                                    }  elseif ($val['recent'] == 1) {
-                                        $historytext.= $val['recent'] . " time in the last four months) and most recently on " . $val['latest'] . "<br>";
+                                ksort($history);
+                                $period=date('Y-m-d',strtotime('4 months ago'));
+                                $histarray=array();
+                                foreach ($history as $stime=>$hist){
+                                    asort($hist);
+                                    $histarray[$stime]['latest']=$hist[0];
+                                    $histarray[$stime]['recent']=0;
+                                    $histarray[$stime]['total']=0;
+                                    foreach ($hist as $hh){
+                                        if ($hh>$period){
+                                            $histarray[$stime]['recent']++;
+                                        }
+                                        $histarray[$stime]['total']++;
+                                    }
+                                }
+                                $historytext="";
+                                foreach ($histarray as $service=>$val){
+                                    $historytext.="<b>" . $service . "</b>: Sung ";
+                                    if ($val['total']==1) {
+                                        $historytext.= "once in total on " . $val['latest'];
                                     } else {
-                                        $historytext= substr($historytext,0,-1) . "and most recently on " . $val['latest'] . "<br>";
+                                        $historytext.= $val['total'] . " times in total (";
+                                        if ($val['recent'] ==1 ){
+                                            $historytext.= "once in the last four months, on " . $val['latest'] . ")<br>";
+                                        } elseif ($val['recent'] > 1) {
+                                            $historytext.= $val['recent'] . " times in the last four months) and most recently on " . $val['latest'] . "<br>";
+                                        }  elseif ($val['recent'] == 1) {
+                                            $historytext.= $val['recent'] . " time in the last four months) and most recently on " . $val['latest'] . "<br>";
+                                        } else {
+                                            $historytext= substr($historytext,0,-1) . "and most recently on " . $val['latest'] . "<br>";
+                                        }
                                     }
                                 }
+                                return new HtmlString($historytext);
+                            } else {
+                                return " ";
                             }
-                            return new HtmlString($historytext);
                         })
                     ]),
                 ]),

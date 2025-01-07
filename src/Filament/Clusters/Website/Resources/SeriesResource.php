@@ -26,6 +26,8 @@ class SeriesResource extends Resource
 
     protected static ?string $modelLabel = 'Sermon series';
 
+    public $record;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -64,7 +66,10 @@ class SeriesResource extends Resource
                     ->date('Y-m-d')
                     ->label('Starting date')
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->state(function (Series $record) {
+                        return url('storage/app/' . $record->image);
+                }),
             ])
             ->filters([
                 //

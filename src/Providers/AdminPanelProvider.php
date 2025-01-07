@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Providers;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use Bishopm\Church\Filament\Widgets\Birthdays;
 use Bishopm\Church\Filament\Widgets\PastoralContact;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -54,7 +55,8 @@ class AdminPanelProvider extends PanelProvider
                 PastoralContact::class,
                 // MeasuresChart::class,
                 NewMembers::class,
-                StatsOverview::class,
+                // StatsOverview::class,
+                Birthdays::class,
                 TasksToDo::class
             ])
             ->sidebarCollapsibleOnDesktop()

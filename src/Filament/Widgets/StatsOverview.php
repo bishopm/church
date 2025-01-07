@@ -21,7 +21,7 @@ class StatsOverview extends BaseWidget
         return [
             Stat::make('Birthdays today', $bd)->label('')
                 ->color('success')
-                ->description('Today\'s birthdays')
+                ->description('Upcoming birthdays')
                 ->descriptionIcon('heroicon-o-cake')
         ];
     }

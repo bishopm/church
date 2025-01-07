@@ -15,7 +15,7 @@
                         Your browser does not support the audio element.
                     </audio>
                 </div>
-                @if (count($series->sermons) > 1))
+                @if (count($series->sermons) > 1)
                     <h3>Other sermons in the series</h3>
                 @endif
                 <ul class="list-unstyled">

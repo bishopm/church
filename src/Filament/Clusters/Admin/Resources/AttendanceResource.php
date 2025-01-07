@@ -57,7 +57,7 @@ class AttendanceResource extends Resource
                             $date=date('Y-m-d',strtotime($get('attendancedate')));
                             $service=$get('service');
                             $indiv=Individual::find($state);
-                            $check = Attendance::where('attendancedate',$date)->where('service',$service)->first();
+                            $check = Attendance::where('attendancedate',$date)->where('service',$service)->where('individual_id',$state)->first();
                             if (!$check){
                                 $set('individual_id', intval($state));
                                 $msg = $indiv->firstname . " " . $indiv->surname . " attended the " . $service . " service on " . $date;

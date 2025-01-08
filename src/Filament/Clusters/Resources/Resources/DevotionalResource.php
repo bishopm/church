@@ -18,7 +18,7 @@ class DevotionalResource extends Resource
 {
     protected static ?string $model = Devotional::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
 
     protected static ?string $cluster = Resources::class;
 

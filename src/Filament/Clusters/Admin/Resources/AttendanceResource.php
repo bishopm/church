@@ -4,11 +4,9 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources;
 
 use Bishopm\Church\Filament\Clusters\Admin;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\AttendanceResource\Pages;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\AttendanceResource\RelationManagers;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Individual;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -16,8 +14,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AttendanceResource extends Resource
 {
@@ -51,7 +47,6 @@ class AttendanceResource extends Resource
                 Forms\Components\TextInput::make('scanbox')
                     ->label('Scan barcode')
                     ->autofocus()
-                    ->live(debounce: 400)
                     ->afterStateUpdated(function (Set $set, Get $get, $state, $livewire) {
                         if ($state) {
                             $date=date('Y-m-d',strtotime($get('attendancedate')));
@@ -67,18 +62,16 @@ class AttendanceResource extends Resource
                                     'service' => $service,
                                     'individual_id' => $state
                                 ]);
-                                $set('individual_id', '');
-                                $set('scanbox', '');
                             } else {
                                 Notification::make('notify')->title($indiv->firstname . " " . $indiv->surname . " has already been scanned for this service")->send();
                             }
+                            $set('scanbox', '');
                         }
                     }),
                 Forms\Components\Select::make('individual_id')
                     ->label('Individual')
                     ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))
-                    ->searchable()
-                    ->live(),
+                    ->searchable(),
             ]);
     }
 
@@ -124,5 +117,10 @@ class AttendanceResource extends Resource
             'create' => Pages\CreateAttendance::route('/create'),
             'edit' => Pages\EditAttendance::route('/{record}/edit'),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('create');
     }
 }

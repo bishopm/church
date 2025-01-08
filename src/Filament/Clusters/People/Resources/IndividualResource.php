@@ -36,6 +36,8 @@ class IndividualResource extends Resource
 
     protected static ?string $cluster = People::class;
 
+    public $record;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -68,7 +70,12 @@ class IndividualResource extends Resource
                                 'male' => 'Male',
                             ])
                             ->inline(),
-
+                        Actions::make([
+                            Action::make('Create namebadge')
+                                ->url(
+                                    fn (Individual $record) => route('reports.barcodes',['newonly' => $record->id]),
+                                )
+                        ])
                     ]),
                     Tab::make('Contact')->schema([
                         Forms\Components\TextInput::make('email')

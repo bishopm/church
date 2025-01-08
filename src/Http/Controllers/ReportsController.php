@@ -30,22 +30,23 @@ class ReportsController extends Controller
     public function barcodes($newonly=""){
         if ($newonly){
             $individuals=array();
-            $sunday=date('Y-m-d',strtotime('last sunday'));
-            $attendees=Attendance::where('attendancedate',$sunday)->get();
-            foreach ($attendees as $attendee){
-                $previous=Attendance::where('attendancedate','<',$sunday)->where('individual_id',$attendee->individual_id)->get();
-                if (!count($previous)){
-                    $iii=Individual::find($attendee->individual_id);
-                    if ($iii){
-                        $individuals[$attendee->individual_id]=$iii;
+            if ($newonly=="yes"){
+                $sunday=date('Y-m-d',strtotime('last sunday'));
+                $attendees=Attendance::where('attendancedate',$sunday)->get();
+                foreach ($attendees as $attendee){
+                    $previous=Attendance::where('attendancedate','<',$sunday)->where('individual_id',$attendee->individual_id)->get();
+                    if (!count($previous)){
+                        $iii=Individual::find($attendee->individual_id);
+                        if ($iii){
+                            $individuals[$attendee->individual_id]=$iii;
+                        }
                     }
                 }
+            } else {
+                $individuals[$newonly]=Individual::find($newonly);
             }
             $long=false;
-        } /* elseif ((null !== input('checked')) and (count(input('checked')))){
-            $individuals=Individual::whereIn('id', input('checked'))->orderBy('created_at','DESC')->get()->toArray();
-            $long=false;
-        } */ else {
+        } else {
             $individuals=Individual::orderBy('surname','ASC')->orderBy('firstname','ASC')->get()->toArray();
             $long=true;
         }

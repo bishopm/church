@@ -2,9 +2,13 @@
 
 namespace Bishopm\Church\Console\Commands;
 
+use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Anniversary;
+use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class BirthdayEmail extends Command
 {
@@ -74,21 +78,20 @@ class BirthdayEmail extends Command
             $msg=$msg. "<br>";
         }
         // Send to birthday group
-        $setting=intval(Settings::get('birthdaysgroup'));
-        $churchname=Settings::get('church_name');
-        $churchemail=Settings::get('email');
+        $setting=intval(setting('birthday_group'));
+        $churchname=setting('general.church_name');
+        $churchemail=setting('email.church_email');
         $group=Group::with('groupmembers.individual')->find($setting);
-        foreach ($group->groupmembers as $recip) {
+        foreach ($group->individuals as $recip) {
             $data=array();
             $data['recipient']=$recip->individual->firstname;
             $data['subject']="Birthdays / Anniversaries: " . $churchname;
             $data['sender']=$churchemail;
-            $data['emailmessage']=$msg;
+            $data['body']=$msg;
             $data['email']=$recip->individual->email;
-            Mail::send('bishopm.churchsite::mail.birthdays', $data, function($message) use ($data) {
-                $message->to($data['email']);
-                $message->subject($data['subject']);
-            });
+            if ($data['email']=="michael@westvillemethodist.co.za"){
+                Mail::to($data['email'])->queue(new ChurchMail($data));
+            }
         }
     }
 }

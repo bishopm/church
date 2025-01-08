@@ -52,9 +52,9 @@ class EditIndividual extends EditRecord
                 $individual->pastoralnotes()->delete();
                 $individual->rosteritems()->delete();
                 $individual->pastor()->delete();
-                if ($data['deleteHousehold']){
+                if (isset($data['deleteHousehold']) and ($data['deleteHousehold']==true)){
                     $individual->household()->delete();
-                } elseif ($data['anniversarydate']<>""){
+                } elseif (isset($data['anniversarydate']) and ($data['anniversarydate']<>"")){
                     Anniversary::create([
                         'household_id'=>$this->record->household_id,
                         'anniversarytype'=>'Death',

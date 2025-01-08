@@ -13,6 +13,7 @@ class ListIndividuals extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('All member barcodes')->url(fn (): string => route('reports.barcodes')),
             Actions\CreateAction::make(),
         ];
     }

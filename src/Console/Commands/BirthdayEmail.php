@@ -77,18 +77,19 @@ class BirthdayEmail extends Command
             }
             $msg=$msg. "<br>";
         }
+
         // Send to birthday group
-        $setting=intval(setting('birthday_group'));
+        $setting=intval(setting('automation.birthday_group'));
         $churchname=setting('general.church_name');
         $churchemail=setting('email.church_email');
-        $group=Group::with('groupmembers.individual')->find($setting);
+        $group=Group::with('individuals')->where('id',$setting)->first();
         foreach ($group->individuals as $recip) {
             $data=array();
-            $data['recipient']=$recip->individual->firstname;
+            $data['recipient']=$recip->firstname;
             $data['subject']="Birthdays / Anniversaries: " . $churchname;
             $data['sender']=$churchemail;
             $data['body']=$msg;
-            $data['email']=$recip->individual->email;
+            $data['email']=$recip->email;
             if ($data['email']=="michael@westvillemethodist.co.za"){
                 Mail::to($data['email'])->queue(new ChurchMail($data));
             }

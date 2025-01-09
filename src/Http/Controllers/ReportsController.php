@@ -4,13 +4,11 @@ namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Classes\Fpdf as Pdf;
 use Bishopm\Church\Http\Controllers\Controller;
-use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Chord;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Meeting;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Bishopm\Church\Models\Song;
 use Bishopm\Church\Models\Roster;
@@ -30,17 +28,11 @@ class ReportsController extends Controller
     public function barcodes($newonly=""){
         if ($newonly){
             $individuals=array();
-            if ($newonly=="yes"){
+            if ($newonly=="new"){
                 $sunday=date('Y-m-d',strtotime('last sunday'));
-                $attendees=Attendance::where('attendancedate',$sunday)->get();
-                foreach ($attendees as $attendee){
-                    $previous=Attendance::where('attendancedate','<',$sunday)->where('individual_id',$attendee->individual_id)->get();
-                    if (!count($previous)){
-                        $iii=Individual::find($attendee->individual_id);
-                        if ($iii){
-                            $individuals[$attendee->individual_id]=$iii;
-                        }
-                    }
+                $newindivs=Individual::where('created_at','>',$sunday)->get();               
+                foreach ($newindivs as $newindiv){
+                    $individuals[$newindiv->id]=$newindiv;
                 }
             } else {
                 $individuals[$newonly]=Individual::find($newonly);
@@ -57,104 +49,108 @@ class ReportsController extends Controller
         $yy=10;
         $xx=10;
         $image=url('/') . "/public/church/images/blacklogo.png";
-        foreach ($individuals as $indiv){
-            if ($yy>130){
+        if (count($individuals)){
+            foreach ($individuals as $indiv){
+                if ($yy>130){
+                    $pdf->AddPage('P');
+                    $yy=10;
+                }
+                $pdf->rect($xx,$yy,93,114);
+                $pdf->Image($image,$xx+70,$yy+57.5,20,20);
+                $pdf->setxy($xx+4,$yy+24);
+                $font=60;
+                $size="unknown";
+                do {
+                    $pdf->SetFont('Arial', 'B', $font);
+                    if ($indiv['firstname']){
+                        $width=$pdf->GetStringWidth($indiv['firstname']);
+                    } else {
+                        $width=0;
+                    }
+                    if ($width < 85){
+                        $pdf->cell(86,0,$indiv['firstname'],0,0,'C');
+                        $size="known";
+                        $font=8;
+                    } else {
+                        $font=$font-0.5;
+                    }
+                } while ($size=="unknown");
+                $pdf->setxy($xx+4,$yy+40);
+                $font=25;
+                $size="unknown";
+                do {
+                    $pdf->SetFont('Arial', '', $font);
+                    $width=$pdf->GetStringWidth($indiv['surname']);
+                    if ($width < 85){
+                        $pdf->cell(86,0,$indiv['surname'],0,0,'C');
+                        $size="known";
+                        $font=8;
+                    } else {
+                        $font=$font-0.5;
+                    }
+                } while ($size=="unknown");
+                $pdf->SetFont('Arial', 'B', 11);
+                $pdf->SetDrawColor(185,185,185);
+                $pdf->line($xx,$yy+57,$xx+93,$yy+57);
+                $pdf->SetDrawColor(0,0,0);
+                $pdf->Code39($xx+5,$yy+60,$indiv['id'],1.5,10);
+                $pdf->setxy($xx+4,$yy+72);
+                $pdf->cell(100,0,$indiv['firstname'] . " " . $indiv['surname'],0,0,'L');
+                if ($xx==10){
+                    $xx=110;    
+                } else {
+                    $xx=10;
+                    $yy=$yy+120;
+                }
+            }
+            if ($long){
                 $pdf->AddPage('P');
-                $yy=10;
+                $pdf->rect(10,10,93,114);
+                $pdf->RoundedRect(15,15,83,47,2);
+                $pdf->text(15,73,"First name and surname");
+                $pdf->RoundedRect(15,74,83,12,1);
+                $pdf->text(15,91,"Cellphone");
+                $pdf->RoundedRect(15,92,83,12,1);
+                $pdf->text(15,108,"Email");
+                $pdf->RoundedRect(15,109,83,12,1);
+                
+                $pdf->rect(110,10,93,114);
+                $pdf->RoundedRect(115,15,83,47,2);
+                $pdf->text(115,73,"First name and surname");
+                $pdf->RoundedRect(115,74,83,12,1);
+                $pdf->text(115,91,"Cellphone");
+                $pdf->RoundedRect(115,92,83,12,1);
+                $pdf->text(115,108,"Email");
+                $pdf->RoundedRect(115,109,83,12,1);
+                
+                $pdf->rect(10,130,93,114);
+                $pdf->RoundedRect(15,135,83,47,2);
+                $pdf->text(15,193,"First name and surname");
+                $pdf->RoundedRect(15,194,83,12,1);
+                $pdf->text(15,211,"Cellphone");
+                $pdf->RoundedRect(15,212,83,12,1);
+                $pdf->text(15,228,"Email");
+                $pdf->RoundedRect(15,229,83,12,1);
+                
+                $pdf->rect(110,130,93,114);
+                $pdf->RoundedRect(115,135,83,47,2);
+                $pdf->text(115,193,"First name and surname");
+                $pdf->RoundedRect(115,194,83,12,1);
+                $pdf->text(115,211,"Cellphone");
+                $pdf->RoundedRect(115,212,83,12,1);
+                $pdf->text(115,228,"Email");
+                $pdf->RoundedRect(115,229,83,12,1);
+                
+                $pdf->SetFont('Arial', 'B', 11);
+                $pdf->SetDrawColor(185,185,185);
+                $pdf->line(10,67,103,67);
+                $pdf->line(110,67,203,67);
+                $pdf->line(10,187,103,187);
+                $pdf->line(110,187,203,187);
+                $pdf->SetDrawColor(0,0,0);
             }
-            $pdf->rect($xx,$yy,93,114);
-            $pdf->Image($image,$xx+70,$yy+57.5,20,20);
-            $pdf->setxy($xx+4,$yy+24);
-            $font=60;
-            $size="unknown";
-            do {
-                $pdf->SetFont('Arial', 'B', $font);
-                if ($indiv['firstname']){
-                    $width=$pdf->GetStringWidth($indiv['firstname']);
-                } else {
-                    $width=0;
-                }
-                if ($width < 85){
-                    $pdf->cell(86,0,$indiv['firstname'],0,0,'C');
-                    $size="known";
-                    $font=8;
-                } else {
-                    $font=$font-0.5;
-                }
-            } while ($size=="unknown");
-            $pdf->setxy($xx+4,$yy+40);
-            $font=25;
-            $size="unknown";
-            do {
-                $pdf->SetFont('Arial', '', $font);
-                $width=$pdf->GetStringWidth($indiv['surname']);
-                if ($width < 85){
-                    $pdf->cell(86,0,$indiv['surname'],0,0,'C');
-                    $size="known";
-                    $font=8;
-                } else {
-                    $font=$font-0.5;
-                }
-            } while ($size=="unknown");
-            $pdf->SetFont('Arial', 'B', 11);
-            $pdf->SetDrawColor(185,185,185);
-            $pdf->line($xx,$yy+57,$xx+93,$yy+57);
-            $pdf->SetDrawColor(0,0,0);
-            $pdf->Code39($xx+5,$yy+60,$indiv['id'],1.5,10);
-            $pdf->setxy($xx+4,$yy+72);
-            $pdf->cell(100,0,$indiv['firstname'] . " " . $indiv['surname'],0,0,'L');
-            if ($xx==10){
-                $xx=110;    
-            } else {
-                $xx=10;
-                $yy=$yy+120;
-            }
-        }
-        if ($long){
-            $pdf->AddPage('P');
-            $pdf->rect(10,10,93,114);
-            $pdf->RoundedRect(15,15,83,47,2);
-            $pdf->text(15,73,"First name and surname");
-            $pdf->RoundedRect(15,74,83,12,1);
-            $pdf->text(15,91,"Cellphone");
-            $pdf->RoundedRect(15,92,83,12,1);
-            $pdf->text(15,108,"Email");
-            $pdf->RoundedRect(15,109,83,12,1);
-            
-            $pdf->rect(110,10,93,114);
-            $pdf->RoundedRect(115,15,83,47,2);
-            $pdf->text(115,73,"First name and surname");
-            $pdf->RoundedRect(115,74,83,12,1);
-            $pdf->text(115,91,"Cellphone");
-            $pdf->RoundedRect(115,92,83,12,1);
-            $pdf->text(115,108,"Email");
-            $pdf->RoundedRect(115,109,83,12,1);
-            
-            $pdf->rect(10,130,93,114);
-            $pdf->RoundedRect(15,135,83,47,2);
-            $pdf->text(15,193,"First name and surname");
-            $pdf->RoundedRect(15,194,83,12,1);
-            $pdf->text(15,211,"Cellphone");
-            $pdf->RoundedRect(15,212,83,12,1);
-            $pdf->text(15,228,"Email");
-            $pdf->RoundedRect(15,229,83,12,1);
-            
-            $pdf->rect(110,130,93,114);
-            $pdf->RoundedRect(115,135,83,47,2);
-            $pdf->text(115,193,"First name and surname");
-            $pdf->RoundedRect(115,194,83,12,1);
-            $pdf->text(115,211,"Cellphone");
-            $pdf->RoundedRect(115,212,83,12,1);
-            $pdf->text(115,228,"Email");
-            $pdf->RoundedRect(115,229,83,12,1);
-            
-            $pdf->SetFont('Arial', 'B', 11);
-            $pdf->SetDrawColor(185,185,185);
-            $pdf->line(10,67,103,67);
-            $pdf->line(110,67,203,67);
-            $pdf->line(10,187,103,187);
-            $pdf->line(110,187,203,187);
-            $pdf->SetDrawColor(0,0,0);
+        } else {
+            $pdf->text(10,10,"No new members have been added to the system since last Sunday");
         }
         $filename=base_path() . "/storage/app/media/barcodes/barcodes.pdf";
         $pdf->Output($filename,'F');

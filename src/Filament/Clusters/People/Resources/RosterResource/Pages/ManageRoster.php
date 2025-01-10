@@ -39,6 +39,8 @@ class ManageRoster extends Page implements HasForms
 
     public ?array $data;
 
+    public $count;
+
     public $credits, $smss;
 
     public function mount(int | string $record): void
@@ -107,14 +109,14 @@ class ManageRoster extends Page implements HasForms
                                 }
                             }
                             $reading = Service::where('servicedate',$rosterdate)->where('servicetime',$stime)->first();
-                            if (isset($reading->reading)){
+                            if ((isset($reading->reading)) and (str_contains($ri->rostergroup->group->groupname, 'Readers'))){
                                 $msg = $msg . " Reading: " . $reading->reading;
                             }
                         }
                     }
                     $this->data['ridata'][$ri->rostergroup->group->groupname][$indiv->cellphone]=$msg;
                     $this->data['allmessages'][$indiv->cellphone]=$msg;
-                    $messages = $messages . $indiv->cellphone . ": " . $msg . "\n";
+                    $messages = $messages . $indiv->cellphone . ": " . $msg . "<br>";
                 }
             }
         }

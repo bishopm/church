@@ -11,15 +11,14 @@ class TasksToDo extends Widget
 {
     protected static string $view = 'church::widgets.tasks-to-do';
 
-    public ?array $widgetdata;
+    public array $tasks;
 
     function mount() {
         $indiv = Individual::where('user_id',Auth::user()->id)->first();
         if ($indiv){
-            Task::where('individual_id',$indiv->id)->orderBy('duedate','asc')->take(5)->get();
-            $this->widgetdata['tasks']=Task::where('individual_id',$indiv->id)->orderBy('duedate','asc')->take(5)->get();
+            $this->tasks=Task::where('individual_id',$indiv->id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
         } else {
-            $this->widgetdata['tasks']=array();
+            $this->tasks=array();
         }
     }
 
@@ -33,5 +32,12 @@ class TasksToDo extends Widget
             }
         }
         return false;
+    }
+
+    public function done($id){
+        $updatetask=Task::find($id);
+        $updatetask->status="done";
+        $updatetask->save();
+        $this->mount();
     }
 }

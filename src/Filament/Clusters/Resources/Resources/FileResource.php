@@ -57,6 +57,7 @@ class FileResource extends Resource
                         fn (string $state) => url('/storage/app/' . $state),
                     )
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

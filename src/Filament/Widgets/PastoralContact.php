@@ -18,7 +18,7 @@ class PastoralContact extends Widget
     public static function canView(): bool 
     { 
         $roles =auth()->user()->roles->toArray(); 
-        $permitted = array('Office','Finance');
+        $permitted = array('Office','Finance','Pastoral');
         foreach ($roles as $role){
             if ((in_array($role['name'],$permitted)) or (auth()->user()->isSuperAdmin())){
                 return true;

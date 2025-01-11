@@ -87,6 +87,7 @@ class BookResource extends Resource
                     ->separator(','),
                 Tables\Columns\ImageColumn::make('image'),
             ])
+            ->defaultSort('title', 'asc')
             ->filters([
                 //
             ])

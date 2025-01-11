@@ -23,7 +23,7 @@ class TasksToDo extends Widget implements HasForms, HasActions
 
     protected static string $view = 'church::widgets.tasks-to-do';
 
-    public array $tasks;
+    public array $tasks, $doings, $somedays, $dones;
     public $individual_id;
 
     function mount() {
@@ -31,8 +31,14 @@ class TasksToDo extends Widget implements HasForms, HasActions
         $this->individual_id=$indiv->id;
         if ($indiv){
             $this->tasks=Task::where('individual_id',$indiv->id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
+            $this->doings=Task::where('individual_id',$indiv->id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
+            $this->somedays=Task::where('individual_id',$indiv->id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
+            $this->dones=Task::where('individual_id',$indiv->id)->where('status','done')->orderBy('duedate','asc')->take(5)->get()->toArray();
         } else {
             $this->tasks=array();
+            $this->doings=array();
+            $this->somedays=array();
+            $this->dones=array();
         }
     }
 
@@ -57,6 +63,7 @@ class TasksToDo extends Widget implements HasForms, HasActions
                 Select::make('status')->options([
                     'todo' => 'To do',
                     'doing' => 'Underway',
+                    'someday' => 'Some day',
                     'done' => 'Done'
                 ])
                 ->default('todo'),
@@ -75,6 +82,8 @@ class TasksToDo extends Widget implements HasForms, HasActions
                     'individual_id' => $data['individual_id']
                 ]);
                 $this->tasks=Task::where('individual_id',$this->individual_id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                $this->doings=Task::where('individual_id',$this->individual_id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                $this->somedays=Task::where('individual_id',$this->individual_id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
             });
     }
 
@@ -93,6 +102,13 @@ class TasksToDo extends Widget implements HasForms, HasActions
     public function done($id){
         $updatetask=Task::find($id);
         $updatetask->status="done";
+        $updatetask->save();
+        $this->mount();
+    }
+
+    public function undone($id){
+        $updatetask=Task::find($id);
+        $updatetask->status="todo";
         $updatetask->save();
         $this->mount();
     }

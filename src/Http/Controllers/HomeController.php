@@ -350,4 +350,27 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.tag',$data);
     }
 
+    public function sunday()
+    {
+        $sunday=date('l j F Y');
+        // $sunday="Sunday 30 July 2023";
+        $servicetime='09h00';
+        $set = Service::where('servicedate',date('Y-m-d',strtotime($sunday)))->where('servicetime',$servicetime)->first();
+        if ($set){
+            $reading = $set->reading;
+            $url="https://methodist.church.net.za/preacher/697/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
+            $response=Http::get($url);
+            if (isset($response)){
+                $preacher="Preacher: " . $response->body;
+            } else {
+                $preacher = "";
+            }
+            $txt="<div style=\"background-color: rgba(0, 0, 0, .3); text-align:center; color:white; font-family:Arial;\"><br><h3>" . $sunday . "</h3><h3>Reading: " . $reading . "</h3><h3>" . $preacher . "</h3><br></div>";
+        } else {
+            $txt="<div style=\"background-color: rgba(0, 0, 0, .3); text-align:center; color:white; font-family:Arial;\"><br><h3>" . $sunday . "</h3><br></div>";
+        }
+        return $txt;
+    }
+    
+
 }

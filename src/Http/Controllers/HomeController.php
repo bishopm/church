@@ -361,7 +361,7 @@ class HomeController extends Controller
             $url="https://methodist.church.net.za/preacher/697/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
             $response=Http::get($url);
             if (isset($response)){
-                $preacher="Preacher: " . $response->body;
+                $preacher="Preacher: " . $response->body();
             } else {
                 $preacher = "";
             }

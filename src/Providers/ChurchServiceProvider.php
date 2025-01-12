@@ -122,6 +122,11 @@ class ChurchServiceProvider extends ServiceProvider
         }
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
             $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
+            $schedule->command('churchsite:birthdayemail')->weekly()->fridays()->at('6:30');
+            // $schedule->command('churchsite:maintenanceemail')->weekly()->mondays()->at('6:00');
+            // $schedule->command('churchsite:monthlymeasures')->monthlyOn(1, '5:30');
+            // $schedule->command('churchsite:givingemail')->dailyAt('9:00');
+            $schedule->command('churchsite:recurringtasks')->dailyAt('5:00');
         });
     }
 
@@ -174,6 +179,7 @@ class ChurchServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             'Bishopm\Church\Console\Commands\InstallChurch',
+            'Bishopm\Church\Console\Commands\RecurringTasks',
             'Bishopm\Church\Console\Commands\BirthdayEmail'
         ]);
     }

@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Console\Commands;
 
-use Bishopm\Church\Mail\ChurchMail;
+use Bishopm\Church\Mail\ChurchHtmlMail;
 use Bishopm\Church\Models\Anniversary;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
@@ -53,7 +53,7 @@ class BirthdayEmail extends Command
         $days=array($mon,$tue,$wed,$thu,$fri,$sat,$sun);
         $birthdays=Individual::join('households', 'households.id', '=', 'individuals.household_id')->wherein(DB::raw('substr(birthdate, 6, 5)'), $days)->whereNull('individuals.deleted_at')->select('individuals.firstname', 'individuals.surname', 'individuals.cellphone', 'households.homephone', 'households.householdcell', DB::raw('substr(birthdate, 6, 5) as bd'))->orderByRaw('bd')->get();
         foreach ($birthdays as $bday) {
-            $msg=$msg . "*" . date("D d M", strtotime($thisyr . "-" . $bday->bd)) . "* **" . $bday->firstname . " " . $bday->surname . ":**";
+            $msg="<br>" . $msg . "<b>" . date("D d M", strtotime($thisyr . "-" . $bday->bd)) . "</b> " . $bday->firstname . " " . $bday->surname . ":";
             if ($bday->cellphone) {
                 $msg=$msg . " Cellphone: " . $bday->cellphone;
             }
@@ -75,7 +75,7 @@ class BirthdayEmail extends Command
             if ($ann->householdcell) {
                 $msg=$msg . " Household cellphone: " . self::gethcell($ann->householdcell);
             }
-            $msg=$msg. "<br>";
+            $msg=$msg. "<br><br><br>";
         }
 
         // Send to birthday group
@@ -85,13 +85,14 @@ class BirthdayEmail extends Command
         $group=Group::with('individuals')->where('id',$setting)->first();
         foreach ($group->individuals as $recip) {
             $data=array();
-            $data['recipient']=$recip->firstname;
+            $data['firstname']=$recip->firstname;
             $data['subject']="Birthdays / Anniversaries: " . $churchname;
+            $data['url']="https://westvillemethodist.co.za";
             $data['sender']=$churchemail;
             $data['body']=$msg;
             $data['email']=$recip->email;
             if ($data['email']=="michael@westvillemethodist.co.za"){
-                Mail::to($data['email'])->queue(new ChurchMail($data));
+                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
             }
         }
     }

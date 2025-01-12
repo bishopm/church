@@ -15,6 +15,11 @@ class Individual extends Model
     public $table = 'individuals';
     protected $guarded = ['id'];
 
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+    
     public function household(): BelongsTo
     {
         return $this->belongsTo(Household::class);

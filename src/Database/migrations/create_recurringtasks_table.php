@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('taskday');
             $table->integer('individual_id');
             $table->string('visibility', 199)->default('public');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
     

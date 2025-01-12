@@ -157,6 +157,41 @@ class ReportsController extends Controller
         return Redirect::to('/storage/app/media/barcodes/barcodes.pdf');
     }
 
+    public function removenames(){
+        $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
+        $pdf = new Fpdf;
+        $pdf->AddPage('P');
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->text(10, 16, "Name tags not used in over 6 months");
+        $pdf->text(10, 25, "Name");
+        $pdf->text(150, 25, "Last service");
+        $pdf->line(10, 29, 190, 29);
+        $pdf->SetFont('Helvetica', '', 12);
+        $y=35;
+        $remdate=strtotime('6 months ago');
+        foreach ($removals as $removal){
+            $stt=strtotime(substr($removal->lastseen,0,11));
+            if ($stt<$remdate){
+                $pdf->text(10,$y,strtoupper($removal->surname) . ", " . $removal->firstname);
+                $pdf->text(150,$y,$removal->lastseen);
+                $y=$y+5;
+                if ($y > 280){
+                    $pdf->AddPage('P');
+                    $pdf->SetFont('Helvetica', 'B', 14);
+                    $pdf->text(10, 16, "Name tags not used in over 6 months");
+                    $pdf->text(10, 25, "Name");
+                    $pdf->text(150, 25, "Last service");
+                    $pdf->line(10, 29, 190, 29);
+                    $pdf->SetFont('Helvetica', '', 12);
+                    $y=35;  
+                }
+            }
+        }
+        $pdf->Output('I','name-tags-removal');
+        exit;
+    }
+
     public function roster(string $id, int $year, int $month, $period=1, $output=null) {
         $pdf = new Fpdf();
         for ($i=0;$i<$period;$i++){

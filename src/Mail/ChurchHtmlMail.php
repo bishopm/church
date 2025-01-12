@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ChurchMail extends Mailable
+class ChurchHtmlMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -39,7 +39,7 @@ class ChurchMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'church::mail.templates.email',
+            html: 'church::mail.templates.htmlemail',
             with: [
                 'firstname' => $this->data['firstname'],
                 'url' => $this->data['url'],

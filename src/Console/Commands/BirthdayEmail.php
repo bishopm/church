@@ -91,9 +91,7 @@ class BirthdayEmail extends Command
             $data['sender']=$churchemail;
             $data['body']=$msg;
             $data['email']=$recip->email;
-            if ($data['email']=="michael@westvillemethodist.co.za"){
-                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
-            }
+            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
         }
     }
 }

@@ -47,6 +47,7 @@ class AttendanceResource extends Resource
                 Forms\Components\TextInput::make('scanbox')
                     ->label('Scan barcode')
                     ->autofocus()
+                    ->live(debounce:200)
                     ->afterStateUpdated(function (Set $set, Get $get, $state, $livewire) {
                         if ($state) {
                             $date=date('Y-m-d',strtotime($get('attendancedate')));
@@ -54,7 +55,6 @@ class AttendanceResource extends Resource
                             $indiv=Individual::find($state);
                             $check = Attendance::where('attendancedate',$date)->where('service',$service)->where('individual_id',$state)->first();
                             if (!$check){
-                                $set('individual_id', intval($state));
                                 $msg = $indiv->firstname . " " . $indiv->surname . " attended the " . $service . " service on " . $date;
                                 Notification::make('notify')->title($msg)->send();
                                 Attendance::create([
@@ -62,6 +62,9 @@ class AttendanceResource extends Resource
                                     'service' => $service,
                                     'individual_id' => $state
                                 ]);
+                                $set('individual_id', '');
+                                $set('scanbox', '');
+                                redirect()->route('filament.admin.admin.resources.attendances.create');
                             } else {
                                 Notification::make('notify')->title($indiv->firstname . " " . $indiv->surname . " has already been scanned for this service")->send();
                             }

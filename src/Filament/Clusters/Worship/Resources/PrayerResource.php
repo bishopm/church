@@ -47,7 +47,7 @@ class PrayerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable()
+                    ->searchable(['title','words'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()

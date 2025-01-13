@@ -1,10 +1,25 @@
 <x-filament-widgets::widget>
     <x-filament::section>
         @if (count($memberdata['individuals']))
-            <div class="text-lg font-bold">New members</div>
             <table class="table table-condensed">
+                <tr><th>New members</th><th colspan="2" >Welcome message</th></tr>
                 @foreach ($memberdata['individuals'] as $indiv)
-                    <tr><td><b><a href="{{URL::route('filament.admin.people.resources.individuals.edit',$indiv->id)}}">{{$indiv->firstname}} {{$indiv->surname}}</a></b></td><td>&nbsp;&nbsp;</td></td><td>Welcome email / WhatsApp</td></tr>
+                    <tr><td><b><a href="{{URL::route('filament.admin.people.resources.individuals.edit',$indiv->id)}}">{{$indiv->firstname}} {{$indiv->surname}}</a></b></td><td>&nbsp;&nbsp;</td>
+                    @if ($indiv->welcome_email==0)
+                        @if ($indiv->email<>'')
+                            <td>Email</td>
+                        @else 
+                            <td class="text-gray-500">Email</td>
+                        @endif
+                        @if ($indiv->cellphone<>'')
+                            <td>WhatsApp</td>
+                        @else 
+                        <td class="text-gray-500">WhatsApp</td>
+                        @endif
+                    @else
+                        <td></td><td></td>
+                    @endif
+                    </tr>
                 @endforeach
             </table>
             <br>

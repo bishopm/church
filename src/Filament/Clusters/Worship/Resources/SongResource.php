@@ -98,6 +98,21 @@ class SongResource extends Resource
                             ->required()
                             ->rows(20)
                             ->columnSpanFull(),
+                        Forms\Components\Placeholder::make('openlp')
+                            ->content(function (Get $get){
+                                    $lyrics=$get('lyrics');
+                                    $lyrics=preg_replace('/\[[^\]]*\]/', '', $lyrics);
+                                    $lyrics=str_replace('{V','---[Verse:',$lyrics);
+                                    $lyrics=str_replace('{C','---[Chorus:',$lyrics);
+                                    $lyrics=str_replace('{P','---[Pre-Chorus:',$lyrics);
+                                    $lyrics=str_replace('{B','---[Bridge:',$lyrics);
+                                    $lyrics=str_replace('{T','---[Tag:',$lyrics);
+                                    $lyrics=str_replace('}',']---',$lyrics);
+                                    $lyrics=nl2br($lyrics);
+                                    return new HtmlString($lyrics);
+                                }
+                            )
+                            ->columnSpanFull(),
                     ]),
                     Tab::make('Media')->schema([     
                         Forms\Components\TextInput::make('audio')
@@ -110,8 +125,14 @@ class SongResource extends Resource
                                 ->icon('heroicon-m-video-camera')
                                 ->media(fn (Get $get) => $get('video'))
                         ),
-                        Forms\Components\TextInput::make('music')
-                            ->maxLength(191),
+                        Forms\Components\FileUpload::make('music')
+                            ->directory('media/songs'),
+                        PdfViewerField::make('musicview')
+                            ->label('PDF preview')
+                            ->hidden(fn (Song $record) => $record->music === null)
+                            ->minHeight('80svh')
+                            ->fileUrl(fn (Song $record) => url('/') . '/storage/' . $record->music)
+                            ->columnSpanFull(),
                     ]),
                     Tab::make('History')->schema([
                         Forms\Components\Placeholder::make('history')->label('')
@@ -208,7 +229,7 @@ class SongResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable(['title','lyrics']),
                 Tables\Columns\TextColumn::make('lastused')
                     ->label('Last used'),
                 Tables\Columns\TextColumn::make('musictype')->label('Type')

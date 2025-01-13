@@ -4,6 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources\AttendanceResource\Pa
 
 use Bishopm\Church\Filament\Clusters\Admin\Resources\AttendanceResource;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAttendance extends EditRecord
@@ -15,5 +16,10 @@ class EditAttendance extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function getSaveFormAction(): Action
+    {
+        return parent::getSaveFormAction()->extraAttributes(['type' => 'button', 'wire:click' => 'save']);
     }
 }

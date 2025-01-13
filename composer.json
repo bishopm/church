@@ -14,7 +14,7 @@
     "require": {
         "illuminate/support": "~11",
 	    "livewire/livewire": "~3",
-    	"filament/filament": "3.2.124",
+    	"filament/filament": "^3.2",
         "guava/calendar": "~1",
         "outerweb/filament-settings": "~1",
         "codedge/laravel-fpdf": "~1",

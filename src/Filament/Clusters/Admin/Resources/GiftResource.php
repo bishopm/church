@@ -61,6 +61,7 @@ class GiftResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('paymentdate', 'desc')
             ->filters([
                 //
             ])

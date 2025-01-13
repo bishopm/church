@@ -121,7 +121,7 @@ class ChurchServiceProvider extends ServiceProvider
             ]);
         }
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
-            $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
+            $schedule->command('queue:work --stop-when-empty')->withoutOverlapping();
             $schedule->command('churchsite:birthdayemail')->weekly()->fridays()->at('6:30');
             // $schedule->command('churchsite:maintenanceemail')->weekly()->mondays()->at('6:00');
             // $schedule->command('churchsite:monthlymeasures')->monthlyOn(1, '5:30');

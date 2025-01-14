@@ -131,7 +131,7 @@ class SongResource extends Resource
                             ->label('PDF preview')
                             ->hidden(fn (Song $record) => $record->music === null)
                             ->minHeight('80svh')
-                            ->fileUrl(fn (Song $record) => url('/') . '/storage/' . $record->music)
+                            ->fileUrl(fn (Song $record) => url('/') . '/storage/app/' . $record->music)
                             ->columnSpanFull(),
                     ]),
                     Tab::make('History')->schema([

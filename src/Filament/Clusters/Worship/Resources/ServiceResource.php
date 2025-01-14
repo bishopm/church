@@ -84,6 +84,7 @@ class ServiceResource extends Resource
                             return $service->series_id;
                         }
                     }),
+                Forms\Components\Toggle::make('livestream')->label('Service will be live-streamed'),
                 Forms\Components\Repeater::make('setitems')
                     ->live()
                     ->hiddenOn('create')

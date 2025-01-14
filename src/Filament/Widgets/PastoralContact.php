@@ -12,7 +12,7 @@ class PastoralContact extends Widget
     public ?array $pastoraldata;
 
     function mount() {
-        $this->pastoraldata['notes']=Pastoralnote::with('pastor.individual')->where('pastoralnotable_type','household')->orderBy('pastoraldate','DESC')->take(5)->get();
+        $this->pastoraldata['notes']=Pastoralnote::with('pastor.individual')->where('pastoralnotable_type','household')->orWhere('pastoralnotable_type','individual')->orderBy('pastoraldate','DESC')->take(5)->get();
     }
 
     public static function canView(): bool 

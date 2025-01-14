@@ -21,7 +21,9 @@ class PastorResource extends Resource
 
     protected static ?string $cluster = People::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $modelLabel = 'Pastoral carer';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

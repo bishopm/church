@@ -13,7 +13,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Bishopm\Church\Models\Group;
- 
+use Bishopm\Church\Models\Individual;
+
 class Settings extends BaseSettings
 {
     protected static ?string $cluster = SettingsCluster::class;
@@ -120,7 +121,9 @@ class Settings extends BaseSettings
                     Tabs\Tab::make('Worship')
                         ->columns(2)
                         ->schema([
-                            TextInput::make('worship.worship_email'),
+                            Select::make('worship.worship_email')->label('Send worship services to this person')
+                            ->options(Individual::all()->sortBy('surname')->pluck('fullname', 'id'))
+                            ->searchable(),
                             KeyValue::make('worship.order_of_service')->columnSpanFull()                            
                         ]),
                 ]),

@@ -57,6 +57,11 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.model_directories',[base_path('vendor/bishopm/church/src/Models')]);
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
+        Config::set('filesystems.disks.google.driver','google');
+        Config::set('filesystems.disks.google.clientId',setting('services.drive_clientid'));
+        Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));
+        Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
+        Config::set('filesystems.disks.google.folder','');
         Livewire::component('login', LoginForm::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);

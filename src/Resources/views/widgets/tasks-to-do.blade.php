@@ -3,16 +3,16 @@
         <div x-data="{ tab: 'tab1' }">
             <x-filament::tabs label="Content tabs">
                 <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''">
-                    To do <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{count($tasks)}}</span>
+                    To do <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$tcount}}</span>
                 </x-filament::tabs.item>
                 <x-filament::tabs.item @click="tab = 'tab2'" :alpine-active="'tab === \'tab2\''">
-                    Doing <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{count($doings)}}</span>
+                    Doing <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$ucount}}</span>
                 </x-filament::tabs.item>        
                 <x-filament::tabs.item @click="tab = 'tab3'" :alpine-active="'tab === \'tab3\''">
-                    Some day <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{count($somedays)}}</span>
+                    Some day <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$scount}}</span>
                 </x-filament::tabs.item>
                 <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''">
-                    Done <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{count($dones)}}</span>
+                    Done <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$dcount}}</span>
                 </x-filament::tabs.item>
                 {{ $this->addAction }}
                 <x-filament-actions::modals />

@@ -24,22 +24,39 @@ class TasksToDo extends Widget implements HasForms, HasActions
     protected static string $view = 'church::widgets.tasks-to-do';
 
     public array $tasks, $doings, $somedays, $dones;
+    public $tcount,$ucount,$scount,$dcount;
     public $individual_id;
 
     function mount() {
         $indiv = Individual::where('user_id',Auth::user()->id)->first();
         $this->individual_id=$indiv->id;
         if ($indiv){
-            $this->tasks=Task::where('individual_id',$indiv->id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
-            $this->doings=Task::where('individual_id',$indiv->id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
-            $this->somedays=Task::where('individual_id',$indiv->id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
-            $this->dones=Task::where('individual_id',$indiv->id)->where('status','done')->orderBy('duedate','asc')->take(5)->get()->toArray();
+            $this->getTasks();
         } else {
             $this->tasks=array();
+            $this->tcount=0;
             $this->doings=array();
+            $this->ucount=0;
             $this->somedays=array();
+            $this->scount=0;
             $this->dones=array();
+            $this->dcount=0;
         }
+    }
+
+    private function getTasks(){
+        $this->tasks=Task::where('individual_id',$this->individual_id)->where('status','todo')->orderBy('duedate','asc')->get()->toArray();
+        $this->tcount=count($this->tasks);
+        $this->tasks = array_slice($this->tasks, 0, 5, true);
+        $this->doings=Task::where('individual_id',$this->individual_id)->where('status','doing')->orderBy('duedate','asc')->get()->toArray();
+        $this->ucount=count($this->doings);
+        $this->doings = array_slice($this->doings, 0, 5, true);
+        $this->somedays=Task::where('individual_id',$this->individual_id)->where('status','someday')->orderBy('duedate','asc')->get()->toArray();
+        $this->scount=count($this->somedays);
+        $this->somedays = array_slice($this->somedays, 0, 5, true);
+        $this->dones=Task::where('individual_id',$this->individual_id)->where('status','done')->orderBy('duedate','asc')->get()->toArray();
+        $this->dcount=count($this->dones);
+        $this->dones = array_slice($this->dones, 0, 5, true);
     }
 
     public function addAction(): Action {
@@ -81,9 +98,16 @@ class TasksToDo extends Widget implements HasForms, HasActions
                     'visibility' => $data['visibility'],
                     'individual_id' => $data['individual_id']
                 ]);
-                $this->tasks=Task::where('individual_id',$this->individual_id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
-                $this->doings=Task::where('individual_id',$this->individual_id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
-                $this->somedays=Task::where('individual_id',$this->individual_id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                if ($status=="todo"){
+                    $this->tasks=Task::where('individual_id',$this->individual_id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                    $this->tcount++;
+                } elseif ($status=="doing"){
+                    $this->doings=Task::where('individual_id',$this->individual_id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                    $this->ucount++;
+                } elseif ($status=="someday"){
+                    $this->somedays=Task::where('individual_id',$this->individual_id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
+                    $this->scount++;
+                }
             });
     }
 
@@ -103,13 +127,13 @@ class TasksToDo extends Widget implements HasForms, HasActions
         $updatetask=Task::find($id);
         $updatetask->status="done";
         $updatetask->save();
-        $this->mount();
+        $this->getTasks();
     }
 
     public function undone($id){
         $updatetask=Task::find($id);
         $updatetask->status="todo";
         $updatetask->save();
-        $this->mount();
+        $this->getTasks();
     }
 }

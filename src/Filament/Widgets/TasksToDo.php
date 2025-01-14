@@ -98,13 +98,13 @@ class TasksToDo extends Widget implements HasForms, HasActions
                     'visibility' => $data['visibility'],
                     'individual_id' => $data['individual_id']
                 ]);
-                if ($status=="todo"){
+                if ($data['status']=="todo"){
                     $this->tasks=Task::where('individual_id',$this->individual_id)->where('status','todo')->orderBy('duedate','asc')->take(5)->get()->toArray();
                     $this->tcount++;
-                } elseif ($status=="doing"){
+                } elseif ($data['status']=="doing"){
                     $this->doings=Task::where('individual_id',$this->individual_id)->where('status','doing')->orderBy('duedate','asc')->take(5)->get()->toArray();
                     $this->ucount++;
-                } elseif ($status=="someday"){
+                } elseif ($data['status']=="someday"){
                     $this->somedays=Task::where('individual_id',$this->individual_id)->where('status','someday')->orderBy('duedate','asc')->take(5)->get()->toArray();
                     $this->scount++;
                 }

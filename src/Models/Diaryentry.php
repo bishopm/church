@@ -28,6 +28,16 @@ class Diaryentry extends Model implements Eventable
                     $this->details=$this->diarisable->groupname;
                 }
             }
+        } else {
+            if ($this->diarisable_type=="tenant"){
+                if (isset($this->diarisable->tenant)){
+                    $this->details=$this->diarisable->tenant . " (" . $this->details . ")";
+                }
+            } elseif ($this->diarisable_type=="group"){
+                if (isset($this->diarisable->groupname)){
+                    $this->details=$this->diarisable->groupname . " (" . $this->details . ")";
+                }
+            }
         }
         if (!$this->details){
             $this->details = "-";

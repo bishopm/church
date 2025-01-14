@@ -7,20 +7,17 @@ use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Tenant;
 use Carbon\Carbon;
 use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -132,14 +129,24 @@ class ChurchCalendarWidget extends CalendarWidget
                     ->required(),
                 Hidden::make('venue_id')
                     ->default($this->record->id),
+                Textarea::make('details')
+                    ->rows(5),
                 Group::make([
                     DateTimePicker::make('diarydatetime')
+                        ->label('Start time and date')
                         ->native(true)
+                        ->default(function() {
+                            return date('Y-m-d H:00',strtotime('+2 hours'));
+                        })
                         ->seconds(false)
                         ->displayFormat('Y-m-d H:i')
                         ->format('Y-m-d H:i')
                         ->required(),
                     TimePicker::make('endtime')
+                        ->label('End time')
+                        ->default(function() {
+                            return date('H:00',strtotime('+3 hours'));
+                        })
                         ->native(true)
                         ->seconds(false)
                         ->required(),

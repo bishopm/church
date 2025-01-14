@@ -71,6 +71,9 @@ class Settings extends BaseSettings
                             TextInput::make('services.society_id')->label('methodist.church.net.za society ID'),
                             TextInput::make('services.bulksms_clientid')->label('BulkSMS Client ID'),
                             TextInput::make('services.bulksms_api_secret')->label('BulkSMS API Secret'),
+                            TextInput::make('services.drive_clientid')->label('Google Drive Client ID'),
+                            TextInput::make('services.drive_clientsecret')->label('Google Drive Client Secret'),
+                            TextInput::make('services.drive_refreshtoken')->label('Google Drive refresh token'),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)

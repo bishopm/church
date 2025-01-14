@@ -21,7 +21,7 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
 
     protected static ?string $cluster = Admin::class;
 
@@ -44,6 +44,7 @@ class TaskResource extends Resource
                     ->options([
                         'todo'=>'To do',
                         'doing'=>'Underway',
+                        'someday'=>'Some day',
                         'done'=>'Done'
                     ])
                     ->placeholder('')
@@ -90,6 +91,7 @@ class TaskResource extends Resource
                 ->options([
                     'todo'=>'To do',
                     'doing'=>'Underway',
+                    'someday'=>'Some day',
                     'done'=>'Done'
                 ]),
                 Filter::make('hide_completed')

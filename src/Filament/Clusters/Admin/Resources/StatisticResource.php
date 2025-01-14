@@ -20,7 +20,7 @@ class StatisticResource extends Resource
     
     protected static ?string $model = Statistic::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
     protected static ?string $cluster = Admin::class;
 

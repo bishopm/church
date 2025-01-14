@@ -157,6 +157,30 @@ class ReportsController extends Controller
         return Redirect::to('/storage/app/media/barcodes/barcodes.pdf');
     }
 
+    public function calendar($yr=""){
+        if (!$yr){
+            $yr=date('Y');
+        }
+        $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->get();
+        $pdf = new Fpdf;
+        $pdf->AddPage('P');
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->text(10, 16, $yr . " Calendar");
+        $pdf->line(10, 29, 190, 29);
+        $pdf->SetFont('Helvetica', '', 12);
+        $y=35;
+        foreach ($meetings as $meeting){
+            $pdf->text(10,$y,date('d M',strtotime($meeting->meetingdatetime)));
+            $pdf->text(25,$y,date('H:i',strtotime($meeting->meetingdatetime)));
+            $pdf->text(40,$y,$meeting->details);
+            $pdf->text(100,$y,$meeting->venue->venue);
+            $y=$y+5;
+        }
+        $pdf->Output('I','Calendar');
+        exit;
+    }
+
     public function removenames(){
         $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
         $pdf = new Fpdf;

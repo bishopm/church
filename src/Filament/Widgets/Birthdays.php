@@ -23,8 +23,9 @@ class Birthdays extends Widget
         $fri=strval(date('m-d', strtotime("next Monday")+345600));
         $sat=strval(date('m-d', strtotime("next Monday")+432000));
         $sun=strval(date('m-d', strtotime("next Monday")+518400));
-        $msg="<b>Birthdays for the week: (starting " . $thisyr . "-" . $mon . ")</b><br>";
+        $msg="<b>Birthdays for next week: (starting " . $thisyr . "-" . $mon . ")</b><br>";
         $days=array($mon,$tue,$wed,$thu,$fri,$sat,$sun);
+        $this->memberdata['today']=Individual::join('households', 'households.id', '=', 'individuals.household_id')->wherein(DB::raw('substr(birthdate, 6, 5)'), [date('m-d')])->whereNull('individuals.deleted_at')->select('individuals.firstname', 'individuals.surname', 'individuals.cellphone', 'households.homephone', 'households.householdcell', DB::raw('substr(birthdate, 6, 5) as bd'))->orderByRaw('bd')->get();
         $birthdays=Individual::join('households', 'households.id', '=', 'individuals.household_id')->wherein(DB::raw('substr(birthdate, 6, 5)'), $days)->whereNull('individuals.deleted_at')->select('individuals.firstname', 'individuals.surname', 'individuals.cellphone', 'households.homephone', 'households.householdcell', DB::raw('substr(birthdate, 6, 5) as bd'))->orderByRaw('bd')->get();
         $olddate="";
         foreach ($birthdays as $bday) {

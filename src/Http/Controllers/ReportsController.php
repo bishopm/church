@@ -163,19 +163,39 @@ class ReportsController extends Controller
         }
         $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->get();
         $pdf = new Fpdf;
+        $title = $yr . " Calendar";
+        $pdf->SetTitle($title);
         $pdf->AddPage('P');
         $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 22);
+        $image=url('/') . "/public/church/images/colouredlogo.png";
+        $pdf-> Image($image,10,0,25,25);
+        $pdf->text(40, 12, setting('general.church_name'));
+        $pdf->SetFont('Helvetica', '', 16);
+        $pdf->text(40, 20, $title);
         $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(10, 16, $yr . " Calendar");
-        $pdf->line(10, 29, 190, 29);
+        $pdf->line(10, 24, 200, 24);
         $pdf->SetFont('Helvetica', '', 12);
-        $y=35;
+        $y=32;
         foreach ($meetings as $meeting){
-            $pdf->text(10,$y,date('d M',strtotime($meeting->meetingdatetime)));
-            $pdf->text(25,$y,date('H:i',strtotime($meeting->meetingdatetime)));
-            $pdf->text(40,$y,$meeting->details);
-            $pdf->text(100,$y,$meeting->venue->venue);
+            $pdf->text(10,$y,date('d M (D)',strtotime($meeting->meetingdatetime)));
+            $pdf->text(37,$y,date('H:i',strtotime($meeting->meetingdatetime)));
+            $pdf->text(52,$y,$meeting->details);
+            $pdf->text(150,$y,$meeting->venue->venue);
             $y=$y+5;
+            if ($y > 280){
+                $pdf->AddPage('P');
+                $pdf->SetFont('Helvetica', 'B', 22);
+                $image=url('/') . "/public/church/images/colouredlogo.png";
+                $pdf-> Image($image,10,0,25,25);
+                $pdf->text(40, 12, setting('general.church_name'));
+                $pdf->SetFont('Helvetica', '', 16);
+                $pdf->text(40, 20, $title);
+                $pdf->SetFont('Helvetica', 'B', 14);
+                $pdf->line(10, 24, 200, 24);
+                $pdf->SetFont('Helvetica', '', 12);
+                $y=32;  
+            }
         }
         $pdf->Output('I','Calendar');
         exit;

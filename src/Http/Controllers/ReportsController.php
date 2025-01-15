@@ -193,6 +193,7 @@ class ReportsController extends Controller
         $pdf->line(10, 24, 200, 24);
         $pdf->SetFont('Helvetica', '', 12);
         $y=32;
+        asort($dates);
         foreach ($dates as $day){
             foreach ($day as $date){
                 $pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));

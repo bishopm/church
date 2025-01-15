@@ -162,6 +162,22 @@ class ReportsController extends Controller
             $yr=date('Y');
         }
         $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->get();
+        $bookings=Diaryentry::with('venue')->where('calendar',1)->where('diarydatetime','>=',$yr . '-01-01')->where('diarydatetime','<=',$yr . '-12-31')->orderBy('diarydatetime','ASC')->get();
+        $dates=array();
+        foreach ($bookings as $booking){
+            $dates[strtotime($booking->diarydatetime)][]=[
+                'datetime'=> $booking->diarydatetime,
+                'details'=>$booking->details,
+                'venue'=>$booking->venue->venue
+            ];
+        }
+        foreach ($meetings as $meeting){
+            $dates[strtotime($meeting->meetingdatetime)][]=[
+                'datetime'=> $meeting->meetingdatetime,
+                'details'=>$meeting->details,
+                'venue'=>$meeting->venue->venue
+            ];
+        }
         $pdf = new Fpdf;
         $title = $yr . " Calendar";
         $pdf->SetTitle($title);
@@ -177,24 +193,26 @@ class ReportsController extends Controller
         $pdf->line(10, 24, 200, 24);
         $pdf->SetFont('Helvetica', '', 12);
         $y=32;
-        foreach ($meetings as $meeting){
-            $pdf->text(10,$y,date('d M (D)',strtotime($meeting->meetingdatetime)));
-            $pdf->text(37,$y,date('H:i',strtotime($meeting->meetingdatetime)));
-            $pdf->text(52,$y,$meeting->details);
-            $pdf->text(150,$y,$meeting->venue->venue);
-            $y=$y+5;
-            if ($y > 280){
-                $pdf->AddPage('P');
-                $pdf->SetFont('Helvetica', 'B', 22);
-                $image=url('/') . "/public/church/images/colouredlogo.png";
-                $pdf-> Image($image,10,0,25,25);
-                $pdf->text(40, 12, setting('general.church_name'));
-                $pdf->SetFont('Helvetica', '', 16);
-                $pdf->text(40, 20, $title);
-                $pdf->SetFont('Helvetica', 'B', 14);
-                $pdf->line(10, 24, 200, 24);
-                $pdf->SetFont('Helvetica', '', 12);
-                $y=32;  
+        foreach ($dates as $day){
+            foreach ($day as $date){
+                $pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));
+                $pdf->text(37,$y,date('H:i',strtotime($date['datetime'])));
+                $pdf->text(52,$y,$date['details']);
+                $pdf->text(150,$y,$date['venue']);
+                $y=$y+5;
+                if ($y > 280){
+                    $pdf->AddPage('P');
+                    $pdf->SetFont('Helvetica', 'B', 22);
+                    $image=url('/') . "/public/church/images/colouredlogo.png";
+                    $pdf-> Image($image,10,0,25,25);
+                    $pdf->text(40, 12, setting('general.church_name'));
+                    $pdf->SetFont('Helvetica', '', 16);
+                    $pdf->text(40, 20, $title);
+                    $pdf->SetFont('Helvetica', 'B', 14);
+                    $pdf->line(10, 24, 200, 24);
+                    $pdf->SetFont('Helvetica', '', 12);
+                    $y=32;  
+                }
             }
         }
         $pdf->Output('I','Calendar');

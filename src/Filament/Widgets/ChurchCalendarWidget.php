@@ -7,6 +7,7 @@ use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Tenant;
 use Carbon\Carbon;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TimePicker;
@@ -160,6 +161,7 @@ class ChurchCalendarWidget extends CalendarWidget
                         ])
                         ->default(7)
                         ->label('How often to repeat'),
+                Checkbox::make('calendar')->label('Add to church calendar')
                 ])->columns(),
                 Group::make([
                     DateTimePicker::make('diarydatetime')

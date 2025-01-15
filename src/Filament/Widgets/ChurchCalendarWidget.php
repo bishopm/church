@@ -14,6 +14,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
@@ -52,21 +53,34 @@ class ChurchCalendarWidget extends CalendarWidget
     public function getHeaderActions(): array
     {
         return [
-                Action::make('report')->label('Weekly report')
-                    ->form([
-                        DatePicker::make('reportdate')
-                            ->label('Starting date')
-                            ->format('Y-m-d')
-                            ->displayFormat('Y-m-d')
-                            ->weekStartsOnMonday()
-                            ->default(now())
-                            ->required(),
-                    ])
-                    ->action(function (array $data): void {
-                        redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate']]);
+            Action::make('report')->label('Weekly report')
+                ->form([
+                    DatePicker::make('reportdate')
+                        ->label('Starting date')
+                        ->format('Y-m-d')
+                        ->displayFormat('Y-m-d')
+                        ->weekStartsOnMonday()
+                        ->default(now())
+                        ->required(),
+                ])
+                ->action(function (array $data): void {
+                    redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate']]);
+                }),
+            CreateAction::make('createDiaryentry')->label('Add booking')
+                    ->model(Diaryentry::class)
+                    ->before(function (array $data){
+                        for ($i=1;$i<$data['repeats']+1;$i++){
+                            $newtime=date('Y-m-d H:i',strtotime($data['diarydatetime'] . ' + ' . $i*$data['interval'] . ' days'));
+                            Diaryentry::create([
+                                'diarisable_id' => $data['diarisable_id'],
+                                'venue_id' => $data['venue_id'],
+                                'details' => $data['details'],
+                                'diarydatetime' => $newtime,
+                                'endtime' => $data['endtime']
+                            ]);
+                        }
+                        return $data;
                     }),
-                CreateAction::make('createDiaryentry')->label('Add booking')
-                    ->model(Diaryentry::class),
         ];
     }
 
@@ -131,6 +145,22 @@ class ChurchCalendarWidget extends CalendarWidget
                     ->default($this->record->id),
                 Textarea::make('details')
                     ->rows(5),
+                Group::make([
+                    TextInput::make('repeats')
+                        ->label('Number of times to repeat')
+                        ->default(0)
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(52),
+                    Select::make('interval')
+                        ->options([
+                            1  => 'daily',
+                            7  => 'weekly',
+                            14 => 'fortnightly'
+                        ])
+                        ->default(7)
+                        ->label('How often to repeat'),
+                ])->columns(),
                 Group::make([
                     DateTimePicker::make('diarydatetime')
                         ->label('Start time and date')

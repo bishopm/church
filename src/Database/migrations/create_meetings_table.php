@@ -12,8 +12,9 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->string('details');
-            $table->date('meetingdatetime');
+            $table->dateTime('meetingdatetime');
             $table->integer('venue_id');
+            $table->time('endtime');
         });
     }
     

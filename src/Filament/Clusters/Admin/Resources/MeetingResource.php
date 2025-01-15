@@ -7,6 +7,7 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\Pages;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\RelationManagers;
 use Bishopm\Church\Models\Meeting;
 use Filament\Forms;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -32,9 +33,17 @@ class MeetingResource extends Resource
                 Forms\Components\DateTimePicker::make('meetingdatetime')
                     ->label('Date and time')
                     ->default(now())
-                    ->native(false)
+                    ->native(true)
                     ->displayFormat('Y-m-d H:i')
                     ->format('Y-m-d H:i')
+                    ->required(),
+                TimePicker::make('endtime')
+                    ->label('End time')
+                    ->default(function() {
+                        return date('H:00',strtotime('+3 hours'));
+                    })
+                    ->native(true)
+                    ->seconds(false)
                     ->required(),
                 Forms\Components\Select::make('venue_id')
                     ->relationship('venue', 'venue')

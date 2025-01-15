@@ -4,6 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\Pages
 
 use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource;
 use Bishopm\Church\Models\Agendaitem;
+use Bishopm\Church\Models\Diaryentry;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -25,5 +26,13 @@ class CreateMeeting extends CreateRecord
                 ]);
             }
         }
+        Diaryentry::create([
+            'diarisable_type' => 'tenant',
+            'diarisable_id' => setting('admin.church_tenant'),
+            'venue_id' => $this->record->venue_id,
+            'details' => $this->record->details,
+            'diarydatetime' => $this->record->meetingdatetime,
+            'endtime' => $this->record->endtime
+        ]);
     }
 }

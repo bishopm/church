@@ -14,6 +14,7 @@ use Filament\Forms\Components\TagsInput;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Tenant;
 
 class Settings extends BaseSettings
 {
@@ -39,7 +40,10 @@ class Settings extends BaseSettings
                         ->columns(2)
                         ->schema([
                             KeyValue::make('admin.agendas')->columnSpanFull(),
-                            Textarea::make('admin.bank_details')->columnSpanFull()->rows(4)
+                            Textarea::make('admin.bank_details')->columnSpanFull()->rows(4),
+                            Select::make('admin.church_tenant')->label('Name of venue user for internal venue bookings')
+                                ->options(Tenant::all()->sortBy('tenant')->pluck('tenant', 'id'))
+                                ->searchable(),
                         ]),
                     Tabs\Tab::make('Automation')
                         ->columns(2)

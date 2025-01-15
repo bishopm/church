@@ -244,6 +244,8 @@ class SongResource extends Resource
                 Tables\Columns\TextColumn::make('musictype')->label('Type')
                     ->searchable()
                     ->formatStateUsing(fn (string $state) => Str::title($state)),
+                Tables\Columns\IconColumn::make('music')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()
                     ->forceSearchCaseInsensitive(true)

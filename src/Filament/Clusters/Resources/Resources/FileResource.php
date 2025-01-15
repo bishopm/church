@@ -52,7 +52,7 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('category')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('filename')
-                    ->prefix(url('/storage/app') . '/')
+                    ->prefix(url('/storage') . '/')
                     ->url(
                         fn (string $state) => url('/storage/' . $state),
                     )

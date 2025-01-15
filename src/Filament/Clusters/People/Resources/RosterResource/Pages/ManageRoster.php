@@ -186,7 +186,7 @@ class ManageRoster extends Page implements HasForms
             $data['firstname'] = $person->firstname;
             $data['url'] = "https://westvillemethodist.co.za";
             $data['firstname'] = $person->firstname;
-            $data['attachment'] = storage_path('app/public/attachments/WMCrosters.pdf');
+            $data['attachment'] = storage_path('public/attachments/WMCrosters.pdf');
             $emailcount++;
             Mail::to($person->email)->queue(new ReportMail($data));
             Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();

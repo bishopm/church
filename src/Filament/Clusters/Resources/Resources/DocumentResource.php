@@ -36,7 +36,7 @@ class DocumentResource extends Resource
                     ])
                     ->inline(),
                 Forms\Components\FileUpload::make('filename')
-                    ->directory('media/documents'),
+                    ->directory('documents'),
             ]);
     }
 

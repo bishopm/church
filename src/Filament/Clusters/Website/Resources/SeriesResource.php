@@ -43,7 +43,7 @@ class SeriesResource extends Resource
                     ->format('Y-m-d')
                     ->required(),
                 Forms\Components\FileUpload::make('image')
-                    ->directory('media/images/sermon')
+                    ->directory('images/sermon')
                     ->previewable(false)
                     ->image()
                     ->required(),
@@ -68,7 +68,7 @@ class SeriesResource extends Resource
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->state(function (Series $record) {
-                        return url('storage/app/' . $record->image);
+                        return url('storage/' . $record->image);
                 }),
             ])
             ->filters([

@@ -22,9 +22,11 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Hugomyb\FilamentMediaAction\Forms\Components\Actions\MediaAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Joaopaulolndev\FilamentPdfViewer\Forms\Components\PdfViewerField;
 use Illuminate\Support\Str;
+use Yaza\LaravelGoogleDriveStorage\Gdrive;
 
 class SongResource extends Resource
 {
@@ -126,13 +128,20 @@ class SongResource extends Resource
                                 ->media(fn (Get $get) => $get('video'))
                         ),
                         Forms\Components\FileUpload::make('music')
-                            ->directory('media/songs'),
-                        PdfViewerField::make('musicview')
-                            ->label('PDF preview')
-                            ->hidden(fn (Song $record) => $record->music === null)
-                            ->minHeight('80svh')
-                            ->fileUrl(fn (Song $record) => url('/') . '/storage/app/' . $record->music)
-                            ->columnSpanFull(),
+                            ->label(function (Song $record){
+                                if ($record->music<>""){
+                                    $url=Storage::disk('google')->url($record->music);
+                                    $url=str_replace('uc?id=','file/d/',$url);
+                                    $url=str_replace('&export=media','/view',$url);    
+                                    return new HtmlString("<a target='_blank' href='" . $url . "'>Click here to open music</a>");
+                                } else {
+                                    return "Music";
+                                }
+                                return $url;
+                            })
+                            ->directory('songs')
+                            ->downloadable()
+                            ->disk('google'),
                     ]),
                     Tab::make('History')->schema([
                         Forms\Components\Placeholder::make('history')->label('')

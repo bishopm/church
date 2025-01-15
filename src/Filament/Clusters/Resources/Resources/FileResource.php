@@ -31,7 +31,7 @@ class FileResource extends Resource
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('filename')
-                    ->directory('media/files'),
+                    ->directory('files'),
                 Forms\Components\Radio::make('category')
                     ->options([
                         'audio' => 'Audio',
@@ -54,7 +54,7 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('filename')
                     ->prefix(url('/storage/app') . '/')
                     ->url(
-                        fn (string $state) => url('/storage/app/' . $state),
+                        fn (string $state) => url('/storage/' . $state),
                     )
             ])
             ->defaultSort('created_at', 'desc')

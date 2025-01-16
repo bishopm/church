@@ -6,6 +6,7 @@ use Bishopm\Church\Filament\Clusters\Admin;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\Pages;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\RelationManagers;
 use Bishopm\Church\Models\Report;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,7 +27,7 @@ class ReportResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('details')
+                Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('url')
@@ -53,6 +54,7 @@ class ReportResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('View')->url(fn (Report $record): string => url('/') . '/' . $record->url)->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

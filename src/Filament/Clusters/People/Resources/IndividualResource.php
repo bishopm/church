@@ -72,6 +72,7 @@ class IndividualResource extends Resource
                             ->inline(),
                         Actions::make([
                             Action::make('Create namebadge')
+                                ->hidden(fn (string $operation) => $operation === 'create')
                                 ->url(
                                     fn (Individual $record) => route('reports.barcodes',['newonly' => $record->id]),
                                 )
@@ -175,9 +176,19 @@ class IndividualResource extends Resource
                     Tab::make('Household')
                     ->schema([
                         Forms\Components\Select::make('household_id')
-                            ->label('Household')
-                            ->options(Household::orderBy('addressee')->get()->pluck('addressee', 'id'))
-                            ->searchable(),
+                            ->label('Household')    
+                            ->relationship(name: 'household', titleAttribute: 'addressee')
+                            ->searchable()
+                            ->createOptionModalHeading('Add a new household')
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('addressee')
+                                    ->required(),
+                                Forms\Components\TextInput::make('address1')->label('Address 1'),
+                                Forms\Components\TextInput::make('address2')->label('Address 2'),
+                                Forms\Components\TextInput::make('address3')->label('Address 3'),
+                                Forms\Components\TextInput::make('homephone')->label('Home phone'),
+                                Forms\Components\TextInput::make('sortsurname')->required()->label('Family surname for sorting purposes'),
+                            ]),
                         Forms\Components\Placeholder::make('householdtext')
                             ->hiddenOn('create')
                             ->content(function (Individual $record){

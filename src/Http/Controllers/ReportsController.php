@@ -184,15 +184,15 @@ class ReportsController extends Controller
         $pdf->AddPage('P');
         $pdf->SetAutoPageBreak(true, 0);
         $pdf->SetFont('Helvetica', 'B', 22);
-        $image=url('/') . "/public/church/images/colouredlogo.png";
-        $pdf-> Image($image,10,0,25,25);
-        $pdf->text(40, 12, setting('general.church_name'));
+        $image=url('/') . "/public/church/images/blacklogo.png";
+        $pdf->Image($image,10,5,25,25);
+        $pdf->text(40, 17, setting('general.church_name'));
         $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 20, $title);
+        $pdf->text(40, 25, $title);
         $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->line(10, 24, 200, 24);
+        $pdf->line(10, 29, 200, 29);
         $pdf->SetFont('Helvetica', '', 12);
-        $y=32;
+        $y=37;
         asort($dates);
         foreach ($dates as $day){
             foreach ($day as $date){

@@ -5,6 +5,7 @@ namespace Bishopm\Church\Filament\Widgets;
 use Guava\Calendar\Widgets\CalendarWidget;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Tenant;
+use Bishopm\Church\Models\Venue;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -40,7 +41,7 @@ class ChurchCalendarWidget extends CalendarWidget
     public function getEvents(array $fetchInfo = []): Collection | array
     {
         return collect()
-            ->push(...Diaryentry::query()->where('venue_id',$this->record->id)->get())
+            ->push(...Diaryentry::query()->where('diarisable_type','tenant')->get())
         ;
     }
 
@@ -99,6 +100,12 @@ class ChurchCalendarWidget extends CalendarWidget
             CreateAction::make('ctxCreateDiaryentry')
                 ->model(Diaryentry::class)
                 ->mountUsing(function (Form $form, array $arguments) {
+                    $getvenue=data_get($arguments, 'resource');
+                    if ($getvenue){
+                        $venue=$getvenue['id'];
+                    } else {
+                        $venue=$this->record->id;
+                    }
                     $tenant = data_get($arguments, 'diarisable_id');
                     $diarydatetime = data_get($arguments, 'startStr');
                     $endtime = data_get($arguments, 'endStr');
@@ -107,7 +114,7 @@ class ChurchCalendarWidget extends CalendarWidget
                             'diarisable_id' => $tenant,
                             'diarydatetime' => Carbon::make($diarydatetime),
                             'endtime' => Carbon::make($endtime),
-                            'venue_id' => $this->record->id
+                            'venue_id' => $venue
                         ]);
                     }
                 }),
@@ -121,7 +128,6 @@ class ChurchCalendarWidget extends CalendarWidget
                 ->model(Diaryentry::class)
                 ->mountUsing(function (Form $form, array $arguments) {
                     $date = data_get($arguments, 'dateStr');
-
                     if ($date) {
                         $form->fill([
                             'diarydatetime' => Carbon::make($date),
@@ -190,8 +196,8 @@ class ChurchCalendarWidget extends CalendarWidget
     {
         parent::onEventDrop($info);
 
-        if (in_array($this->getModel(), [Diaryentry::class])) {
-            $record = $this->getRecord();
+        if (in_array($this->getEventModel(), [Diaryentry::class])) {
+            $record = $this->getEventRecord();
 
             if ($delta = data_get($info, 'delta')) {
                 $startsAt = $record->diarydatetime;
@@ -219,8 +225,8 @@ class ChurchCalendarWidget extends CalendarWidget
     {
         parent::onEventResize($info);
 
-        if ($this->getModel() === Diaryentry::class) {
-            $record = $this->getRecord();
+        if ($this->getEventModel() === Diaryentry::class) {
+            $record = $this->getEventRecord();
             if ($delta = data_get($info, 'endDelta')) {
                 $endsAt = $record->endtime;
                 $endsAt = date("H:i",strtotime($endsAt) + $delta['seconds']);
@@ -248,6 +254,16 @@ class ChurchCalendarWidget extends CalendarWidget
         return false;
     }
 
+    public function getResources(): Collection|array
+    {
+        $data=array();
+        $getvenues=Venue::where('resource',1)->get();
+        foreach ($getvenues as $venue){
+            $data[]=$venue;
+        }
+        return $data;
+    }
+
     public function authorize($ability, $arguments = [])
     {
         return true;
@@ -260,7 +276,7 @@ class ChurchCalendarWidget extends CalendarWidget
             'slotMaxTime' => '21:00:00',
             'headerToolbar' => [
                 'start' => 'title',
-                'center' => 'dayGridMonth,timeGridWeek,timeGridDay',
+                'center' => 'resourceTimeGridDay,dayGridMonth,timeGridWeek,timeGridDay',
                 'end' => 'today prev,next',
             ]
         ];

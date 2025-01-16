@@ -46,6 +46,7 @@ class Diaryentry extends Model implements Eventable
             ->title($this->details)
             ->start($this->diarydatetime)
             ->end(date('Y-m-d',strtotime($this->diarydatetime)) . " " . $this->endtime)
+            ->resourceId($this->venue_id)
             ->extendedProp('tenant', $this->diarisable_type);
     }
 

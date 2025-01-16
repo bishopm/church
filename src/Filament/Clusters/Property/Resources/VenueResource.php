@@ -28,6 +28,8 @@ class VenueResource extends Resource
                 Forms\Components\TextInput::make('venue')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Toggle::make('resource')
+                    ->label('Show in resources view')
             ]);
     }
 

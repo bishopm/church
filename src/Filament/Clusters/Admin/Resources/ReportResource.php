@@ -4,7 +4,6 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources;
 
 use Bishopm\Church\Filament\Clusters\Admin;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\Pages;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\RelationManagers;
 use Bishopm\Church\Models\Report;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,8 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ReportResource extends Resource
 {
@@ -43,7 +40,7 @@ class ReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('details')
+                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('url')
                     ->searchable(),

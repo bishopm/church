@@ -176,7 +176,8 @@ class IndividualResource extends Resource
                     Tab::make('Household')
                     ->schema([
                         Forms\Components\Select::make('household_id')
-                            ->label('Household')    
+                            ->label('Household')
+                            ->required()    
                             ->relationship(name: 'household', titleAttribute: 'addressee')
                             ->searchable()
                             ->createOptionModalHeading('Add a new household')

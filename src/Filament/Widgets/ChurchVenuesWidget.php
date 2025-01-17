@@ -24,9 +24,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 
-class ChurchCalendarWidget extends CalendarWidget
+class ChurchVenuesWidget extends CalendarWidget
 {
-    protected string $calendarView = 'timeGridWeek';
+    protected string $calendarView = 'resourceTimeGridDay';
 
     protected bool $eventClickEnabled = true;
 
@@ -34,21 +34,13 @@ class ChurchCalendarWidget extends CalendarWidget
 
     protected bool $eventResizeEnabled = true;
 
-    public ?Model $record = null;
-
     protected bool $dateSelectEnabled = true;
 
     public function getEvents(array $fetchInfo = []): Collection | array
     {
-        if ($this->record->id){
-            $collect = collect()
-                ->push(...Diaryentry::query()->where('venue_id',$this->record->id)->get())
-            ;
-        } else {
-            $collect = collect()
-                ->push(...Diaryentry::query()->get())
-            ;
-        }
+        $collect = collect()
+            ->push(...Diaryentry::query()->get())
+        ;
         return $collect;
     }
 
@@ -69,10 +61,10 @@ class ChurchCalendarWidget extends CalendarWidget
     public function getHeaderActions(): array
     {
         return [
-            Action::make('report')->label('Weekly report')
+            Action::make('report')->label('Day report')
                 ->form([
                     DatePicker::make('reportdate')
-                        ->label('Starting date')
+                        ->label('Report date')
                         ->format('Y-m-d')
                         ->displayFormat('Y-m-d')
                         ->weekStartsOnMonday()
@@ -80,23 +72,8 @@ class ChurchCalendarWidget extends CalendarWidget
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate']]);
+                    redirect()->route('reports.allvenues', ['reportdate'=>$data['reportdate']]);
                 }),
-            CreateAction::make('createDiaryentry')->label('Add booking')
-                    ->model(Diaryentry::class)
-                    ->before(function (array $data){
-                        for ($i=1;$i<$data['repeats']+1;$i++){
-                            $newtime=date('Y-m-d H:i',strtotime($data['diarydatetime'] . ' + ' . $i*$data['interval'] . ' days'));
-                            Diaryentry::create([
-                                'diarisable_id' => $data['diarisable_id'],
-                                'venue_id' => $data['venue_id'],
-                                'details' => $data['details'],
-                                'diarydatetime' => $newtime,
-                                'endtime' => $data['endtime']
-                            ]);
-                        }
-                        return $data;
-                    }),
         ];
     }
 
@@ -162,8 +139,11 @@ class ChurchCalendarWidget extends CalendarWidget
                     ->options(Tenant::orderBy('tenant')->get()->pluck('tenant', 'id'))
                     ->searchable()
                     ->required(),
-                Hidden::make('venue_id')
-                    ->default($this->record->id),
+                Select::make('venue_id')
+                    ->label('Venue')
+                    ->options(Venue::orderBy('venue')->get()->pluck('venue', 'id'))
+                    ->searchable()
+                    ->required(),
                 Textarea::make('details')
                     ->rows(5),
                 Group::make([
@@ -280,7 +260,7 @@ class ChurchCalendarWidget extends CalendarWidget
             'slotMaxTime' => '21:00:00',
             'headerToolbar' => [
                 'start' => 'title',
-                'center' => 'dayGridMonth,timeGridWeek,timeGridDay',
+                'center' => '',
                 'end' => 'today prev,next',
             ]
         ];

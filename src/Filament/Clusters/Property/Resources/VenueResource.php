@@ -83,6 +83,7 @@ class VenueResource extends Resource
     public static function getWidgets(): array {
         return [
             \Bishopm\Church\Filament\Widgets\ChurchCalendarWidget::class,
+            \Bishopm\Church\Filament\Widgets\ChurchVenuesWidget::class,
         ];
     }
 }

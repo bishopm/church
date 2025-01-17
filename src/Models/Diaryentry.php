@@ -42,12 +42,16 @@ class Diaryentry extends Model implements Eventable
         if (!$this->details){
             $this->details = "-";
         }
-        return Event::make($this)
+
+        $event = Event::make($this)
             ->title($this->details)
             ->start($this->diarydatetime)
             ->end(date('Y-m-d',strtotime($this->diarydatetime)) . " " . $this->endtime)
-            ->resourceId($this->venue_id)
             ->extendedProp('tenant', $this->diarisable_type);
+        if ($this->venue_id) {
+            $event->resourceId($this->venue_id);
+        }
+        return $event;        
     }
 
     public function diarisable(): MorphTo

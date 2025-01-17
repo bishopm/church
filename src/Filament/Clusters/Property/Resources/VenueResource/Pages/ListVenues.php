@@ -17,4 +17,10 @@ class ListVenues extends ListRecords
             Actions\CreateAction::make()
         ];
     }
+
+    protected function getFooterWidgets(): array {
+        return [
+            \Bishopm\Church\Filament\Widgets\ChurchVenuesWidget::class,
+        ];
+    }
 }

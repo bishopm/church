@@ -24,6 +24,212 @@ use Illuminate\Support\Facades\Redirect;
 
 class ReportsController extends Controller
 {
+    public function a4meeting ($recordId){
+        $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
+        $pdf = new Fpdf;
+        $pdf->AddPage('P');
+        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
+        $pdf->SetTitle($title);
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 18);
+        $logo=url('/') . "/public/church/images/bwidelogo.png";
+        $pdf->Image($logo,123,8,77,30);
+        $pdf->text(20, 16, $mtg->details);
+        $pdf->SetFont('Helvetica', '', 14);
+        $pdf->text(20, 23, $title);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->text(20, 32, "Agenda");
+        $pdf->line(20, 35, 195, 35);
+        $items=$mtg->agendaitems;
+        $yy=44;
+        $ndx=0;
+        foreach ($items as $item){
+            if ($item->level==1){
+                $pdf->SetFont('Helvetica', 'B', 12);
+                $ndx=intval(floor($ndx)+1);
+                $pdf->text(20, $yy, $ndx . "  " . $item->heading);
+            } else {
+                $yy=$yy-2;
+                $pdf->SetFont('Helvetica', '', 11);
+                $ndx=$ndx+0.1;
+                $pdf->text(25, $yy, $ndx . "  " . $item->heading);
+            }
+            $yy=$yy+8;
+        }
+        $filename=$title;
+        $pdf->Output('I',$filename);
+        exit;
+    }
+
+    public function a5meeting ($recordId){
+        $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
+        $pdf = new Fpdf;
+        $pdf->AddPage('L');
+        $xadd=147;
+        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
+        $pdf->SetTitle($title);
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 15);
+        $logo=url('/') . "/public/church/images/bwidelogo.png";
+        $pdf->Image($logo,85,8,60);
+        $pdf->Image($logo,85+$xadd,8,60);
+        $pdf->text(10, 11, $mtg->details);
+        $pdf->text(10+$xadd, 11, $mtg->details);
+        $pdf->SetFont('Helvetica', '', 12);
+        $pdf->text(10, 18, $title);
+        $pdf->text(10+$xadd, 18, $title);
+        $pdf->SetFont('Helvetica', 'B', 12);
+        $pdf->text(10, 27, "Agenda");
+        $pdf->text(10+$xadd, 27, "Agenda");
+        $pdf->line(10, 30, 142, 30);
+        $pdf->line($xadd+10, 30, $xadd+142, 30);
+        $items=$mtg->agendaitems;
+        $yy=39;
+        $ndx=0;
+        foreach ($items as $item){
+            if ($item->level==1){
+                $pdf->SetFont('Helvetica', 'B', 11);
+                $ndx=intval(floor($ndx)+1);
+                $pdf->text(10, $yy, $ndx . "  " . $item->heading);
+                $pdf->text($xadd+10, $yy, $ndx . "  " . $item->heading);
+            } else {
+                $yy=$yy-2;
+                $pdf->SetFont('Helvetica', '', 10);
+                $ndx=$ndx+0.1;
+                $pdf->text(15, $yy, $ndx . "  " . $item->heading);
+                $pdf->text($xadd+15, $yy, $ndx . "  " . $item->heading);
+            }
+            $yy=$yy+7;
+        }
+        $filename=$title;
+        $pdf->Output('I',$filename);
+        exit;
+    }
+
+    private function addRoster($label,$servicetime,$servicedate){
+        if ($label=="Bible reading"){
+            $groupname="Readers " . $servicetime;
+        } elseif ($label=="Society Stewards") {
+            $groupname=$label;
+        } else {
+            $groupname=$label . " " . $servicetime;
+        }
+        if (substr($groupname,0,1) == "B"){
+            dd($groupname);
+        }
+        $group=Group::where('groupname',$groupname)->first();
+        if ($group){
+            $group_id=$group->id;
+            if ($label<>"Society Stewards"){
+                $rgroup=Rostergroup::where('group_id',$group_id)->first();
+                if ($rgroup){
+                    $rostergroup=$rgroup->id;
+                    $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rostergroup)->where('rosterdate',$servicedate)->first();
+                } 
+            } else {
+                $rostergroups=Rostergroup::with('roster')->where('group_id',$group_id)->get();
+                foreach ($rostergroups as $rg){
+                    if (str_contains($rg->roster->roster,$servicetime)){
+                        $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate',$servicedate)->first();
+                    }
+                }
+            }
+            if ((isset($rosteritem)) and ($rosteritem->individuals)){
+                $indivs=array();
+                foreach ($rosteritem->individuals as $ind){
+                    $indivs[]=$ind->firstname . " " . $ind->surname;
+                }
+                if ($label=="Society Stewards"){
+                    $label = "Society Steward: " . implode(", ", $indivs);
+                } elseif ($label=="Bible reading") {
+                    $label = implode(", ", $indivs);
+                } else {
+                    $label = $label . ": " . implode(", ", $indivs);
+                }
+            } else {
+                if ($label=="Bible reading"){
+                    $label = "";
+                }
+            }
+        }
+        return $label;
+    }
+
+    public function allvenues($reportdate){
+        $hours=['07h00','08h00','09h00','10h00','11h00','12h00','13h00','14h00','15h00','16h00','17h00','18h00','19h00','20h00','21h00','22h00'];
+        $venues=Venue::where('resource',1)->orderBy('venue')->get();
+        $title = "Venue Bookings: " . date('j F Y',strtotime($reportdate));
+        $pdf = new Fpdf;
+        $pdf->SetFillColor(190,190,190);
+        $pdf->AddPage('L');
+        $pdf->SetTitle($title);
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Arial', 'B', 22);
+        $image=url('/') . "/public/church/images/blacklogo.png";
+        $pdf->Image($image,10,0,25,25);
+        $pdf->text(40, 12, setting('general.church_name'));
+        $pdf->SetFont('Arial', '', 16);
+        $pdf->text(40, 20, $title);
+        $pdf->SetFont('Arial', 'B', 12);
+        $yy=40;
+        $xx=35;
+        $col=floor(254/count($venues));
+        $width=$col*count($venues)+$xx-6;
+        foreach ($hours as $hh){
+            if ($hh<>$hours[count($hours)-1]){
+                $pdf->line(10,$yy-6,$width,$yy-6);
+                $pdf->text(13,$yy+1,$hh);
+                $yy=$yy+11;
+            }
+        }
+        $pdf->line(10,34,10,199);
+        $pdf->line($width,34,$width,199);
+        $pdf->line(10,$yy-6,$width,$yy-6);
+        foreach ($venues as $venue){
+            $bookings=Diaryentry::with('diarisable')->where(DB::raw('substr(diarydatetime, 1, 10)'),$reportdate)->where('venue_id',$venue->id)->get();
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->setxy($xx-6,30);
+            $pdf->cell($col,0,$venue->venue,0,0,'C');
+            foreach ($bookings as $booking){
+                $start=substr($booking->diarydatetime,11,5);
+                $sh=substr($start,0,2);
+                $sm=substr($start,3,2);
+                $sy=array_search($sh."h00",$hours) * 11 + 40 + intval($sm)/60 * 11 - 6;
+                $end=$booking->endtime;
+                $eh=substr($end,0,2);
+                $em=substr($end,3,2);
+                $ey=array_search($eh."h00",$hours) * 11 + 40 + intval($em)/60 * 11 - 6;
+                $pdf->rect($xx-6,$sy,$col,$ey-$sy,'DF');
+                $pdf->setxy($xx-6,$sy+1);
+                $pdf->SetFont('Arial', '', 8);
+                if (($booking->diarisable_id) and (isset($booking->diarisable->tenant))){
+                    $msg=$booking->diarisable->tenant;
+                    if ($booking->details){
+                        $msg.=" (" . $booking->details . ")";
+                    }
+                    $pdf->multicell($col,3,$msg,0,'C');
+                } elseif (($booking->diarisable_id) and (isset($booking->diarisable->groupname))){
+                    $msg=$booking->diarisable->groupname;
+                    if ($booking->details){
+                        $msg.=" (" . $booking->details . ")";
+                    }
+                    $pdf->multicell($col,3,$msg,0,'C');
+                } elseif (($booking->diarisable_id) and (isset($booking->diarisable->event))){
+                    $msg=$booking->diarisable->event;
+                    if ($booking->details){
+                        $msg.=" (" . $booking->details . ")";
+                    }
+                    $pdf->multicell($col,3,$msg,0,'C');
+                }
+                $pdf->SetFont('Arial', 'B', 12);
+            }
+            $pdf->line($xx-6,34,$xx-6,199);
+            $xx=$xx+$col;
+        }
+        $pdf->line($xx-6,34,$xx-6,199);
+        $pdf->Output();
+        exit;
+    }
 
     public function barcodes($newonly=""){
         if ($newonly){
@@ -220,6 +426,162 @@ class ReportsController extends Controller
         exit;
     }
 
+    public function convert_smart_quotes($string) {
+        $search = array(chr(0xe2) . chr(0x80) . chr(0x98),
+                        chr(0xe2) . chr(0x80) . chr(0x99),
+                        chr(0xe2) . chr(0x80) . chr(0x9c),
+                        chr(0xe2) . chr(0x80) . chr(0x9d),
+                        chr(0xe2) . chr(0x80) . chr(0x93),
+                        chr(0xe2) . chr(0x80) . chr(0x94),
+                        chr(226) . chr(128) . chr(153),
+                        'â€™','â€œ','â€<9d>','â€"','Â  ');
+        $replace = array("'","'",'"','"',' - ',' - ',"'","'",'"','"',' - ',' ');
+    
+        return str_replace($search, $replace, $string);
+    }
+
+    private function GetExtraInfo($setitem){
+        if ($setitem->setitemable_type=="song"){
+            $song = Song::find($setitem->setitemable_id);
+            if ($song->musictype=="hymn"){
+                if ($song->tune){
+                    return "Tune: " . $song->tune . " " . $song->verseorder;
+                } else {
+                    return $song->verseorder;
+                }
+            } else {
+                return $song->firstline;
+            }
+        } elseif (!isset($setitem->setitemable_id)) {
+            $set=Service::with('series')->where('id',$setitem->service_id)->first();
+            if ($setitem->note=="Bible reading"){
+                return $set->reading . " (" . $this->addRoster("Bible reading",$set->servicetime,$set->servicedate) . ")";
+            } elseif ($setitem->note=="Sermon"){
+                $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
+                $response=Http::get($url);
+                $extra = $response->body();
+                if ((isset($set->series)) and ($set->series->series !== "")) {
+                    $extra = $extra . " (" . $set->series->series . ")";
+                }
+                return $extra;
+            }
+        }
+    }
+
+    private function getRosterData($today,$id) {
+        $firstday=date('l',strtotime($today.'-01'));
+        $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        $rostermodel=Roster::find($id);
+        $dday = 8 - array_search($firstday,$alldays) + array_search($rostermodel->dayofweek,$alldays);
+        if ($dday > 7){
+            $dday=$dday-7;
+        }
+        $firstdate=$today . '-0' . $dday;
+        $data = array();
+        $data['columns'][]=date('j M Y',strtotime($firstdate));
+        $data['columns'][]=date('j M Y',strtotime($firstdate . '+1 week'));
+        $data['columns'][]=date('j M Y',strtotime($firstdate . '+2 week'));
+        $data['columns'][]=date('j M Y',strtotime($firstdate . '+3 week'));
+        if (date('m',strtotime($firstdate . '+4 week')) == date('m',strtotime($today))){
+            $data['columns'][]=date('j M Y',strtotime($firstdate . '+4 week'));
+        }
+        $groups = DB::table('rosters')->join('rostergroups', 'rosters.id', '=', 'rostergroups.roster_id')
+            ->join('groups', 'rostergroups.group_id', '=', 'groups.id')
+            ->select('groupname','groups.id','rostergroups.extrainfo')
+            ->where('rosters.id',$id)
+            ->orderBy('groupname')
+            ->get();
+        foreach ($groups as $group){
+            $data['rows'][$group->groupname]['id']=$group->id;
+            if ($group->extrainfo=='yes'){
+                $data['rows'][$group->groupname]['extra']='yes';
+            } 
+            foreach ($data['columns'] as $col){
+                $fixdate=date('Y-m-d',strtotime($col));
+                $dum=DB::table('rosteritems')->join('rostergroups','rosteritems.rostergroup_id','=','rostergroups.id')
+                    ->join('rosters','rostergroups.roster_id','=','rosters.id')
+                    ->join('groups','rostergroups.group_id','=','groups.id')
+                    ->join('individual_rosteritem','individual_rosteritem.rosteritem_id','rosteritems.id')
+                    ->select('individual_rosteritem.individual_id')
+                    ->where('rosteritems.rosterdate','=',$fixdate)
+                    ->where('groups.id',$group->id)
+                    ->where('rosters.id','=',$id)
+                    ->get();
+                if (count($dum)){
+                    foreach ($dum as $individ) {
+                        if ($individ->individual_id < 0){
+                            $indivextra=Rostergroup::where('roster_id',$id)->where('group_id',$group->id)->first()->extraoptions;
+                            $eoptions=explode(",",$indivextra);
+                            foreach ($eoptions as $ko=>$eo){
+                                if ($individ->individual_id == -1 * (1+$ko)){
+                                    $indivdata=$eo;
+                                }
+                            }
+                        } else {
+                            $indiv=Individual::find($individ->individual_id);
+                            if ($indiv){
+                                $indivdata=$indiv->surname . ', ' . $indiv->firstname;
+                            }
+                        }
+                        if ($indiv){
+                            $data['rows'][$group->groupname][$col][$indiv->id] = $indivdata;
+                        } else {
+                            $data['rows'][$group->groupname][$col][] = "-";
+                        }
+                    }
+                } else {
+                    $data['rows'][$group->groupname][$col][] = "-";
+                }
+                unset($dum);
+            }
+        }
+        return $data;
+    }
+
+    public function group($id)
+    {
+        $group = Group::with('individuals')->find($id);
+        $pdf = new Fpdf;
+        $pdf->AddPage('P');
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 18);
+        $pdf->text(15, 16, setting('general.church_name'));
+        $pdf->SetFont('Helvetica', '', 16);
+        $pdf->text(15, 23, $group->groupname);
+        $pdf->SetTitle($group->groupname);
+        $pdf->SetFont('Helvetica', '', 12);
+        $pdf->text(173, 23, date('Y-m-d'));
+        $pdf->line(15, 26, 195, 26);
+        $yy=35;
+        $indivs = array();
+        foreach ($group->individuals as $indiv) {
+            $cc=$indiv->cellphone;
+            $indivs[$indiv->surname . ', ' . $indiv->firstname] = substr($cc,0,3) . " " . substr($cc,3,3) . " " . substr($cc,6,4);
+        }
+        ksort($indivs);
+        foreach ($indivs as $kk=>$ii) {
+            if ($yy>285){
+                $yy=35;
+                $pdf->AddPage('P');
+                $pdf->SetFont('Helvetica', 'B', 18);
+                $pdf->text(15, 16, setting('general.church_name'));
+                $pdf->SetFont('Helvetica', '', 16);
+                $pdf->text(15, 23, $group->groupname);
+                $pdf->SetTitle($group->groupname);
+                $pdf->SetFont('Helvetica', '', 12);
+                $pdf->text(173, 23, date('Y-m-d'));
+                $pdf->line(15, 26, 195, 26);
+            }
+            $pdf->SetFont('Helvetica', 'B', 12);
+            $pdf->text(15, $yy, $kk);
+            $pdf->SetFont('Helvetica', '', 12);
+            $pdf->text(169, $yy, utf8_decode($ii));
+            $yy=$yy+6;
+        }
+        $pdf->Output();
+        exit;
+    }
+
     public function removenames(){
         $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
         $pdf = new Fpdf;
@@ -338,76 +700,6 @@ class ReportsController extends Controller
             $pdf->Output();
         }
         exit;
-    }
-
-    private function getRosterData($today,$id) {
-        $firstday=date('l',strtotime($today.'-01'));
-        $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        $rostermodel=Roster::find($id);
-        $dday = 8 - array_search($firstday,$alldays) + array_search($rostermodel->dayofweek,$alldays);
-        if ($dday > 7){
-            $dday=$dday-7;
-        }
-        $firstdate=$today . '-0' . $dday;
-        $data = array();
-        $data['columns'][]=date('j M Y',strtotime($firstdate));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+1 week'));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+2 week'));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+3 week'));
-        if (date('m',strtotime($firstdate . '+4 week')) == date('m',strtotime($today))){
-            $data['columns'][]=date('j M Y',strtotime($firstdate . '+4 week'));
-        }
-        $groups = DB::table('rosters')->join('rostergroups', 'rosters.id', '=', 'rostergroups.roster_id')
-            ->join('groups', 'rostergroups.group_id', '=', 'groups.id')
-            ->select('groupname','groups.id','rostergroups.extrainfo')
-            ->where('rosters.id',$id)
-            ->orderBy('groupname')
-            ->get();
-        foreach ($groups as $group){
-            $data['rows'][$group->groupname]['id']=$group->id;
-            if ($group->extrainfo=='yes'){
-                $data['rows'][$group->groupname]['extra']='yes';
-            } 
-            foreach ($data['columns'] as $col){
-                $fixdate=date('Y-m-d',strtotime($col));
-                $dum=DB::table('rosteritems')->join('rostergroups','rosteritems.rostergroup_id','=','rostergroups.id')
-                    ->join('rosters','rostergroups.roster_id','=','rosters.id')
-                    ->join('groups','rostergroups.group_id','=','groups.id')
-                    ->join('individual_rosteritem','individual_rosteritem.rosteritem_id','rosteritems.id')
-                    ->select('individual_rosteritem.individual_id')
-                    ->where('rosteritems.rosterdate','=',$fixdate)
-                    ->where('groups.id',$group->id)
-                    ->where('rosters.id','=',$id)
-                    ->get();
-                if (count($dum)){
-                    foreach ($dum as $individ) {
-                        if ($individ->individual_id < 0){
-                            $indivextra=Rostergroup::where('roster_id',$id)->where('group_id',$group->id)->first()->extraoptions;
-                            $eoptions=explode(",",$indivextra);
-                            foreach ($eoptions as $ko=>$eo){
-                                if ($individ->individual_id == -1 * (1+$ko)){
-                                    $indivdata=$eo;
-                                }
-                            }
-                        } else {
-                            $indiv=Individual::find($individ->individual_id);
-                            if ($indiv){
-                                $indivdata=$indiv->surname . ', ' . $indiv->firstname;
-                            }
-                        }
-                        if ($indiv){
-                            $data['rows'][$group->groupname][$col][$indiv->id] = $indivdata;
-                        } else {
-                            $data['rows'][$group->groupname][$col][] = "-";
-                        }
-                    }
-                } else {
-                    $data['rows'][$group->groupname][$col][] = "-";
-                }
-                unset($dum);
-            }
-        }
-        return $data;
     }
 
     public function service ($id,$stime=""){
@@ -545,83 +837,6 @@ class ReportsController extends Controller
         $pdf->Output('I',$filename);
         exit;
     }
-
-    private function addRoster($label,$servicetime,$servicedate){
-        if ($label=="Bible reading"){
-            $groupname="Readers " . $servicetime;
-        } elseif ($label=="Society Stewards") {
-            $groupname=$label;
-        } else {
-            $groupname=$label . " " . $servicetime;
-        }
-        if (substr($groupname,0,1) == "B"){
-            dd($groupname);
-        }
-        $group=Group::where('groupname',$groupname)->first();
-        if ($group){
-            $group_id=$group->id;
-            if ($label<>"Society Stewards"){
-                $rgroup=Rostergroup::where('group_id',$group_id)->first();
-                if ($rgroup){
-                    $rostergroup=$rgroup->id;
-                    $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rostergroup)->where('rosterdate',$servicedate)->first();
-                } 
-            } else {
-                $rostergroups=Rostergroup::with('roster')->where('group_id',$group_id)->get();
-                foreach ($rostergroups as $rg){
-                    if (str_contains($rg->roster->roster,$servicetime)){
-                        $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate',$servicedate)->first();
-                    }
-                }
-            }
-            if ((isset($rosteritem)) and ($rosteritem->individuals)){
-                $indivs=array();
-                foreach ($rosteritem->individuals as $ind){
-                    $indivs[]=$ind->firstname . " " . $ind->surname;
-                }
-                if ($label=="Society Stewards"){
-                    $label = "Society Steward: " . implode(", ", $indivs);
-                } elseif ($label=="Bible reading") {
-                    $label = implode(", ", $indivs);
-                } else {
-                    $label = $label . ": " . implode(", ", $indivs);
-                }
-            } else {
-                if ($label=="Bible reading"){
-                    $label = "";
-                }
-            }
-        }
-        return $label;
-    }
-
-    private function GetExtraInfo($setitem){
-        if ($setitem->setitemable_type=="song"){
-            $song = Song::find($setitem->setitemable_id);
-            if ($song->musictype=="hymn"){
-                if ($song->tune){
-                    return "Tune: " . $song->tune . " " . $song->verseorder;
-                } else {
-                    return $song->verseorder;
-                }
-            } else {
-                return $song->firstline;
-            }
-        } elseif (!isset($setitem->setitemable_id)) {
-            $set=Service::with('series')->where('id',$setitem->service_id)->first();
-            if ($setitem->note=="Bible reading"){
-                return $set->reading . " (" . $this->addRoster("Bible reading",$set->servicetime,$set->servicedate) . ")";
-            } elseif ($setitem->note=="Sermon"){
-                $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $set->servicetime . "/" . substr($set->servicedate,0,10);
-                $response=Http::get($url);
-                $extra = $response->body();
-                if ((isset($set->series)) and ($set->series->series !== "")) {
-                    $extra = $extra . " (" . $set->series->series . ")";
-                }
-                return $extra;
-            }
-        }
-    }
     
     private function setupRosternotes($service_id){
         $set=Service::find($service_id);
@@ -635,21 +850,7 @@ class ReportsController extends Controller
         }
         return $rosternotes;
     }
-
-    public function convert_smart_quotes($string) {
-        $search = array(chr(0xe2) . chr(0x80) . chr(0x98),
-                        chr(0xe2) . chr(0x80) . chr(0x99),
-                        chr(0xe2) . chr(0x80) . chr(0x9c),
-                        chr(0xe2) . chr(0x80) . chr(0x9d),
-                        chr(0xe2) . chr(0x80) . chr(0x93),
-                        chr(0xe2) . chr(0x80) . chr(0x94),
-                        chr(226) . chr(128) . chr(153),
-                        'â€™','â€œ','â€<9d>','â€"','Â  ');
-        $replace = array("'","'",'"','"',' - ',' - ',"'","'",'"','"',' - ',' ');
-    
-        return str_replace($search, $replace, $string);
-    }
-      
+  
     public function song($id)
     {
         $song = Song::find($id);
@@ -903,51 +1104,7 @@ class ReportsController extends Controller
         $lyrics=str_replace('%', ']', $lyrics);
         return $lyrics;
     }
-
-    public function group($id)
-    {
-        $group = Group::with('individuals')->find($id);
-        $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 18);
-        $pdf->text(15, 16, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(15, 23, $group->groupname);
-        $pdf->SetTitle($group->groupname);
-        $pdf->SetFont('Helvetica', '', 12);
-        $pdf->text(173, 23, date('Y-m-d'));
-        $pdf->line(15, 26, 195, 26);
-        $yy=35;
-        $indivs = array();
-        foreach ($group->individuals as $indiv) {
-            $cc=$indiv->cellphone;
-            $indivs[$indiv->surname . ', ' . $indiv->firstname] = substr($cc,0,3) . " " . substr($cc,3,3) . " " . substr($cc,6,4);
-        }
-        ksort($indivs);
-        foreach ($indivs as $kk=>$ii) {
-            if ($yy>285){
-                $yy=35;
-                $pdf->AddPage('P');
-                $pdf->SetFont('Helvetica', 'B', 18);
-                $pdf->text(15, 16, setting('general.church_name'));
-                $pdf->SetFont('Helvetica', '', 16);
-                $pdf->text(15, 23, $group->groupname);
-                $pdf->SetTitle($group->groupname);
-                $pdf->SetFont('Helvetica', '', 12);
-                $pdf->text(173, 23, date('Y-m-d'));
-                $pdf->line(15, 26, 195, 26);
-            }
-            $pdf->SetFont('Helvetica', 'B', 12);
-            $pdf->text(15, $yy, $kk);
-            $pdf->SetFont('Helvetica', '', 12);
-            $pdf->text(169, $yy, utf8_decode($ii));
-            $yy=$yy+6;
-        }
-        $pdf->Output();
-        exit;
-    }
-
+    
     public function venue($id, $reportdate){
         $days=array();
         $fday=intval(date('N',strtotime($reportdate)));
@@ -1029,85 +1186,5 @@ class ReportsController extends Controller
         exit;
     }
 
-    public function a4meeting ($recordId){
-        $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
-        $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 18);
-        $logo=url('/') . "/public/church/images/bwidelogo.png";
-        $pdf->Image($logo,123,8,77,30);
-        $pdf->text(20, 16, $mtg->details);
-        $pdf->SetFont('Helvetica', '', 14);
-        $pdf->text(20, 23, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(20, 32, "Agenda");
-        $pdf->line(20, 35, 195, 35);
-        $items=$mtg->agendaitems;
-        $yy=44;
-        $ndx=0;
-        foreach ($items as $item){
-            if ($item->level==1){
-                $pdf->SetFont('Helvetica', 'B', 12);
-                $ndx=intval(floor($ndx)+1);
-                $pdf->text(20, $yy, $ndx . "  " . $item->heading);
-            } else {
-                $yy=$yy-2;
-                $pdf->SetFont('Helvetica', '', 11);
-                $ndx=$ndx+0.1;
-                $pdf->text(25, $yy, $ndx . "  " . $item->heading);
-            }
-            $yy=$yy+8;
-        }
-        $filename=$title;
-        $pdf->Output('I',$filename);
-        exit;
-    }
-
-    public function a5meeting ($recordId){
-        $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
-        $pdf = new Fpdf;
-        $pdf->AddPage('L');
-        $xadd=147;
-        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 15);
-        $logo=url('/') . "/public/church/images/bwidelogo.png";
-        $pdf->Image($logo,85,8,60);
-        $pdf->Image($logo,85+$xadd,8,60);
-        $pdf->text(10, 11, $mtg->details);
-        $pdf->text(10+$xadd, 11, $mtg->details);
-        $pdf->SetFont('Helvetica', '', 12);
-        $pdf->text(10, 18, $title);
-        $pdf->text(10+$xadd, 18, $title);
-        $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->text(10, 27, "Agenda");
-        $pdf->text(10+$xadd, 27, "Agenda");
-        $pdf->line(10, 30, 142, 30);
-        $pdf->line($xadd+10, 30, $xadd+142, 30);
-        $items=$mtg->agendaitems;
-        $yy=39;
-        $ndx=0;
-        foreach ($items as $item){
-            if ($item->level==1){
-                $pdf->SetFont('Helvetica', 'B', 11);
-                $ndx=intval(floor($ndx)+1);
-                $pdf->text(10, $yy, $ndx . "  " . $item->heading);
-                $pdf->text($xadd+10, $yy, $ndx . "  " . $item->heading);
-            } else {
-                $yy=$yy-2;
-                $pdf->SetFont('Helvetica', '', 10);
-                $ndx=$ndx+0.1;
-                $pdf->text(15, $yy, $ndx . "  " . $item->heading);
-                $pdf->text($xadd+15, $yy, $ndx . "  " . $item->heading);
-            }
-            $yy=$yy+7;
-        }
-        $filename=$title;
-        $pdf->Output('I',$filename);
-        exit;
-    }
+    
 }

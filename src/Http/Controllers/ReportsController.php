@@ -155,7 +155,10 @@ class ReportsController extends Controller
         return $label;
     }
 
-    public function allvenues($reportdate){
+    public function allvenues($reportdate=""){
+        if (!$reportdate){
+            $reportdate=date('Y-m-d');
+        }
         $hours=['07h00','08h00','09h00','10h00','11h00','12h00','13h00','14h00','15h00','16h00','17h00','18h00','19h00','20h00','21h00','22h00'];
         $venues=Venue::where('resource',1)->orderBy('venue')->get();
         $title = "Venue Bookings: " . date('j F Y',strtotime($reportdate));

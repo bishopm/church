@@ -69,7 +69,7 @@ Route::domain('app.' . $url)->group(function() {
 });
 
 // Admin routes
-Route::get('/admin/reports/venues/{reportdate}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
+Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
 Route::get('/admin/reports/barcodes/{newonly?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@barcodes','as' => 'reports.barcodes']);
 Route::get('/admin/reports/calendar/{yr?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@calendar','as' => 'reports.calendar']);
 Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);

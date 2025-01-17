@@ -15,6 +15,8 @@ class ChurchMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $failOnTimeout = false;
+
     /**
      * Create a new message instance.
      */

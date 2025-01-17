@@ -128,6 +128,7 @@ class SongResource extends Resource
                                 ->media(fn (Get $get) => $get('video'))
                         ),
                         Forms\Components\FileUpload::make('music')
+                            ->hiddenOn('create')
                             ->label(function (Song $record){
                                 if ($record->music<>""){
                                     $url=Storage::disk('google')->url($record->music);

@@ -38,8 +38,10 @@ class ChurchVenuesWidget extends CalendarWidget
 
     public function getEvents(array $fetchInfo = []): Collection | array
     {
+        $past = date('Y-m-d',strtotime('- 1 week'));
+        $future = date('Y-m-d',strtotime('+ 1 week'));
         $collect = collect()
-            ->push(...Diaryentry::query()->get())
+            ->push(...Diaryentry::query()->where('diarydatetime','>',$past)->where('diarydatetime','<',$future)->get())
         ;
         return $collect;
     }

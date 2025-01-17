@@ -33,7 +33,9 @@ class DocumentResource extends Resource
                     ->options([
                         'quiet-moments' => 'Quiet Moments',
                         'staying-connected' => 'Staying Connected',
+                        'general' => 'General'
                     ])
+                    ->default('staying-connected')
                     ->inline(),
                 Forms\Components\FileUpload::make('filename')
                     ->directory('documents'),

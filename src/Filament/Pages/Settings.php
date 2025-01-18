@@ -51,9 +51,29 @@ class Settings extends BaseSettings
                             Select::make('automation.birthday_group')->label('Send birthday emails to this group')
                                 ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
                                 ->searchable(),
+                            Select::make('automation.birthday_day')->label('Send birthday emails on this day')
+                                ->options([
+                                    1 => 'Monday',
+                                    2 => 'Tuesday',
+                                    3 => 'Wednesday',
+                                    4 => 'Thursday',
+                                    5 => 'Friday',
+                                    6 => 'Saturday',
+                                    0 => 'Sunday'
+                                ]),
                             Select::make('automation.maintenance_group')->label('Send maintenance emails to this group')
                                 ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
-                                ->searchable()
+                                ->searchable(),
+                            Select::make('automation.maintenance_day')->label('Send maintenance emails on this day')
+                                ->options([
+                                    1 => 'Monday',
+                                    2 => 'Tuesday',
+                                    3 => 'Wednesday',
+                                    4 => 'Thursday',
+                                    5 => 'Friday',
+                                    6 => 'Saturday',
+                                    0 => 'Sunday'
+                                ]),
                         ]),
                     Tabs\Tab::make('Email')
                         ->columns(2)

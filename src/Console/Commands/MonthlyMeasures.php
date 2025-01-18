@@ -1,13 +1,12 @@
 <?php
 
-namespace Bishopm\Churchsite\Console;
+namespace Bishopm\Church\Console\Commands;
 
 use Illuminate\Console\Command;
-use Bishopm\Churchsite\Models\Individual;
-use Bishopm\Churchsite\Models\Statistic;
-use Bishopm\Churchsite\Models\Group;
-use Bishopm\Churchsite\Models\Settings;
-use DB;
+use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Statistic;
+use Bishopm\Church\Models\Group;
+use Illuminate\Support\Facades\DB;
 
 class MonthlyMeasures extends Command
 {
@@ -16,7 +15,7 @@ class MonthlyMeasures extends Command
      *
      * @var string
      */
-    protected $signature = 'churchsite:monthlymeasures';
+    protected $signature = 'church:monthlymeasures';
 
     /**
      * The console command description.
@@ -33,32 +32,28 @@ class MonthlyMeasures extends Command
     public function handle()
     {
         $reportmonth=date('Y-m',strtotime('-1 month'));
-        $fquery=Group::with('groupmembers')->where('grouptype','fellowship')->get();
+        $fquery=Group::with('individuals')->where('grouptype','fellowship')->get();
         $farray=array();
         foreach ($fquery as $fgroup){
-            foreach ($fgroup->groupmembers as $fmember){
-                if (isset($fmember->individual)){
-                    $farray[$fmember->individual->id]="yes";
-                }
+            foreach ($fgroup->individuals as $indiv){
+                $farray[$indiv->id]="yes";
             }
         }
         $fellowship=count($farray);
-        DB::table('bishopm_churchsite_measures')->insert([
+        DB::table('measures')->insert([
             'measuredate' => $reportmonth . '-01',
             'category' => 'connect',
             'measurement' => $fellowship
         ]);
-        $squery=Group::with('groupmembers')->where('grouptype','service')->get();
+        $squery=Group::with('individuals')->where('grouptype','service')->get();
         $sarray=array();
         foreach ($squery as $sgroup){
-            foreach ($sgroup->groupmembers as $smember){
-                if (isset($smember->individual)){
-                    $sarray[$smember->individual->id]="yes";
-                }
+            foreach ($sgroup->individuals as $smember){
+                $sarray[$smember->id]="yes";
             }
         }
         $service=count($sarray);
-        DB::table('bishopm_churchsite_measures')->insert([
+        DB::table('measures')->insert([
             'measuredate' => $reportmonth . '-01',
             'category' => 'serve',
             'measurement' => $service
@@ -69,7 +64,7 @@ class MonthlyMeasures extends Command
             $garray[$gmember->giving]="yes";
         }
         $giving=count($garray);
-        DB::table('bishopm_churchsite_measures')->insert([
+        DB::table('measures')->insert([
             'measuredate' => $reportmonth . '-01',
             'category' => 'give',
             'measurement' => $giving
@@ -86,7 +81,7 @@ class MonthlyMeasures extends Command
             $total=$total+$stat->attendance;
         }
         $worship=round($total/count($warray),0);
-        DB::table('bishopm_churchsite_measures')->insert([
+        DB::table('measures')->insert([
             'measuredate' => $reportmonth . '-01',
             'category' => 'worship',
             'measurement' => $worship

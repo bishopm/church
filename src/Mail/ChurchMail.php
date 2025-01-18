@@ -15,8 +15,6 @@ class ChurchMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $failOnTimeout = false;
-
     /**
      * Create a new message instance.
      */
@@ -58,9 +56,9 @@ class ChurchMail extends Mailable
      */
     public function attachments(): array
     {
-        if (array_key_exists('attachment',$this->data)){
+        if ((array_key_exists('attachment',$this->data)) and ($this->data['attachment']<>'')){
             return [
-                Attachment::fromPath(storage_path('app/public/' . $this->data['attachment']))
+                Attachment::fromPath(storage_path($this->data['attachment']))
             ]; 
         } else {
             return [];

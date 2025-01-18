@@ -105,8 +105,12 @@ class HomeController extends Controller
 
     public function blogger($slug) {
         $blogger=Person::where('slug',$slug)->first();
-        $data['posts']=Post::where('person_id',$blogger->id)->orderBy('published_at','DESC')->paginate(10);
-        return view('church::' . $this->routeName . '.blogger',$data);
+        if ($blogger){
+            $data['posts']=Post::where('person_id',$blogger->id)->orderBy('published_at','DESC')->paginate(10);
+            return view('church::' . $this->routeName . '.blogger',$data);
+        } else {
+            abort(404);
+        }
     }
 
     public function book($id){

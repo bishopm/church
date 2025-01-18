@@ -52,6 +52,7 @@ class ReportResource extends Resource
             ->filters([
                 //
             ])
+            ->recordUrl(fn (Report $record): string => url('/') . '/' . $record->url)
             ->actions([
                 Action::make('View')->url(fn (Report $record): string => url('/') . '/' . $record->url)->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),

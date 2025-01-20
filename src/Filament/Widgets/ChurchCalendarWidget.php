@@ -4,6 +4,8 @@ namespace Bishopm\Church\Filament\Widgets;
 
 use Guava\Calendar\Widgets\CalendarWidget;
 use Bishopm\Church\Models\Diaryentry;
+use Bishopm\Church\Models\Event;
+use Bishopm\Church\Models\Group as GroupModel;
 use Bishopm\Church\Models\Tenant;
 use Bishopm\Church\Models\Venue;
 use Carbon\Carbon;
@@ -11,13 +13,14 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
 use Illuminate\Support\Collection;
@@ -79,16 +82,19 @@ class ChurchCalendarWidget extends CalendarWidget
                         ->default(now())
                         ->required(),
                 ])
+                ->icon('heroicon-o-newspaper')
                 ->action(function (array $data): void {
                     redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate']]);
                 }),
-            CreateAction::make('createDiaryentry')->label('Add booking')
+                CreateAction::make('createDiaryentry')->label('Add a booking')
+                    ->icon('heroicon-o-calendar-days')
                     ->model(Diaryentry::class)
                     ->before(function (array $data){
                         for ($i=1;$i<$data['repeats']+1;$i++){
                             $newtime=date('Y-m-d H:i',strtotime($data['diarydatetime'] . ' + ' . $i*$data['interval'] . ' days'));
                             Diaryentry::create([
                                 'diarisable_id' => $data['diarisable_id'],
+                                'diarisable_type' => 'tenant',
                                 'venue_id' => $data['venue_id'],
                                 'details' => $data['details'],
                                 'diarydatetime' => $newtime,
@@ -96,7 +102,7 @@ class ChurchCalendarWidget extends CalendarWidget
                             ]);
                         }
                         return $data;
-                    }),
+                    })
         ];
     }
 
@@ -112,7 +118,7 @@ class ChurchCalendarWidget extends CalendarWidget
     {
         return [
             CreateAction::make('ctxCreateDiaryentry')
-                ->model(Diaryentry::class)
+                ->model(Diaryentry::class)->modelLabel('Booking')
                 ->mountUsing(function (Form $form, array $arguments) {
                     $getvenue=data_get($arguments, 'resource');
                     if ($getvenue){
@@ -121,11 +127,16 @@ class ChurchCalendarWidget extends CalendarWidget
                         $venue=$this->record->id;
                     }
                     $tenant = data_get($arguments, 'diarisable_id');
+                    $utype = data_get($arguments, 'diarisable_type');
+                    if (!$utype){
+                        $utype="tenant";
+                    }
                     $diarydatetime = data_get($arguments, 'startStr');
                     $endtime = data_get($arguments, 'endStr');
                     if ($diarydatetime) {
                         $form->fill([
                             'diarisable_id' => $tenant,
+                            'diarisable_type' => $utype,
                             'diarydatetime' => Carbon::make($diarydatetime),
                             'endtime' => Carbon::make($endtime),
                             'venue_id' => $venue
@@ -139,7 +150,7 @@ class ChurchCalendarWidget extends CalendarWidget
     {
         return [
             CreateAction::make('ctxCreateDiaryentry')
-                ->model(Diaryentry::class)
+                ->model(Diaryentry::class)->modelLabel('Booking')
                 ->mountUsing(function (Form $form, array $arguments) {
                     $date = data_get($arguments, 'dateStr');
                     if ($date) {
@@ -157,11 +168,30 @@ class ChurchCalendarWidget extends CalendarWidget
     {
         return 
             [
-                Select::make('diarisable_id')
-                    ->label('Venue user')
-                    ->options(Tenant::orderBy('tenant')->get()->pluck('tenant', 'id'))
-                    ->searchable()
-                    ->required(),
+                Group::make([
+                    Select::make('diarisable_id')
+                        ->label('Venue user')
+                        ->options(function (Get $get) {
+                            if ($get('diarisable_type')=="group") {
+                                return GroupModel::orderBy('groupname')->get()->pluck('groupname', 'id');
+                            } elseif ($get('diarisable_type')=="event") {
+                                return Event::orderBy('event')->get()->pluck('event', 'id');
+                            } else {
+                                return Tenant::orderBy('tenant')->get()->pluck('tenant', 'id');
+                            };
+                        })
+                        ->searchable()
+                        ->required(),
+                    Select::make('diarisable_type')
+                        ->label('User type')
+                        ->options([
+                            'tenant' => 'External group',
+                            'group' => setting('general.church_abbreviation') . ' group',
+                            'event' => setting('general.church_abbreviation') . ' event'
+                        ])
+                        ->selectablePlaceholder(false)
+                        ->default('tenant')
+                ])->columns(),
                 Hidden::make('venue_id')
                     ->default($this->record->id),
                 Textarea::make('details')

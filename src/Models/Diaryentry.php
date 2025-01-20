@@ -18,15 +18,22 @@ class Diaryentry extends Model implements Eventable
     protected $guarded = ['id'];
 
     public function toEvent(): Event|array {
+        $colour="#14B8A6";
         if ($this->details==''){
             if ($this->diarisable_type=="tenant"){
                 if (isset($this->diarisable->tenant)){
                     $this->details=$this->diarisable->tenant;
                 }
             } elseif ($this->diarisable_type=="group"){
+                $colour="blue";
                 if (isset($this->diarisable->groupname)){
                     $this->details=$this->diarisable->groupname;
                 }
+            } elseif ($this->diarisable_type=="event"){
+                $colour="red";
+                if (isset($this->diarisable->event)){
+                    $this->details=$this->diarisable->event;
+                }    
             }
         } else {
             if ($this->diarisable_type=="tenant"){
@@ -34,8 +41,14 @@ class Diaryentry extends Model implements Eventable
                     $this->details=$this->diarisable->tenant . " (" . $this->details . ")";
                 }
             } elseif ($this->diarisable_type=="group"){
+                $colour="blue";
                 if (isset($this->diarisable->groupname)){
                     $this->details=$this->diarisable->groupname . " (" . $this->details . ")";
+                }
+            } elseif ($this->diarisable_type=="event"){
+                $colour="red";
+                if (isset($this->diarisable->event)){
+                    $this->details=$this->diarisable->event . " (" . $this->details . ")";
                 }
             }
         }
@@ -45,6 +58,7 @@ class Diaryentry extends Model implements Eventable
 
         $event = Event::make($this)
             ->title($this->details)
+            ->backgroundColor($colour)
             ->start($this->diarydatetime)
             ->end(date('Y-m-d',strtotime($this->diarydatetime)) . " " . $this->endtime)
             ->extendedProp('tenant', $this->diarisable_type);

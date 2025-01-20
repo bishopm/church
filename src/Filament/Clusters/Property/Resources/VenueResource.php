@@ -29,6 +29,7 @@ class VenueResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('resource')
+                    ->hiddenOn('view')
                     ->label('Show in resources view')
             ]);
     }

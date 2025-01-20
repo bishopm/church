@@ -91,6 +91,10 @@ class Settings extends BaseSettings
                             TextInput::make('email.mail_from_address'),
                             TextInput::make('email.mail_from_name')
                         ]),
+                    Tabs\Tab::make('Giving')
+                        ->schema([
+                            RichEditor::make('messages.giving_email')->columnSpanFull(),
+                        ]),
                     Tabs\Tab::make('Messages')
                         ->schema([
                             RichEditor::make('messages.welcome_email')->columnSpanFull(),

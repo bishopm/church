@@ -11,6 +11,10 @@ class Person extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    protected $casts = [
+        'role' => 'array',
+    ];
+
     public function getFullNameAttribute()
     {
         return $this->firstname . ' ' . $this->surname;

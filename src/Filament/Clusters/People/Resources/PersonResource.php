@@ -54,9 +54,13 @@ class PersonResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('role')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\TagsInput::make('role')
+                    ->suggestions([
+                        'Blogger',
+                        'Preacher',
+                        'Staff'
+                    ])
+                    ->required(),
                 Forms\Components\Toggle::make('active'),
             ]);
     }

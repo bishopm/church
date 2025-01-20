@@ -20,6 +20,8 @@ class Settings extends BaseSettings
 {
     protected static ?string $cluster = SettingsCluster::class;
 
+    public static array|string $routeMiddleware = ['adminonly'];
+
     public function schema(): array|Closure
     {
         return [

@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
+use Bishopm\Church\Http\Middleware\AdminRoute;
 use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
@@ -29,6 +30,8 @@ class ChurchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $router = $this->app['router'];
+        $router->aliasMiddleware('adminonly', AdminRoute::class);
         Schema::defaultStringLength(191);
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'church');
         Paginator::useBootstrapFive();
@@ -143,6 +146,7 @@ class ChurchServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../../config/church.php', 'church');
+
         $this->app->singleton('church', function ($app) {
             return new Church;
         });

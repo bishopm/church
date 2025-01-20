@@ -97,6 +97,7 @@ class SongResource extends Resource
                         Forms\Components\TextInput::make('tune')
                             ->maxLength(191),
                         Forms\Components\Textarea::make('lyrics')
+                            ->label('Lyrics ({} for sections, [] for chords)')
                             ->required()
                             ->rows(20)
                             ->columnSpanFull(),

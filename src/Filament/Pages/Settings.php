@@ -15,6 +15,7 @@ use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Tenant;
+use Filament\Forms\Components\RichEditor;
 
 class Settings extends BaseSettings
 {
@@ -89,6 +90,11 @@ class Settings extends BaseSettings
                             TextInput::make('email.mail_encryption'),
                             TextInput::make('email.mail_from_address'),
                             TextInput::make('email.mail_from_name')
+                        ]),
+                    Tabs\Tab::make('Messages')
+                        ->schema([
+                            RichEditor::make('messages.welcome_email')->columnSpanFull(),
+                            Textarea::make('messages.welcome_whatsapp')->columnSpanFull()->rows(4),
                         ]),
                     Tabs\Tab::make('Services')
                         ->columns(2)

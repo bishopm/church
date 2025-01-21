@@ -305,10 +305,8 @@ class HomeController extends Controller
     }
     
     public function roster($slug){
-        //$nextweek=date('Y-m-d',strtotime('+ 1 week'));
-        //$today=date('Y-m-d');
-        $nextweek=date('Y-m-d',strtotime('- 51 week'));
-        $today=date('Y-m-d',strtotime('-52 week'));
+        $nextweek=date('Y-m-d',strtotime('+ 1 week'));
+        $today=date('Y-m-d');
         $services = setting('general.services');
         $group=Group::with('rostergroups.roster')->where('slug',$slug)->first();
         $data['message']="";

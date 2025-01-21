@@ -361,9 +361,9 @@ class ReportsController extends Controller
         } else {
             $pdf->text(10,10,"No new members have been added to the system since last Sunday");
         }
-        $filename=base_path() . "/storage/media/barcodes/barcodes.pdf";
+        $filename=base_path() . "/storage/barcodes/barcodes.pdf";
         $pdf->Output($filename,'F');
-        return Redirect::to('/storage/media/barcodes/barcodes.pdf');
+        return Redirect::to('/storage/barcodes/barcodes.pdf');
     }
 
     public function calendar($yr=""){

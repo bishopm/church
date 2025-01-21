@@ -9,9 +9,11 @@ use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class GroupResource extends Resource
 {
@@ -30,6 +32,8 @@ class GroupResource extends Resource
                 Forms\Components\TextInput::make('groupname')
                     ->label('Group name')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->maxLength(255),
                 Forms\Components\Select::make('grouptype')
                     ->required()
@@ -44,9 +48,12 @@ class GroupResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->image(),
                 Forms\Components\Select::make('individual_id')
-                        ->label('Leader')
-                        ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))
-                        ->searchable(),
+                    ->label('Leader')
+                    ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))
+                    ->searchable(),
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\Toggle::make('publish'),
             ]);
     }

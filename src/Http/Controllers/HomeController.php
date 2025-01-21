@@ -16,6 +16,7 @@ use Bishopm\Church\Models\Loan;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
+use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Service;
@@ -301,6 +302,18 @@ class HomeController extends Controller
     public function quietmoments() {
         $data['scs']=Document::where('category','quiet-moments')->orderBy('created_at','DESC')->simplePaginate(15);
         return view('church::web.quietmoments',$data);
+    }
+    
+    public function roster($slug){
+        $nextweek=date('Y-m-d',strtotime('- 51 week'));
+        $today=date('Y-m-d',strtotime('- 52 week'));
+        $group=Group::with('rostergroups.roster')->where('slug',$slug)->first();
+        $data['group']=$group->groupname;
+        foreach ($group->rostergroups as $rg){
+            $data['rosters'][$rg->roster->roster]=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate','<',$nextweek)->where('rosterdate','>',$today)->get();
+        }
+        ksort($data['rosters']);
+        return view('church::web.roster',$data);
     }
 
     public function series($year,$slug){

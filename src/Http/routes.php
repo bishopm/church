@@ -27,6 +27,7 @@ Route::domain($url)->group(function() {
         Route::get('/projects/{id}', 'project')->name('web.project');
         Route::get('/projects', 'projects')->name('web.projects');
         Route::get('/quietmoments', 'quietmoments')->name('web.quietmoments');
+        Route::get('/rosters/{slug}', 'roster')->name('web.roster');
         Route::get('/sermons', 'sermons')->name('web.sermons');
         Route::get('/sermons/{year}/{slug}', 'series')->name('web.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('web.sermon');

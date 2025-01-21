@@ -305,8 +305,8 @@ class HomeController extends Controller
     }
     
     public function roster($slug){
-        $nextweek=date('Y-m-d',strtotime('- 51 week'));
-        $today=date('Y-m-d',strtotime('- 52 week'));
+        $nextweek=date('Y-m-d',strtotime('+ 1 week'));
+        $today=date('Y-m-d');
         $group=Group::with('rostergroups.roster')->where('slug',$slug)->first();
         $data['group']=$group->groupname;
         foreach ($group->rostergroups as $rg){

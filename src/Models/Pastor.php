@@ -20,4 +20,9 @@ class Pastor extends Model
     {
         return $this->hasMany(Pastoralnote::class);
     }
+
+    public function pastoralcases(): HasMany
+    {
+        return $this->hasMany(Pastoralcase::class);
+    }
 }

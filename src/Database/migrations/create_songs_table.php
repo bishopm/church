@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('video')->nullable();
             $table->string('music')->nullable();
             $table->string('musictype')->nullable();
+            $table->string('bible')->nullable();
             $table->text('lyrics');
             $table->string('firstline', 255)->nullable();
             $table->string('verseorder', 191)->nullable();

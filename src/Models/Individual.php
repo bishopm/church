@@ -45,7 +45,6 @@ class Individual extends Model
         return $this->hasMany(Task::class);
     }
 
-
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class);
@@ -71,5 +70,10 @@ class Individual extends Model
         if ($attend){
             return date('d M Y',strtotime($attend->attendancedate)) . " (" . $attend->service . ")";
         }
+    }
+
+    public function pastoralcases(): MorphMany
+    {
+        return $this->morphMany(Pastoralcase::class,'pastorable');
     }
 }

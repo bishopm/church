@@ -49,6 +49,8 @@ class SongResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(191),
+                        Forms\Components\TextInput::make('author')
+                            ->maxLength(191),
                         Forms\Components\Select::make('musictype')
                             ->label('Type')
                             ->default('contemporary')
@@ -73,8 +75,7 @@ class SongResource extends Resource
                                     return 'Last used: ';
                                 }
                             })
-                            ->hintActions(self::getServices())
-                            ->columnSpanFull(),
+                            ->hintActions(self::getServices()),
                         PdfViewerField::make('file')
                             ->hiddenOn('create')
                             ->label('')
@@ -83,8 +84,6 @@ class SongResource extends Resource
                             ->columnSpanFull(),
                     ]),
                     Tab::make('Details')->columns(2)->schema([
-                        Forms\Components\TextInput::make('author')
-                            ->maxLength(191),
                         Forms\Components\TextInput::make('tempo')
                             ->maxLength(191),
                         Forms\Components\TextInput::make('copyright')
@@ -95,6 +94,8 @@ class SongResource extends Resource
                             ->maxLength(191)
                             ->label('Verse order'),
                         Forms\Components\TextInput::make('tune')
+                            ->maxLength(191),
+                        Forms\Components\TextInput::make('bible')->label('Bible reference')
                             ->maxLength(191),
                         Forms\Components\Textarea::make('lyrics')
                             ->label('Lyrics ({} for sections, [] for chords)')

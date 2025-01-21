@@ -26,4 +26,9 @@ class Household extends Model
     {
         return $this->morphMany(Pastoralnote::class,'pastoralnotable');
     }
+
+    public function pastoralcases(): MorphMany
+    {
+        return $this->morphMany(Pastoralcase::class,'pastorable');
+    }
 }

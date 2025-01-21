@@ -27,6 +27,8 @@ class PastoralnoteResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false;
 
+    protected static ?string $modelLabel = 'Pastoral note';
+
     protected static ?string $cluster = People::class;
 
     public static function form(Form $form): Form

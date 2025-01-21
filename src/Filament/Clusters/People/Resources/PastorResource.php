@@ -64,6 +64,7 @@ class PastorResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\PastoralcasesRelationManager::class,
             RelationManagers\PastoralnotesRelationManager::class
         ];
     }

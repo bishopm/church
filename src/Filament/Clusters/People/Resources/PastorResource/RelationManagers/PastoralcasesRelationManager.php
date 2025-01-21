@@ -8,19 +8,22 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Bishopm\Church\Models\Pastoralnote;
+use Bishopm\Church\Models\Pastoralcase;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PastoralnotesRelationManager extends RelationManager
+class PastoralcasesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'pastoralnotes';
+    protected static string $relationship = 'Pastoralcases';
 
-    protected static ?string $title = 'Pastoral notes';
+    protected static ?string $title = 'Pastoral cases';
 
-    protected static ?string $modelLabel = 'pastoral note';
+    protected static ?string $modelLabel = 'pastoral case';
+
+    public $record;
 
     public function form(Form $form): Form
     {
@@ -29,12 +32,7 @@ class PastoralnotesRelationManager extends RelationManager
                 Forms\Components\TextInput::make('details')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('pastoraldate')
-                    ->native(false)
-                    ->displayFormat('Y-m-d')
-                    ->format('Y-m-d')
-                    ->required(),
-                Forms\Components\MorphToSelect::make('pastoralnotable')->label('Individual or Household')
+                Forms\Components\MorphToSelect::make('pastorable')->label('Individual or Household')
                     ->types([
                         Forms\Components\MorphToSelect\Type::make(Individual::class)
                             ->titleAttribute('fullname'),
@@ -42,7 +40,7 @@ class PastoralnotesRelationManager extends RelationManager
                             ->titleAttribute('addressee'),
                         ])
                     ->searchable()
-                    ->model(Pastoralnote::class),
+                    ->model(Pastoralcase::class),
             ]);
     }
 
@@ -50,9 +48,8 @@ class PastoralnotesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('details')
-            ->columns([
-                Tables\Columns\TextColumn::make('pastoraldate')->label('Date'),                
-                Tables\Columns\TextColumn::make('pastoralnotable')->label('Individual / Household')
+            ->columns([     
+                Tables\Columns\TextColumn::make('pastorable')->label('Individual / Household')
                     ->formatStateUsing(function ($state){
                         if (isset($state['fullname'])){
                             return $state['fullname'];
@@ -60,17 +57,17 @@ class PastoralnotesRelationManager extends RelationManager
                             return $state['addressee'];
                         }
                     }),
-                Tables\Columns\TextColumn::make('details'),
+                Tables\Columns\TextColumn::make('details')
             ])
-            ->defaultSort('pastoraldate','DESC')
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])
+            ->recordUrl(fn (Pastoralcase $record): string => route('filament.admin.people.resources.pastoralcases.edit', $record->id))
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Action::make('Manage')->url(fn (Pastoralcase $record): string => route('filament.admin.people.resources.pastoralcases.edit', $record->id)),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

@@ -305,21 +305,27 @@ class HomeController extends Controller
     }
     
     public function roster($slug){
-        $nextweek=date('Y-m-d',strtotime('+ 1 week'));
-        $today=date('Y-m-d');
+        //$nextweek=date('Y-m-d',strtotime('+ 1 week'));
+        //$today=date('Y-m-d');
+        $nextweek=date('Y-m-d',strtotime('- 51 week'));
+        $today=date('Y-m-d',strtotime('-52 week'));
         $services = setting('general.services');
         $group=Group::with('rostergroups.roster')->where('slug',$slug)->first();
-
+        $data['message']="";
         if (!$group){
             // Service-based groups
             $data['group']=ucwords(str_replace('-', ' ', $slug)); 
             foreach ($services as $service){
                 $group=Group::with('rostergroups.roster')->where('slug',$slug . "-" . $service)->first();
-                foreach ($group->rostergroups as $rg){
-                    $data['rosters'][$rg->roster->roster]=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate','<',$nextweek)->where('rosterdate','>',$today)->get();
-                }
-                if (isset($data['rosters'])){
-                    ksort($data['rosters']);
+                if ($group){
+                    foreach ($group->rostergroups as $rg){
+                        $data['rosters'][$rg->roster->roster]=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate','<',$nextweek)->where('rosterdate','>',$today)->get();
+                    }
+                    if (isset($data['rosters'])){
+                        ksort($data['rosters']);
+                    }
+                } else {
+                    $data['message']="Sorry, there are no details for this group";
                 }
             }
         } else {

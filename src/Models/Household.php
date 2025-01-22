@@ -5,6 +5,7 @@ namespace Bishopm\Church\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Household extends Model
 {
@@ -27,8 +28,13 @@ class Household extends Model
         return $this->morphMany(Pastoralnote::class,'pastoralnotable');
     }
 
-    public function pastoralcases(): MorphMany
+    public function pastors(): MorphToMany
     {
-        return $this->morphMany(Pastoralcase::class,'pastorable');
+        return $this->morphToMany(Pastor::class,'pastorable');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->addressee;
     }
 }

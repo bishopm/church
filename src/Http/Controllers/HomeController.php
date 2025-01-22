@@ -390,8 +390,7 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.tag',$data);
     }
 
-    public function sunday()
-    {
+    public function sunday(){
         $sunday=date('l j F Y');
         // $sunday="Sunday 30 July 2023";
         $servicetime='09h00';
@@ -412,5 +411,8 @@ class HomeController extends Controller
         return $txt;
     }
     
+    public function welcome(){
+        return view('church::web.welcome');
+    }
 
 }

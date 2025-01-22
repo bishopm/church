@@ -33,6 +33,8 @@ class PastoralnotesRelationManager extends RelationManager
                     ->native(false)
                     ->displayFormat('Y-m-d')
                     ->format('Y-m-d')
+                    ->default(now())
+                    ->label('Date')
                     ->required(),
                 Forms\Components\MorphToSelect::make('pastoralnotable')->label('Individual or Household')
                     ->types([

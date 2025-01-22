@@ -13,6 +13,7 @@ class NewMembers extends Widget
 
     function mount() {
         $this->memberdata['individuals']=Individual::orderBy('created_at','DESC')->take(5)->get();
+        $this->memberdata['whatsapp']=setting('messages.welcome_whatsapp');
     }
 
     public static function canView(): bool 

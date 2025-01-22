@@ -34,6 +34,7 @@ Route::domain($url)->group(function() {
         Route::get('/stayingconnected', 'stayingconnected')->name('web.stayingconnected');
         Route::get('/subject/{slug}', 'subject')->name('web.subject');
         Route::get('/sundaydetails', 'sunday')->name('web.sunday');
+        Route::get('/welcome', 'welcome')->name('web.welcome');
     });
 });
 

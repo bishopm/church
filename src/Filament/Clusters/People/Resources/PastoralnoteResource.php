@@ -36,6 +36,8 @@ class PastoralnoteResource extends Resource
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('pastoraldate')
+                    ->label('Date')
+                    ->default(now())
                     ->required(),
                 Forms\Components\Select::make('pastor_id')
                     ->label('Pastor')

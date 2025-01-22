@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Individual extends Model
 {
@@ -35,11 +36,6 @@ class Individual extends Model
         return $this->hasMany(Loan::class);
     }
 
-    public function pastor(): HasOne
-    {
-        return $this->hasOne(Pastor::class);
-    }
-
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
@@ -60,6 +56,11 @@ class Individual extends Model
         return $this->firstname . ' ' . $this->surname;
     }
 
+    public function getNameAttribute()
+    {
+        return $this->firstname . ' ' . $this->surname;
+    }
+
     public function pastoralnotes(): MorphMany
     {
         return $this->morphMany(Pastoralnote::class,'pastoralnotable');
@@ -72,8 +73,8 @@ class Individual extends Model
         }
     }
 
-    public function pastoralcases(): MorphMany
+    public function pastors(): MorphToMany
     {
-        return $this->morphMany(Pastoralcase::class,'pastorable');
+        return $this->morphToMany(Pastor::class,'pastorable');
     }
 }

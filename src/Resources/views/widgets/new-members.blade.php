@@ -12,9 +12,9 @@
                             <td class="text-gray-500">Email</td>
                         @endif
                         @if ($indiv->cellphone<>'')
-                            <td>WhatsApp</td>
+                            <td><a target="_blank" href="https://web.whatsapp.com/send?phone=27{{substr($indiv->cellphone,1,9)}}&text=Hi {{$indiv->firstname}}, {{($memberdata['whatsapp'])}}">WhatsApp</a></td>
                         @else 
-                        <td class="text-gray-500">WhatsApp</td>
+                            <td class="text-gray-500">WhatsApp</td>
                         @endif
                     @else
                         <td></td><td></td>

@@ -1,13 +1,13 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\People\Resources\GroupResource\RelationManagers;
+namespace Bishopm\Church\Filament\Clusters\People\Resources\PastorResource\RelationManagers;
 
+use Bishopm\Church\Models\Individual;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Bishopm\Church\Models\Individual;
 
 class IndividualsRelationManager extends RelationManager
 {
@@ -18,7 +18,8 @@ class IndividualsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('individual_id')
-                    ->label('Group member')
+                    ->label('Pastoral case - individual')
+                    ->required()
                     ->options(Individual::orderBy('surname')->get()->pluck('surname', 'id'))
                     ->searchable(),
             ]);
@@ -27,7 +28,7 @@ class IndividualsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitle(fn (Individual $record): string => "{$record->firstname} {$record->surname}")
+        ->recordTitle(fn (Individual $record): string => "{$record->firstname} {$record->surname}")
             ->columns([
                 Tables\Columns\TextColumn::make('fullname')
                 ->label('Name'),
@@ -36,7 +37,7 @@ class IndividualsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()->recordSelectSearchColumns(['firstname', 'surname'])->label('Add group member'),
+                Tables\Actions\AttachAction::make()->recordSelectSearchColumns(['firstname', 'surname'])->label('Add pastoral case'),
             ])
             ->actions([
                 Tables\Actions\Action::make('view')->url(fn ($record): string => route('filament.admin.people.resources.individuals.edit', $record))->icon('heroicon-m-eye'),
@@ -44,7 +45,7 @@ class IndividualsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

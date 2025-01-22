@@ -64,7 +64,8 @@ class PastorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PastoralcasesRelationManager::class,
+            RelationManagers\IndividualsRelationManager::class,
+            RelationManagers\HouseholdsRelationManager::class,
             RelationManagers\PastoralnotesRelationManager::class
         ];
     }
@@ -75,6 +76,7 @@ class PastorResource extends Resource
             'index' => Pages\ListPastors::route('/'),
             'create' => Pages\CreatePastor::route('/create'),
             'edit' => Pages\EditPastor::route('/{record}/edit'),
+            'pastoralcases' => Pages\Pastoralcases::route('/pastoralcases')
         ];
     }
 }

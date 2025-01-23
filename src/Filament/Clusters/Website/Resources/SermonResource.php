@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SermonResource extends Resource
 {
+    protected static ?int $navigationSort = 2;
+    
     protected static ?string $model = Sermon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-microphone';

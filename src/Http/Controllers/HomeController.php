@@ -13,6 +13,7 @@ use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Loan;
+use Bishopm\Church\Models\Page;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
@@ -252,6 +253,11 @@ class HomeController extends Controller
         return view('church::app.offline');
     }
 
+    public function page($page){
+        $data['page']=Page::where('slug',$page)->where('published',1)->firstOrFail();
+        return view('church::web.page',$data);
+    }
+
     public function practices(){
         $data=array();
         $data['indiv']=Individual::find($this->member['id']);
@@ -409,10 +415,6 @@ class HomeController extends Controller
             $txt="<div style=\"background-color: rgba(0, 0, 0, .3); text-align:center; color:white; font-family:Arial;\"><br><h3>" . $sunday . "</h3><br></div>";
         }
         return $txt;
-    }
-    
-    public function welcome(){
-        return view('church::web.welcome');
     }
 
 }

@@ -5,6 +5,7 @@ namespace Bishopm\Church\Http\Controllers;
 use Bishopm\Church\Classes\Fpdf as Pdf;
 use Bishopm\Church\Http\Controllers\Controller;
 use Bishopm\Church\Models\Chord;
+use Bishopm\Church\Models\Course;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Event;
 use Bishopm\Church\Models\Group;
@@ -373,6 +374,7 @@ class ReportsController extends Controller
         }
         $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->where('calendar',1)->get();
         $events=Event::with('venue')->where('eventdate','>=',$yr . '-01-01')->where('eventdate','<=',$yr . '-12-31')->orderBy('eventdate','ASC')->where('calendar',1)->get();
+        $courses=Course::with('venue')->where('coursedate','>=',$yr . '-01-01')->where('coursedate','<=',$yr . '-12-31')->orderBy('coursedate','ASC')->where('calendar',1)->get();
         $bookings=Diaryentry::with('venue')->where('calendar',1)->where('diarydatetime','>=',$yr . '-01-01')->where('diarydatetime','<=',$yr . '-12-31')->orderBy('diarydatetime','ASC')->get();
         $dates=array();
         foreach ($bookings as $booking){
@@ -383,10 +385,17 @@ class ReportsController extends Controller
             ];
         }
         foreach ($events as $event){
-            $dates[strtotime($event->diarydatetime)][]=[
+            $dates[strtotime($event->eventdate)][]=[
                 'datetime'=> $event->eventdate,
                 'details'=>$event->event,
                 'venue'=>$event->venue->venue
+            ];
+        }
+        foreach ($courses as $course){
+            $dates[strtotime($course->coursedate)][]=[
+                'datetime'=> $course->coursedate,
+                'details'=>$course->course,
+                'venue'=>$course->venue->venue
             ];
         }
         foreach ($meetings as $meeting){
@@ -411,7 +420,7 @@ class ReportsController extends Controller
         $pdf->line(10, 29, 200, 29);
         $pdf->SetFont('Helvetica', '', 12);
         $y=35;
-        asort($dates);
+        ksort($dates);
         $month="";
         foreach ($dates as $day){
             foreach ($day as $date){

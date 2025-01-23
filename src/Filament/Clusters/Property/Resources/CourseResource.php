@@ -3,9 +3,9 @@
 namespace Bishopm\Church\Filament\Clusters\Property\Resources;
 
 use Bishopm\Church\Filament\Clusters\Property;
-use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\Pages;
-use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\RelationManagers;
-use Bishopm\Church\Models\Event;
+use Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource\Pages;
+use Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource\RelationManagers;
+use Bishopm\Church\Models\Course;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +14,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventResource extends Resource
+class CourseResource extends Resource
 {
-    protected static ?int $navigationSort = 3;
-    
-    protected static ?string $model = Event::class;
+    protected static ?int $navigationSort = 5;
+
+    protected static ?string $model = Course::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -28,10 +28,13 @@ class EventResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('event')
+                Forms\Components\TextInput::make('course')
+                    ->required()
+                    ->maxLength(199),
+                Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('eventdate')
+                Forms\Components\DateTimePicker::make('coursedate')
                     ->label('Date and time')
                     ->default(now())
                     ->native(true)
@@ -42,16 +45,12 @@ class EventResource extends Resource
                     ->label('Venue')
                     ->relationship('venue', 'venue')
                     ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
+                Forms\Components\Checkbox::make('calendar')
+                    ->label('Add to church calendar'),
                 Forms\Components\FileUpload::make('image')
-                    ->directory('images/event')
+                    ->directory('images/course')
                     ->previewable(false)
                     ->image(),
-                Forms\Components\Checkbox::make('calendar')->label('Add to church calendar'),
-                Forms\Components\Toggle::make('published'),
-                
             ]);
     }
 
@@ -59,22 +58,20 @@ class EventResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('event')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('eventdate')
-                    ->dateTime()
-                    ->label('Date and time')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('course')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('coursedate')
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('calendar')
                     ->boolean(),
             ])
+            ->defaultSort('coursedate','DESC')
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultSort('eventdate','DESC')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -92,9 +89,9 @@ class EventResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEvents::route('/'),
-            'create' => Pages\CreateEvent::route('/create'),
-            'edit' => Pages\EditEvent::route('/{record}/edit'),
+            'index' => Pages\ListCourses::route('/'),
+            'create' => Pages\CreateCourse::route('/create'),
+            'edit' => Pages\EditCourse::route('/{record}/edit'),
         ];
     }
 }

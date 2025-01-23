@@ -33,10 +33,14 @@ class EventResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('eventdate')
                     ->label('Date and time')
-                    ->default(now())
                     ->native(true)
                     ->displayFormat('Y-m-d H:i')
                     ->format('Y-m-d H:i')
+                    ->required(),
+                Forms\Components\TimePicker::make('endtime')
+                    ->label('End time')
+                    ->native(true)
+                    ->seconds(false)
                     ->required(),
                 Forms\Components\Select::make('venue_id')
                     ->label('Venue')

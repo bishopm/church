@@ -34,7 +34,13 @@ class PageResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->maxLength(191),
                 Forms\Components\FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->directory('images/page')
+                    ->previewable(false)
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('16:9')
+                    ->imageResizeTargetWidth('960')
+                    ->imageResizeTargetHeight('540'),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(191),

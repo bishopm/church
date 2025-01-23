@@ -6,6 +6,7 @@ use Bishopm\Church\Classes\Fpdf as Pdf;
 use Bishopm\Church\Http\Controllers\Controller;
 use Bishopm\Church\Models\Chord;
 use Bishopm\Church\Models\Diaryentry;
+use Bishopm\Church\Models\Event;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Meeting;
@@ -370,7 +371,8 @@ class ReportsController extends Controller
         if (!$yr){
             $yr=date('Y');
         }
-        $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->get();
+        $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->where('calendar',1)->get();
+        $events=Event::with('venue')->where('eventdate','>=',$yr . '-01-01')->where('eventdate','<=',$yr . '-12-31')->orderBy('eventdate','ASC')->where('calendar',1)->get();
         $bookings=Diaryentry::with('venue')->where('calendar',1)->where('diarydatetime','>=',$yr . '-01-01')->where('diarydatetime','<=',$yr . '-12-31')->orderBy('diarydatetime','ASC')->get();
         $dates=array();
         foreach ($bookings as $booking){
@@ -378,6 +380,13 @@ class ReportsController extends Controller
                 'datetime'=> $booking->diarydatetime,
                 'details'=>$booking->details,
                 'venue'=>$booking->venue->venue
+            ];
+        }
+        foreach ($events as $event){
+            $dates[strtotime($event->diarydatetime)][]=[
+                'datetime'=> $event->eventdate,
+                'details'=>$event->event,
+                'venue'=>$event->venue->venue
             ];
         }
         foreach ($meetings as $meeting){
@@ -401,10 +410,18 @@ class ReportsController extends Controller
         $pdf->SetFont('Helvetica', 'B', 14);
         $pdf->line(10, 29, 200, 29);
         $pdf->SetFont('Helvetica', '', 12);
-        $y=37;
+        $y=35;
         asort($dates);
+        $month="";
         foreach ($dates as $day){
             foreach ($day as $date){
+                if ($month<>date('F',strtotime($date['datetime']))){
+                    $month=date('F',strtotime($date['datetime']));
+                    $pdf->SetFont('Helvetica', 'B', 12);
+                    $pdf->text(10,$y+2,$month);
+                    $pdf->SetFont('Helvetica', '', 12);
+                    $y=$y+7;
+                }
                 $pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));
                 $pdf->text(37,$y,date('H:i',strtotime($date['datetime'])));
                 $pdf->text(52,$y,$date['details']);

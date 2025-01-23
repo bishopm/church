@@ -1,14 +1,12 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\RelationManagers;
+namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\Component as Livewire;
 
 class AgendaitemsRelationManager extends RelationManager

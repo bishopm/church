@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource;
+use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

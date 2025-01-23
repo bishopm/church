@@ -15,6 +15,7 @@ return new class extends Migration
             $table->dateTime('meetingdatetime');
             $table->integer('venue_id');
             $table->time('endtime');
+            $table->tinyInteger('calendar')->nullable()->default(null);
         });
     }
     

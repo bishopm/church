@@ -1,10 +1,10 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Admin\Resources;
+namespace Bishopm\Church\Filament\Clusters\Property\Resources;
 
-use Bishopm\Church\Filament\Clusters\Admin;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\Pages;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\RelationManagers;
+use Bishopm\Church\Filament\Clusters\Property;
+use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pages;
+use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\RelationManagers;
 use Bishopm\Church\Models\Meeting;
 use Filament\Forms;
 use Filament\Forms\Components\TimePicker;
@@ -15,13 +15,13 @@ use Filament\Tables\Table;
 
 class MeetingResource extends Resource
 {
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $model = Meeting::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $cluster = Admin::class;
+    protected static ?string $cluster = Property::class;
 
     public static function form(Form $form): Form
     {
@@ -48,6 +48,7 @@ class MeetingResource extends Resource
                 Forms\Components\Select::make('venue_id')
                     ->relationship('venue', 'venue')
                     ->required(),
+                Forms\Components\Checkbox::make('calendar')->label('Add to church calendar'),
                 Forms\Components\Select::make('agenda')
                     ->visibleOn('create')
                     ->dehydrated(false)
@@ -76,6 +77,8 @@ class MeetingResource extends Resource
                 Tables\Columns\TextColumn::make('venue.venue')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\IconColumn::make('calendar')
+                    ->boolean(),
             ])
             ->defaultSort('meetingdatetime','DESC')
             ->filters([

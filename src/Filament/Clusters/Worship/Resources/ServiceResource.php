@@ -149,15 +149,27 @@ class ServiceResource extends Resource
                                         'note' => $data['note'],
                                         'sortorder' => $ndx
                                     ]);
-                                    $setitems['record-' . $si->id]=array(
-                                        'id' => $si->id,
-                                        'service_id' => $si->service_id,
-                                        'setitemable_id' => $si->setitemable_id,
-                                        'setitemable_type' => $si->setitemable_type,
-                                        'note' => $si->setitemable->title,
-                                        'sortorder' => $si->sortorder,
-                                        'extra' => null
-                                    );
+                                    if (isset($si->setitemable->title)){
+                                        $setitems['record-' . $si->id]=array(
+                                            'id' => $si->id,
+                                            'service_id' => $si->service_id,
+                                            'setitemable_id' => $si->setitemable_id,
+                                            'setitemable_type' => $si->setitemable_type,
+                                            'note' => $si->setitemable->title,
+                                            'sortorder' => $si->sortorder,
+                                            'extra' => null
+                                        );
+                                    } else {
+                                        $setitems['record-' . $si->id]=array(
+                                            'id' => $si->id,
+                                            'service_id' => $si->service_id,
+                                            'setitemable_id' => $si->setitemable_id,
+                                            'setitemable_type' => $si->setitemable_type,
+                                            'note' => $data['note'],
+                                            'sortorder' => $si->sortorder,
+                                            'extra' => null
+                                        );
+                                    }
                                     foreach ($setitems as $i=>$setitem){
                                         if (substr($i,0,6)<>"record"){
                                             unset($setitems[$i]);

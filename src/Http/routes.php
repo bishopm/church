@@ -30,7 +30,6 @@ Route::domain($url)->group(function() {
         Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('web.blogpost');
         Route::get('/blog', 'blog')->name('web.blog');
         Route::get('/blog/{slug}', 'blogger')->name('web.blogger');
-        Route::get('/giving', 'giving')->name('web.giving');
         Route::get('/groups', 'groups')->name('web.groups');
         Route::get('/groups/{id}', 'group')->name('web.group');
         Route::get('/offline', 'offline')->name('web.offline');
@@ -64,7 +63,6 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/calendar/{full?}', 'calendar')->name('app.calendar');
         Route::get('/details', 'details')->name('app.details');
         Route::get('/devotionals', 'devotionals')->name('app.devotionals');
-        Route::get('/giving', 'giving')->name('app.giving');
         Route::get('/groups', 'groups')->name('app.groups');
         Route::get('/groups/{id}', 'group')->name('app.group');
         Route::get('/login', 'login')->name('app.login');

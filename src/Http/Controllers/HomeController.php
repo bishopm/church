@@ -217,10 +217,6 @@ class HomeController extends Controller
         return view('church::app.devotionals',$data);
     }
 
-    public function giving(){
-        return view('church::' . $this->routeName . '.giving');
-    }
-
     public function group($id){
         $data['group']=Group::with('individual')->where('id',$id)->first();
         return view('church::' . $this->routeName . '.group',$data);

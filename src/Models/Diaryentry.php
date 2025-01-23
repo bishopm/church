@@ -43,6 +43,9 @@ class Diaryentry extends Model implements Eventable
                 if (isset($this->diarisable->tenant)){
                     $this->details=$this->diarisable->tenant . " (" . $this->details . ")";
                 }
+                if ($this->diarisable_id==setting('admin.church_tenant')){
+                    $colour="blue";    
+                }
             } elseif ($this->diarisable_type=="group"){
                 $colour="blue";
                 if (isset($this->diarisable->groupname)){

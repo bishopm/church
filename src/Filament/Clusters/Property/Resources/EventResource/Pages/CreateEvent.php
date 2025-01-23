@@ -4,7 +4,6 @@ namespace Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\Page
 
 use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource;
 use Bishopm\Church\Models\Diaryentry;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateEvent extends CreateRecord

@@ -28,9 +28,12 @@ class EventResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('event')
-                    ->required()
-                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('event')
+                    ->required(),
+                Forms\Components\Select::make('venue_id')
+                    ->label('Venue')
+                    ->relationship('venue', 'venue')
+                    ->required(),
                 Forms\Components\DateTimePicker::make('eventdate')
                     ->label('Date and time')
                     ->native(true)
@@ -42,13 +45,8 @@ class EventResource extends Resource
                     ->native(true)
                     ->seconds(false)
                     ->required(),
-                Forms\Components\Select::make('venue_id')
-                    ->label('Venue')
-                    ->relationship('venue', 'venue')
-                    ->required(),
                 Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
+                    ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/event')
                     ->previewable(false)

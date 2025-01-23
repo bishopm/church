@@ -429,13 +429,13 @@ class ReportsController extends Controller
                     $pdf->SetFont('Helvetica', 'B', 12);
                     $pdf->text(10,$y+2,$month);
                     $pdf->SetFont('Helvetica', '', 12);
-                    $y=$y+7;
+                    $y=$y+6;
                 }
                 $pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));
                 $pdf->text(37,$y,date('H:i',strtotime($date['datetime'])));
                 $pdf->text(52,$y,$date['details']);
                 $pdf->text(150,$y,$date['venue']);
-                $y=$y+5;
+                $y=$y+4;
                 if ($y > 280){
                     $pdf->AddPage('P');
                     $pdf->SetFont('Helvetica', 'B', 22);

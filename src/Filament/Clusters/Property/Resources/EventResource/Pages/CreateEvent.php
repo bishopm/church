@@ -17,8 +17,8 @@ class CreateEvent extends CreateRecord
             'diarisable_type' => 'tenant',
             'diarisable_id' => setting('admin.church_tenant'),
             'venue_id' => $this->record->venue_id,
-            'details' => $this->record->details,
-            'diarydatetime' => $this->record->meetingdatetime,
+            'details' => $this->record->event,
+            'diarydatetime' => $this->record->eventdate,
             'endtime' => $this->record->endtime
         ]);
     }

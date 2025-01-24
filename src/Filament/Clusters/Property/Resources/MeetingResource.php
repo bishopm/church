@@ -54,6 +54,7 @@ class MeetingResource extends Resource
                     ->relationship('group', 'groupname')
                     ->required(),
                 Forms\Components\Select::make('attendance')
+                    ->hiddenOn('create')
                     ->multiple()
                     ->options(function (Get $get){
                         $group=Group::with('individuals')->where('id',$get('group_id'))->first();

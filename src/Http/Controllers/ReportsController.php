@@ -613,7 +613,7 @@ class ReportsController extends Controller
 
     public function minutes($id) {
         $pdf = new Fpdf;
-        $meeting=Meeting::with('group','agendaitems.tasks')->where('id',$id)->first();
+        $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
         $title = $meeting->group->groupname . " minutes (" . date('j M Y',strtotime($meeting->meetingdatetime)) . ")";
         $pdf->SetTitle($title);
         $pdf->AddPage('P');
@@ -644,16 +644,36 @@ class ReportsController extends Controller
             $sub=1;
             if ((isset($agenda->minute)) or (count($agenda->tasks))){
                 $pdf->SetFont('Helvetica', 'B', 14);
-                $pdf->text(10,$y,$count . ".  " . $agenda->heading);
-                $pdf->SetFont('Helvetica', '', 12);
+                $pdf->text(10,$y,$count . ".  ");
+                $pdf->text(18,$y,$agenda->heading);
+                $pdf->SetFont('Helvetica', '', 11);
                 $y=$y+5;
-            }
-            foreach ($agenda->tasks as $task){
-                $pdf->text(10,$y,$count . "." . $sub . " " . $task->description);
-                $sub++;
-                $y=$y+5;
+                if ($agenda->minute){
+                    $pdf->setxy(17,$y-4);
+                    $pdf->MultiCell(136,5,$agenda->minute);
+                    $y=$pdf->getY()+4;
+                }
+                foreach ($agenda->tasks as $task){
+                    $pdf->setxy(155,$y-1);
+                    $pdf->SetFont('Helvetica', 'B', 9);
+                    if ($task->duedate){
+                        $pdf->cell(0,0,date('j M',strtotime($task->duedate)));
+                    }
+                    $pdf->setxy(168,$y-1);
+                    $pdf->cell(0,0,$task->individual->firstname . " " . $task->individual->surname);
+                    $pdf->SetFont('Helvetica', '', 11);
+                    $pdf->text(10,$y,$count . "." . $sub);
+                    $pdf->setxy(17,$y-3.5);
+                    $pdf->MultiCell(137,5,$task->description);
+                    $sub++;
+                    $y=$pdf->GetY()+3;
+                }
+                $count++;
+                $y=$y+3;
             }
         }
+        $pdf->text(10,$pdf->GetY()+8,"Signed on                           as a true record of the decisions taken at this meeting");
+        $pdf->line(155,$y+3,195,$y+3);
         $pdf->Output();
     }
 

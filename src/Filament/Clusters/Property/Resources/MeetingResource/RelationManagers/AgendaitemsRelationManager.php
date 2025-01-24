@@ -38,6 +38,7 @@ class AgendaitemsRelationManager extends RelationManager
                     ->columnSpanFull(),
                 Forms\Components\Repeater::make('tasks')
                     ->relationship()
+                    ->hiddenOn('create')
                     ->schema([
                         Forms\Components\TextInput::make('description')->required()->label('Action'),
                         Forms\Components\Select::make('individual_id')->label('Responsibility')

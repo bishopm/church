@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('heading', 199);
             $table->integer('sortorder');
             $table->integer('level');
+            $table->text('minute')->nullable();
         });
     }
     

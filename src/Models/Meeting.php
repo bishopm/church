@@ -17,6 +17,11 @@ class Meeting extends Model
         return $this->belongsTo(Venue::class);
     }
 
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
     public function agendaitems(): HasMany
     {
         return $this->hasMany(Agendaitem::class);

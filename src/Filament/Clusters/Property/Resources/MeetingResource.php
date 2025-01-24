@@ -5,10 +5,12 @@ namespace Bishopm\Church\Filament\Clusters\Property\Resources;
 use Bishopm\Church\Filament\Clusters\Property;
 use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pages;
 use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\RelationManagers;
+use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Meeting;
 use Filament\Forms;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -48,6 +50,19 @@ class MeetingResource extends Resource
                 Forms\Components\Select::make('venue_id')
                     ->relationship('venue', 'venue')
                     ->required(),
+                Forms\Components\Select::make('group_id')
+                    ->relationship('group', 'groupname')
+                    ->required(),
+                Forms\Components\Select::make('attendance')
+                    ->multiple()
+                    ->options(function (Get $get){
+                        $group=Group::with('individuals')->where('id',$get('group_id'))->first();
+                        foreach ($group->individuals as $indiv){
+                            $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
+                        }
+                        return $data;
+                    })
+                    ->searchable(),
                 Forms\Components\Checkbox::make('calendar')->label('Add to church calendar'),
                 Forms\Components\Select::make('agenda')
                     ->visibleOn('create')

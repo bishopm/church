@@ -611,6 +611,52 @@ class ReportsController extends Controller
         exit;
     }
 
+    public function minutes($id) {
+        $pdf = new Fpdf;
+        $meeting=Meeting::with('group','agendaitems.tasks')->where('id',$id)->first();
+        $title = $meeting->group->groupname . " minutes (" . date('j M Y',strtotime($meeting->meetingdatetime)) . ")";
+        $pdf->SetTitle($title);
+        $pdf->AddPage('P');
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 22);
+        $image=url('/') . "/public/church/images/blacklogo.png";
+        $pdf->Image($image,10,5,25,25);
+        $pdf->text(40, 17, setting('general.church_name'));
+        $pdf->SetFont('Helvetica', '', 16);
+        $pdf->text(40, 25, $title);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->line(10, 29, 200, 29);
+        $pdf->SetFont('Helvetica', '', 12);
+        $attendees=Individual::whereIn('id',json_decode($meeting->attendance))->orderBy('firstname')->get();
+        $present = "Present: ";
+        $y=33;
+        foreach ($attendees as $ndx=>$indiv){
+            if ($ndx>0){
+                $present.=", ";    
+            } 
+            $present.=$indiv->firstname . " " . $indiv->surname;
+        }
+        $pdf->setxy(9,$y);
+        $pdf->MultiCell(0,5,$present);
+        $y=$pdf->getY()+7;
+        $count=1;
+        foreach ($meeting->agendaitems as $agenda){
+            $sub=1;
+            if ((isset($agenda->minute)) or (count($agenda->tasks))){
+                $pdf->SetFont('Helvetica', 'B', 14);
+                $pdf->text(10,$y,$count . ".  " . $agenda->heading);
+                $pdf->SetFont('Helvetica', '', 12);
+                $y=$y+5;
+            }
+            foreach ($agenda->tasks as $task){
+                $pdf->text(10,$y,$count . "." . $sub . " " . $task->description);
+                $sub++;
+                $y=$y+5;
+            }
+        }
+        $pdf->Output();
+    }
+
     public function removenames(){
         $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
         $pdf = new Fpdf;

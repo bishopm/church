@@ -5,9 +5,12 @@ namespace Bishopm\Church\Livewire;
 use Bishopm\Church\Models\Household;
 use Bishopm\Church\Models\Individual;
 use Livewire\Component;
- 
+use Lukeraymonddowning\Honey\Traits\WithHoney;
+
 class LoginForm extends Component
 {
+    use WithHoney;
+
     public $phone = '';
     public $surname = '';
     public $firstname = '';

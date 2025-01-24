@@ -57,11 +57,13 @@ class MeetingResource extends Resource
                     ->hiddenOn('create')
                     ->multiple()
                     ->options(function (Get $get){
-                        $group=Group::with('individuals')->where('id',$get('group_id'))->first();
-                        foreach ($group->individuals as $indiv){
-                            $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
+                        if ($get('group_id')){
+                            $group=Group::with('individuals')->where('id',$get('group_id'))->first();
+                            foreach ($group->individuals as $indiv){
+                                $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
+                            }
+                            return $data;
                         }
-                        return $data;
                     })
                     ->searchable(),
                 Forms\Components\Checkbox::make('calendar')->label('Add to church calendar'),

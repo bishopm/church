@@ -71,10 +71,9 @@ class AgendaitemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('sortorder')->label('Order'),
                 Tables\Columns\TextColumn::make('level'),
                 Tables\Columns\TextColumn::make('tasks')
-                    ->label('Action')
-                    ->formatStateUsing(function ($state) {
-                        return count(array(json_decode($state)));
-                    }),
+                    ->formatStateUsing(function ($state){
+                        return substr_count($state,'{');
+                    })
             ])
             ->filters([
                 //

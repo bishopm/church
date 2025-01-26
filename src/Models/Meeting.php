@@ -12,6 +12,13 @@ class Meeting extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    protected function casts(): array
+    {
+        return [
+            'attendance' => 'array',
+        ];
+    }
+
     public function venue(): BelongsTo
     {
         return $this->belongsTo(Venue::class);

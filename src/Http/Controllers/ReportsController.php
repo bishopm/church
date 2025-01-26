@@ -626,8 +626,8 @@ class ReportsController extends Controller
         $pdf->text(40, 25, $title);
         $pdf->SetFont('Helvetica', 'B', 14);
         $pdf->line(10, 29, 200, 29);
-        $pdf->SetFont('Helvetica', '', 12);
-        $attendees=Individual::whereIn('id',json_decode($meeting->attendance))->orderBy('firstname')->get();
+        $pdf->SetFont('Helvetica', '', 11);
+        $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
         $present = "Present: ";
         $y=33;
         foreach ($attendees as $ndx=>$indiv){
@@ -672,6 +672,7 @@ class ReportsController extends Controller
                 $y=$y+3;
             }
         }
+        $pdf->SetFont('Helvetica', '', 11);
         $pdf->text(10,$pdf->GetY()+8,"Signed on                           as a true record of the decisions taken at this meeting");
         $pdf->line(155,$y+3,195,$y+3);
         $pdf->Output();

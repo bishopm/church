@@ -614,19 +614,22 @@ class ReportsController extends Controller
     public function minutes($id) {
         $pdf = new Fpdf;
         $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
-        $title = $meeting->group->groupname . " minutes (" . date('j M Y',strtotime($meeting->meetingdatetime)) . ")";
+        $title = $meeting->group->groupname  . " minutes";
         $pdf->SetTitle($title);
+        $page=1;
         $pdf->AddPage('P');
         $pdf->SetAutoPageBreak(true, 0);
         $pdf->SetFont('Helvetica', 'B', 22);
         $image=url('/') . "/public/church/images/blacklogo.png";
         $pdf->Image($image,10,5,25,25);
-        $pdf->text(40, 17, setting('general.church_name'));
+        $pdf->text(40, 15, setting('general.church_name'));
         $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 25, $title);
+        $pdf->text(40, 21, $title);
         $pdf->SetFont('Helvetica', 'B', 14);
         $pdf->line(10, 29, 200, 29);
         $pdf->SetFont('Helvetica', '', 11);
+        $pdf->text(40, 27,'Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")");
+        $pdf->text(185,27,"page " . $page);
         $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
         $present = "Present: ";
         $y=33;
@@ -643,6 +646,11 @@ class ReportsController extends Controller
         foreach ($meeting->agendaitems as $agenda){
             $sub=1;
             if ((isset($agenda->minute)) or (count($agenda->tasks))){
+                if ($y>260){
+                    $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+                    $page++;
+                    $y=35;
+                }
                 $pdf->SetFont('Helvetica', 'B', 14);
                 $pdf->text(10,$y,$count . ".  ");
                 $pdf->text(18,$y,$agenda->heading);
@@ -650,10 +658,15 @@ class ReportsController extends Controller
                 $y=$y+5;
                 if ($agenda->minute){
                     $pdf->setxy(17,$y-4);
-                    $pdf->MultiCell(136,5,$agenda->minute);
+                    $pdf->MultiCell(183,4.5,$agenda->minute,0,'J');
                     $y=$pdf->getY()+4;
                 }
                 foreach ($agenda->tasks as $task){
+                    if ($y>260){
+                        $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+                        $page++;
+                        $y=35;
+                    }
                     $pdf->setxy(155,$y-1);
                     $pdf->SetFont('Helvetica', 'B', 9);
                     if ($task->duedate){
@@ -664,7 +677,7 @@ class ReportsController extends Controller
                     $pdf->SetFont('Helvetica', '', 11);
                     $pdf->text(10,$y,$count . "." . $sub);
                     $pdf->setxy(17,$y-3.5);
-                    $pdf->MultiCell(137,5,$task->description);
+                    $pdf->MultiCell(137,4.5,$task->description);
                     $sub++;
                     $y=$pdf->GetY()+3;
                 }
@@ -673,9 +686,34 @@ class ReportsController extends Controller
             }
         }
         $pdf->SetFont('Helvetica', '', 11);
-        $pdf->text(10,$pdf->GetY()+8,"Signed on                           as a true record of the decisions taken at this meeting");
-        $pdf->line(155,$y+3,195,$y+3);
+        if ($y>260){
+            $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+            $page++;
+            $y=35;
+        } else {
+            $y=$pdf->GetY()+5;
+        }
+        $pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
+        $pdf->rect(8,$y-2,194,12);
         $pdf->Output();
+    }
+
+    private function minute_header($pdf,$page,$title,$meeting){
+        $page++;
+        $pdf->AddPage('P');
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetFont('Helvetica', 'B', 22);
+        $image=url('/') . "/public/church/images/blacklogo.png";
+        $pdf->Image($image,10,5,25,25);
+        $pdf->text(40, 15, setting('general.church_name'));
+        $pdf->SetFont('Helvetica', '', 16);
+        $pdf->text(40, 21, $title);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->line(10, 29, 200, 29);
+        $pdf->SetFont('Helvetica', '', 11);
+        $pdf->text(40, 27,'Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")");
+        $pdf->text(185,27,"page " . $page);
+        return $pdf;
     }
 
     public function removenames(){

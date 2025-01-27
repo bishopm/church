@@ -65,6 +65,7 @@ class AgendaitemsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->paginated(false)
             ->recordTitleAttribute('meetingdatetime')
             ->columns([
                 Tables\Columns\TextColumn::make('heading'),

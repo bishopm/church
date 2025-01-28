@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Classes;
 
 use Exception;
+use Bishopm\Church\Classes\TTFontFile;
 
 /*******************************************************************************
 * tFPDF (based on FPDF 1.85)                                                   *

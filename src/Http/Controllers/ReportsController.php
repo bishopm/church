@@ -2,7 +2,6 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
-use Bishopm\Church\Classes\Fpdf as Pdf;
 use Bishopm\Church\Http\Controllers\Controller;
 use Bishopm\Church\Models\Chord;
 use Bishopm\Church\Models\Course;
@@ -19,92 +18,104 @@ use Bishopm\Church\Models\Rostergroup;
 use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
-use Codedge\Fpdf\Fpdf\Fpdf;
+use Bishopm\Church\Classes\tFPDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 
 class ReportsController extends Controller
 {
+    public $pdf, $title, $subtitle, $page, $logo, $widelogo;
+
+    public function __construct(){
+        $this->pdf = new tFPDF();
+        $this->pdf->AddFont('DejaVu','','DejaVuSans.ttf',true);
+        $this->pdf->AddFont('DejaVu', 'B', 'DejaVuSans-Bold.ttf', true);
+        $this->pdf->AddFont('DejaVuCond','','DejaVuSansCondensed.ttf',true);
+        $this->pdf->AddFont('DejaVuCond', 'B', 'DejaVuSansCondensed-Bold.ttf', true);
+        $this->title="";
+        $this->subtitle="";
+        $this->page=0;
+        $this->logo=url('/') . "/public/church/images/blacklogo.png";
+        $this->widelogo=url('/') . "/public/church/images/bwidelogo.png";
+    }
+
     public function a4meeting ($recordId){
         $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
-        $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 18);
-        $logo=url('/') . "/public/church/images/bwidelogo.png";
-        $pdf->Image($logo,123,8,77,30);
-        $pdf->text(20, 16, $mtg->details);
-        $pdf->SetFont('Helvetica', '', 14);
-        $pdf->text(20, 23, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(20, 32, "Agenda");
-        $pdf->line(20, 35, 195, 35);
+        $this->pdf->AddPage('P');
+        $this->title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 18);
+        $this->pdf->Image($this->widelogo,123,8,77,30);
+        $this->pdf->text(20, 16, $mtg->details);
+        $this->pdf->SetFont('DejaVu', '', 14);
+        $this->pdf->text(20, 23, $this->title);
+        $this->pdf->SetFont('DejaVu', 'B', 14);
+        $this->pdf->text(20, 32, "Agenda");
+        $this->pdf->line(20, 35, 195, 35);
         $items=$mtg->agendaitems;
         $yy=44;
         $ndx=0;
         foreach ($items as $item){
             if ($item->level==1){
-                $pdf->SetFont('Helvetica', 'B', 12);
+                $this->pdf->SetFont('DejaVu', 'B', 12);
                 $ndx=intval(floor($ndx)+1);
-                $pdf->text(20, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text(20, $yy, $ndx . "  " . $item->heading);
             } else {
                 $yy=$yy-2;
-                $pdf->SetFont('Helvetica', '', 11);
+                $this->pdf->SetFont('DejaVu', '', 11);
                 $ndx=$ndx+0.1;
-                $pdf->text(25, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text(25, $yy, $ndx . "  " . $item->heading);
             }
             $yy=$yy+8;
         }
-        $filename=$title;
-        $pdf->Output('I',$filename);
+        $filename=$this->title;
+        $this->pdf->Output('I',$filename);
         exit;
     }
 
     public function a5meeting ($recordId){
         $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
-        $pdf = new Fpdf;
-        $pdf->AddPage('L');
+        $this->pdf = new tFPDF();
+        $this->pdf->AddPage('L');
         $xadd=147;
-        $title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 15);
-        $logo=url('/') . "/public/church/images/bwidelogo.png";
-        $pdf->Image($logo,85,8,60);
-        $pdf->Image($logo,85+$xadd,8,60);
-        $pdf->text(10, 11, $mtg->details);
-        $pdf->text(10+$xadd, 11, $mtg->details);
-        $pdf->SetFont('Helvetica', '', 12);
-        $pdf->text(10, 18, $title);
-        $pdf->text(10+$xadd, 18, $title);
-        $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->text(10, 27, "Agenda");
-        $pdf->text(10+$xadd, 27, "Agenda");
-        $pdf->line(10, 30, 142, 30);
-        $pdf->line($xadd+10, 30, $xadd+142, 30);
+        $this->title=date("j F Y H:i",strtotime($mtg->meetingdatetime));
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 15);
+        $this->pdf->Image($this->widelogo,85,8,60);
+        $this->pdf->Image($this->widelogo,85+$xadd,8,60);
+        $this->pdf->text(10, 11, $mtg->details);
+        $this->pdf->text(10+$xadd, 11, $mtg->details);
+        $this->pdf->SetFont('DejaVu', '', 12);
+        $this->pdf->text(10, 18, $this->title);
+        $this->pdf->text(10+$xadd, 18, $this->title);
+        $this->pdf->SetFont('DejaVu', 'B', 12);
+        $this->pdf->text(10, 27, "Agenda");
+        $this->pdf->text(10+$xadd, 27, "Agenda");
+        $this->pdf->line(10, 30, 142, 30);
+        $this->pdf->line($xadd+10, 30, $xadd+142, 30);
         $items=$mtg->agendaitems;
         $yy=39;
         $ndx=0;
         foreach ($items as $item){
             if ($item->level==1){
-                $pdf->SetFont('Helvetica', 'B', 11);
+                $this->pdf->SetFont('DejaVu', 'B', 11);
                 $ndx=intval(floor($ndx)+1);
-                $pdf->text(10, $yy, $ndx . "  " . $item->heading);
-                $pdf->text($xadd+10, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text(10, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text($xadd+10, $yy, $ndx . "  " . $item->heading);
             } else {
                 $yy=$yy-2;
-                $pdf->SetFont('Helvetica', '', 10);
+                $this->pdf->SetFont('DejaVu', '', 10);
                 $ndx=$ndx+0.1;
-                $pdf->text(15, $yy, $ndx . "  " . $item->heading);
-                $pdf->text($xadd+15, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text(15, $yy, $ndx . "  " . $item->heading);
+                $this->pdf->text($xadd+15, $yy, $ndx . "  " . $item->heading);
             }
             $yy=$yy+7;
         }
-        $filename=$title;
-        $pdf->Output('I',$filename);
+        $filename=$this->title;
+        $this->pdf->Output('I',$filename);
         exit;
     }
 
@@ -163,38 +174,38 @@ class ReportsController extends Controller
         }
         $hours=['07h00','08h00','09h00','10h00','11h00','12h00','13h00','14h00','15h00','16h00','17h00','18h00','19h00','20h00','21h00','22h00'];
         $venues=Venue::where('resource',1)->orderBy('venue')->get();
-        $title = "Venue Bookings: " . date('j F Y',strtotime($reportdate));
-        $pdf = new Fpdf;
-        $pdf->SetFillColor(190,190,190);
-        $pdf->AddPage('L');
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Arial', 'B', 22);
-        $image=url('/') . "/public/church/images/blacklogo.png";
-        $pdf->Image($image,10,0,25,25);
-        $pdf->text(40, 12, setting('general.church_name'));
-        $pdf->SetFont('Arial', '', 16);
-        $pdf->text(40, 20, $title);
-        $pdf->SetFont('Arial', 'B', 12);
+        $this->title = "Venue Bookings: " . date('j F Y',strtotime($reportdate));
+        $this->pdf = new tFPDF();
+        $this->pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
+        $this->pdf->SetFillColor(190,190,190);
+        $this->pdf->AddPage('L');
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('Arial', 'B', 22);
+        $this->pdf->Image($this->logo,10,0,25,25);
+        $this->pdf->text(40, 12, setting('general.church_name'));
+        $this->pdf->SetFont('Arial', '', 16);
+        $this->pdf->text(40, 20, $this->title);
+        $this->pdf->SetFont('Arial', 'B', 12);
         $yy=40;
         $xx=35;
         $col=floor(254/count($venues));
         $width=$col*count($venues)+$xx-6;
         foreach ($hours as $hh){
             if ($hh<>$hours[count($hours)-1]){
-                $pdf->line(10,$yy-6,$width,$yy-6);
-                $pdf->text(13,$yy+1,$hh);
+                $this->pdf->line(10,$yy-6,$width,$yy-6);
+                $this->pdf->text(13,$yy+1,$hh);
                 $yy=$yy+11;
             }
         }
-        $pdf->line(10,34,10,199);
-        $pdf->line($width,34,$width,199);
-        $pdf->line(10,$yy-6,$width,$yy-6);
+        $this->pdf->line(10,34,10,199);
+        $this->pdf->line($width,34,$width,199);
+        $this->pdf->line(10,$yy-6,$width,$yy-6);
         foreach ($venues as $venue){
             $bookings=Diaryentry::with('diarisable')->where(DB::raw('substr(diarydatetime, 1, 10)'),$reportdate)->where('venue_id',$venue->id)->get();
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->setxy($xx-6,30);
-            $pdf->cell($col,0,$venue->venue,0,0,'C');
+            $this->pdf->SetFont('Arial', '', 10);
+            $this->pdf->setxy($xx-6,30);
+            $this->pdf->cell($col,0,$venue->venue,0,0,'C');
             foreach ($bookings as $booking){
                 $start=substr($booking->diarydatetime,11,5);
                 $sh=substr($start,0,2);
@@ -204,35 +215,35 @@ class ReportsController extends Controller
                 $eh=substr($end,0,2);
                 $em=substr($end,3,2);
                 $ey=array_search($eh."h00",$hours) * 11 + 40 + intval($em)/60 * 11 - 6;
-                $pdf->rect($xx-6,$sy,$col,$ey-$sy,'DF');
-                $pdf->setxy($xx-6,$sy+1);
-                $pdf->SetFont('Arial', '', 8);
+                $this->pdf->rect($xx-6,$sy,$col,$ey-$sy,'DF');
+                $this->pdf->setxy($xx-6,$sy+1);
+                $this->pdf->SetFont('Arial', '', 8);
                 if (($booking->diarisable_id) and (isset($booking->diarisable->tenant))){
                     $msg=$booking->diarisable->tenant;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell($col,3,$msg,0,'C');
+                    $this->pdf->multicell($col,3,$msg,0,'C');
                 } elseif (($booking->diarisable_id) and (isset($booking->diarisable->groupname))){
                     $msg=$booking->diarisable->groupname;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell($col,3,$msg,0,'C');
+                    $this->pdf->multicell($col,3,$msg,0,'C');
                 } elseif (($booking->diarisable_id) and (isset($booking->diarisable->event))){
                     $msg=$booking->diarisable->event;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell($col,3,$msg,0,'C');
+                    $this->pdf->multicell($col,3,$msg,0,'C');
                 }
-                $pdf->SetFont('Arial', 'B', 12);
+                $this->pdf->SetFont('Arial', 'B', 12);
             }
-            $pdf->line($xx-6,34,$xx-6,199);
+            $this->pdf->line($xx-6,34,$xx-6,199);
             $xx=$xx+$col;
         }
-        $pdf->line($xx-6,34,$xx-6,199);
-        $pdf->Output();
+        $this->pdf->line($xx-6,34,$xx-6,199);
+        $this->pdf->Output();
         exit;
     }
 
@@ -253,60 +264,58 @@ class ReportsController extends Controller
             $individuals=Individual::orderBy('surname','ASC')->orderBy('firstname','ASC')->get()->toArray();
             $long=true;
         }
-        $pdf = new Pdf('P','mm','A4');
-        $pdf->AddPage('P');
-        $pdf->SetFont('Arial', 'B', 11);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetFont('Arial', 'B', 11);
         
         $yy=10;
         $xx=10;
-        $image=url('/') . "/public/church/images/blacklogo.png";
         if (count($individuals)){
             foreach ($individuals as $indiv){
                 if ($yy>130){
-                    $pdf->AddPage('P');
+                    $this->pdf->AddPage('P');
                     $yy=10;
                 }
-                $pdf->rect($xx,$yy,93,114);
-                $pdf->Image($image,$xx+70,$yy+57.5,20,20);
-                $pdf->setxy($xx+4,$yy+24);
+                $this->pdf->rect($xx,$yy,93,114);
+                $this->pdf->Image($this->logo,$xx+70,$yy+57.5,20,20);
+                $this->pdf->setxy($xx+4,$yy+24);
                 $font=60;
                 $size="unknown";
                 do {
-                    $pdf->SetFont('Arial', 'B', $font);
+                    $this->pdf->SetFont('Arial', 'B', $font);
                     if ($indiv['firstname']){
-                        $width=$pdf->GetStringWidth($indiv['firstname']);
+                        $width=$this->pdf->GetStringWidth($indiv['firstname']);
                     } else {
                         $width=0;
                     }
                     if ($width < 85){
-                        $pdf->cell(86,0,$indiv['firstname'],0,0,'C');
+                        $this->pdf->cell(86,0,$indiv['firstname'],0,0,'C');
                         $size="known";
                         $font=8;
                     } else {
                         $font=$font-0.5;
                     }
                 } while ($size=="unknown");
-                $pdf->setxy($xx+4,$yy+40);
+                $this->pdf->setxy($xx+4,$yy+40);
                 $font=25;
                 $size="unknown";
                 do {
-                    $pdf->SetFont('Arial', '', $font);
-                    $width=$pdf->GetStringWidth($indiv['surname']);
+                    $this->pdf->SetFont('Arial', '', $font);
+                    $width=$this->pdf->GetStringWidth($indiv['surname']);
                     if ($width < 85){
-                        $pdf->cell(86,0,$indiv['surname'],0,0,'C');
+                        $this->pdf->cell(86,0,$indiv['surname'],0,0,'C');
                         $size="known";
                         $font=8;
                     } else {
                         $font=$font-0.5;
                     }
                 } while ($size=="unknown");
-                $pdf->SetFont('Arial', 'B', 11);
-                $pdf->SetDrawColor(185,185,185);
-                $pdf->line($xx,$yy+57,$xx+93,$yy+57);
-                $pdf->SetDrawColor(0,0,0);
-                $pdf->Code39($xx+5,$yy+60,$indiv['id'],1.5,10);
-                $pdf->setxy($xx+4,$yy+72);
-                $pdf->cell(100,0,$indiv['firstname'] . " " . $indiv['surname'],0,0,'L');
+                $this->pdf->SetFont('Arial', 'B', 11);
+                $this->pdf->SetDrawColor(185,185,185);
+                $this->pdf->line($xx,$yy+57,$xx+93,$yy+57);
+                $this->pdf->SetDrawColor(0,0,0);
+                $this->pdf->Code39($xx+5,$yy+60,$indiv['id'],1.5,10);
+                $this->pdf->setxy($xx+4,$yy+72);
+                $this->pdf->cell(100,0,$indiv['firstname'] . " " . $indiv['surname'],0,0,'L');
                 if ($xx==10){
                     $xx=110;    
                 } else {
@@ -315,56 +324,56 @@ class ReportsController extends Controller
                 }
             }
             if ($long){
-                $pdf->AddPage('P');
-                $pdf->rect(10,10,93,114);
-                $pdf->RoundedRect(15,15,83,47,2);
-                $pdf->text(15,73,"First name and surname");
-                $pdf->RoundedRect(15,74,83,12,1);
-                $pdf->text(15,91,"Cellphone");
-                $pdf->RoundedRect(15,92,83,12,1);
-                $pdf->text(15,108,"Email");
-                $pdf->RoundedRect(15,109,83,12,1);
+                $this->pdf->AddPage('P');
+                $this->pdf->rect(10,10,93,114);
+                $this->pdf->RoundedRect(15,15,83,47,2);
+                $this->pdf->text(15,73,"First name and surname");
+                $this->pdf->RoundedRect(15,74,83,12,1);
+                $this->pdf->text(15,91,"Cellphone");
+                $this->pdf->RoundedRect(15,92,83,12,1);
+                $this->pdf->text(15,108,"Email");
+                $this->pdf->RoundedRect(15,109,83,12,1);
                 
-                $pdf->rect(110,10,93,114);
-                $pdf->RoundedRect(115,15,83,47,2);
-                $pdf->text(115,73,"First name and surname");
-                $pdf->RoundedRect(115,74,83,12,1);
-                $pdf->text(115,91,"Cellphone");
-                $pdf->RoundedRect(115,92,83,12,1);
-                $pdf->text(115,108,"Email");
-                $pdf->RoundedRect(115,109,83,12,1);
+                $this->pdf->rect(110,10,93,114);
+                $this->pdf->RoundedRect(115,15,83,47,2);
+                $this->pdf->text(115,73,"First name and surname");
+                $this->pdf->RoundedRect(115,74,83,12,1);
+                $this->pdf->text(115,91,"Cellphone");
+                $this->pdf->RoundedRect(115,92,83,12,1);
+                $this->pdf->text(115,108,"Email");
+                $this->pdf->RoundedRect(115,109,83,12,1);
                 
-                $pdf->rect(10,130,93,114);
-                $pdf->RoundedRect(15,135,83,47,2);
-                $pdf->text(15,193,"First name and surname");
-                $pdf->RoundedRect(15,194,83,12,1);
-                $pdf->text(15,211,"Cellphone");
-                $pdf->RoundedRect(15,212,83,12,1);
-                $pdf->text(15,228,"Email");
-                $pdf->RoundedRect(15,229,83,12,1);
+                $this->pdf->rect(10,130,93,114);
+                $this->pdf->RoundedRect(15,135,83,47,2);
+                $this->pdf->text(15,193,"First name and surname");
+                $this->pdf->RoundedRect(15,194,83,12,1);
+                $this->pdf->text(15,211,"Cellphone");
+                $this->pdf->RoundedRect(15,212,83,12,1);
+                $this->pdf->text(15,228,"Email");
+                $this->pdf->RoundedRect(15,229,83,12,1);
                 
-                $pdf->rect(110,130,93,114);
-                $pdf->RoundedRect(115,135,83,47,2);
-                $pdf->text(115,193,"First name and surname");
-                $pdf->RoundedRect(115,194,83,12,1);
-                $pdf->text(115,211,"Cellphone");
-                $pdf->RoundedRect(115,212,83,12,1);
-                $pdf->text(115,228,"Email");
-                $pdf->RoundedRect(115,229,83,12,1);
+                $this->pdf->rect(110,130,93,114);
+                $this->pdf->RoundedRect(115,135,83,47,2);
+                $this->pdf->text(115,193,"First name and surname");
+                $this->pdf->RoundedRect(115,194,83,12,1);
+                $this->pdf->text(115,211,"Cellphone");
+                $this->pdf->RoundedRect(115,212,83,12,1);
+                $this->pdf->text(115,228,"Email");
+                $this->pdf->RoundedRect(115,229,83,12,1);
                 
-                $pdf->SetFont('Arial', 'B', 11);
-                $pdf->SetDrawColor(185,185,185);
-                $pdf->line(10,67,103,67);
-                $pdf->line(110,67,203,67);
-                $pdf->line(10,187,103,187);
-                $pdf->line(110,187,203,187);
-                $pdf->SetDrawColor(0,0,0);
+                $this->pdf->SetFont('Arial', 'B', 11);
+                $this->pdf->SetDrawColor(185,185,185);
+                $this->pdf->line(10,67,103,67);
+                $this->pdf->line(110,67,203,67);
+                $this->pdf->line(10,187,103,187);
+                $this->pdf->line(110,187,203,187);
+                $this->pdf->SetDrawColor(0,0,0);
             }
         } else {
-            $pdf->text(10,10,"No new members have been added to the system since last Sunday");
+            $this->pdf->text(10,10,"No new members have been added to the system since last Sunday");
         }
         $filename=base_path() . "/storage/barcodes/barcodes.pdf";
-        $pdf->Output($filename,'F');
+        $this->pdf->Output($filename,'F');
         return Redirect::to('/storage/barcodes/barcodes.pdf');
     }
 
@@ -405,20 +414,18 @@ class ReportsController extends Controller
                 'venue'=>$meeting->venue->venue
             ];
         }
-        $pdf = new Fpdf;
-        $title = $yr . " Calendar";
-        $pdf->SetTitle($title);
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 22);
-        $image=url('/') . "/public/church/images/blacklogo.png";
-        $pdf->Image($image,10,5,25,25);
-        $pdf->text(40, 17, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 25, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->line(10, 29, 200, 29);
-        $pdf->SetFont('Helvetica', '', 12);
+        $this->title = $yr . " Calendar";
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVuCond', 'B', 22);
+        $this->pdf->Image($this->logo,10,5,25,25);
+        $this->pdf->text(40, 17, setting('general.church_name'));
+        $this->pdf->SetFont('DejaVuCond', '', 16);
+        $this->pdf->text(40, 25, $this->title);
+        $this->pdf->SetFont('DejaVuCond', 'B', 14);
+        $this->pdf->line(10, 29, 200, 29);
+        $this->pdf->SetFont('DejaVuCond', '', 12);
         $y=35;
         ksort($dates);
         $month="";
@@ -426,32 +433,31 @@ class ReportsController extends Controller
             foreach ($day as $date){
                 if ($month<>date('F',strtotime($date['datetime']))){
                     $month=date('F',strtotime($date['datetime']));
-                    $pdf->SetFont('Helvetica', 'B', 12);
-                    $pdf->text(10,$y+2,$month);
-                    $pdf->SetFont('Helvetica', '', 12);
+                    $this->pdf->SetFont('DejaVuCond', 'B', 12);
+                    $this->pdf->text(10,$y+2,$month);
+                    $this->pdf->SetFont('DejaVuCond', '', 12);
                     $y=$y+6.5;
                 }
-                $pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));
-                $pdf->text(37,$y,date('H:i',strtotime($date['datetime'])));
-                $pdf->text(52,$y,$date['details']);
-                $pdf->text(150,$y,$date['venue']);
+                $this->pdf->text(10,$y,date('d M (D)',strtotime($date['datetime'])));
+                $this->pdf->text(37,$y,date('H:i',strtotime($date['datetime'])));
+                $this->pdf->text(52,$y,$date['details']);
+                $this->pdf->text(150,$y,$date['venue']);
                 $y=$y+4.5;
                 if ($y > 280){
-                    $pdf->AddPage('P');
-                    $pdf->SetFont('Helvetica', 'B', 22);
-                    $image=url('/') . "/public/church/images/colouredlogo.png";
-                    $pdf-> Image($image,10,0,25,25);
-                    $pdf->text(40, 12, setting('general.church_name'));
-                    $pdf->SetFont('Helvetica', '', 16);
-                    $pdf->text(40, 20, $title);
-                    $pdf->SetFont('Helvetica', 'B', 14);
-                    $pdf->line(10, 24, 200, 24);
-                    $pdf->SetFont('Helvetica', '', 12);
+                    $this->pdf->AddPage('P');
+                    $this->pdf->SetFont('DejaVuCond', 'B', 22);
+                    $this->pdf-> Image($this->logo,10,0,25,25);
+                    $this->pdf->text(40, 12, setting('general.church_name'));
+                    $this->pdf->SetFont('DejaVuCond', '', 16);
+                    $this->pdf->text(40, 20, $this->title);
+                    $this->pdf->SetFont('DejaVuCond', 'B', 14);
+                    $this->pdf->line(10, 24, 200, 24);
+                    $this->pdf->SetFont('DejaVuCond', '', 12);
                     $y=32;  
                 }
             }
         }
-        $pdf->Output('I','Calendar');
+        $this->pdf->Output('I','Calendar');
         exit;
     }
 
@@ -570,17 +576,16 @@ class ReportsController extends Controller
     public function group($id)
     {
         $group = Group::with('individuals')->find($id);
-        $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 18);
-        $pdf->text(15, 16, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(15, 23, $group->groupname);
-        $pdf->SetTitle($group->groupname);
-        $pdf->SetFont('Helvetica', '', 12);
-        $pdf->text(173, 23, date('Y-m-d'));
-        $pdf->line(15, 26, 195, 26);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 18);
+        $this->pdf->text(15, 16, setting('general.church_name'));
+        $this->pdf->SetFont('DejaVu', '', 16);
+        $this->pdf->text(15, 23, $group->groupname);
+        $this->pdf->SetTitle($group->groupname);
+        $this->pdf->SetFont('DejaVu', '', 12);
+        $this->pdf->text(173, 23, date('Y-m-d'));
+        $this->pdf->line(15, 26, 195, 26);
         $yy=35;
         $indivs = array();
         foreach ($group->individuals as $indiv) {
@@ -591,246 +596,248 @@ class ReportsController extends Controller
         foreach ($indivs as $kk=>$ii) {
             if ($yy>285){
                 $yy=35;
-                $pdf->AddPage('P');
-                $pdf->SetFont('Helvetica', 'B', 18);
-                $pdf->text(15, 16, setting('general.church_name'));
-                $pdf->SetFont('Helvetica', '', 16);
-                $pdf->text(15, 23, $group->groupname);
-                $pdf->SetTitle($group->groupname);
-                $pdf->SetFont('Helvetica', '', 12);
-                $pdf->text(173, 23, date('Y-m-d'));
-                $pdf->line(15, 26, 195, 26);
+                $this->pdf->AddPage('P');
+                $this->pdf->SetFont('DejaVu', 'B', 18);
+                $this->pdf->text(15, 16, setting('general.church_name'));
+                $this->pdf->SetFont('DejaVu', '', 16);
+                $this->pdf->text(15, 23, $group->groupname);
+                $this->pdf->SetTitle($group->groupname);
+                $this->pdf->SetFont('DejaVu', '', 12);
+                $this->pdf->text(173, 23, date('Y-m-d'));
+                $this->pdf->line(15, 26, 195, 26);
             }
-            $pdf->SetFont('Helvetica', 'B', 12);
-            $pdf->text(15, $yy, $kk);
-            $pdf->SetFont('Helvetica', '', 12);
-            $pdf->text(169, $yy, utf8_decode($ii));
+            $this->pdf->SetFont('DejaVu', 'B', 12);
+            $this->pdf->text(15, $yy, $kk);
+            $this->pdf->SetFont('DejaVu', '', 12);
+            $this->pdf->text(169, $yy, $ii);
             $yy=$yy+6;
         }
-        $pdf->Output();
+        $this->pdf->Output();
         exit;
     }
 
     public function minutes($id) {
-        $pdf = new Fpdf;
         $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
-        $title = $meeting->group->groupname  . " minutes";
-        $pdf->SetTitle($title);
+        if (isset($meeting->group)){
+            $this->title = $meeting->group->groupname  . " minutes";
+        } else {
+            $this->title = $meeting->details  . " minutes";
+        }     
+        $this->pdf->SetTitle($this->title);
         $page=0;
-        $subtitle='Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")";
-        $pdf=$this->report_header($pdf,$page,$title,$subtitle);       
-        $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
-        $present = "Present: ";
-        $y=33;
-        foreach ($attendees as $ndx=>$indiv){
-            if ($ndx>0){
-                $present.=", ";    
-            } 
-            $present.=$indiv->firstname . " " . $indiv->surname;
+        $this->subtitle='Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")";
+        $this->pdf=$this->report_header();
+        if (isset($meeting->group)){   
+            $y=33;
+            $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
+            $present = "Present: ";
+            foreach ($attendees as $ndx=>$indiv){
+                if ($ndx>0){
+                    $present.=", ";    
+                } 
+                $present.=$indiv->firstname . " " . $indiv->surname;
+            }
+            $this->pdf->setxy(9,$y);
+            $this->pdf->MultiCell(0,5,$present);
+            $y=$this->pdf->getY()+7;
+        } else {
+            $y=40;
         }
-        $pdf->setxy(9,$y);
-        $pdf->MultiCell(0,5,$present);
-        $y=$pdf->getY()+7;
         $count=1;
         foreach ($meeting->agendaitems as $agenda){
             $sub=1;
             if ((isset($agenda->minute)) or (count($agenda->tasks))){
                 if ($y>260){
-                    $pdf=$this->report_header($pdf,$page,$title,$subtitle);
+                    $this->pdf=$this->report_header();
                     $page++;
                     $y=35;
                 }
-                $pdf->SetFont('Helvetica', 'B', 14);
-                $pdf->text(10,$y,$count . ".  ");
-                $pdf->text(18,$y,$agenda->heading);
-                $pdf->SetFont('Helvetica', '', 11);
+                $this->pdf->SetFont('DejaVu', 'B', 14);
+                $this->pdf->text(10,$y,$count . ".  ");
+                $this->pdf->text(18,$y,$agenda->heading);
+                $this->pdf->SetFont('DejaVu', '', 11);
                 $y=$y+5;
                 if ($agenda->minute){
-                    $pdf->setxy(17,$y-4);
-                    $pdf->MultiCell(183,4.5,$agenda->minute,0,'J');
-                    $y=$pdf->getY()+4;
+                    $this->pdf->setxy(17,$y-4);
+                    $this->pdf->MultiCell(183,4.5,$agenda->minute,0,'J');
+                    $y=$this->pdf->getY()+4;
                 }
                 foreach ($agenda->tasks as $task){
                     if ($y>260){
-                        $pdf=$this->report_header($pdf,$page,$title,$subtitle);
+                        $this->pdf=$this->report_header();
                         $page++;
                         $y=35;
                     }
-                    $pdf->setxy(155,$y-1);
-                    $pdf->SetFont('Helvetica', 'B', 9);
+                    $this->pdf->setxy(155,$y-1);
+                    $this->pdf->SetFont('DejaVu', 'B', 9);
                     if ($task->duedate){
-                        $pdf->cell(0,0,date('j M',strtotime($task->duedate)));
+                        $this->pdf->cell(0,0,date('j M',strtotime($task->duedate)));
                     }
-                    $pdf->setxy(168,$y-1);
-                    $pdf->cell(0,0,$task->individual->firstname . " " . $task->individual->surname);
-                    $pdf->SetFont('Helvetica', '', 11);
-                    $pdf->text(10,$y,$count . "." . $sub);
-                    $pdf->setxy(17,$y-3.5);
-                    $pdf->MultiCell(137,4.5,$task->description);
+                    $this->pdf->setxy(168,$y-1);
+                    $this->pdf->cell(0,0,$task->individual->firstname . " " . $task->individual->surname);
+                    $this->pdf->SetFont('DejaVu', '', 11);
+                    $this->pdf->text(10,$y,$count . "." . $sub);
+                    $this->pdf->setxy(17,$y-3.5);
+                    $this->pdf->MultiCell(137,4.5,$task->description);
                     $sub++;
-                    $y=$pdf->GetY()+3;
+                    $y=$this->pdf->GetY()+3;
                 }
                 $count++;
                 $y=$y+3;
             }
         }
-        $pdf->SetFont('Helvetica', '', 11);
+        $this->pdf->SetFont('DejaVu', '', 11);
         if ($y>260){
-            $pdf=$this->report_header($pdf,$page,$title,$subtitle);
+            $this->pdf=$this->report_header();
             $page++;
             $y=35;
         } else {
-            $y=$pdf->GetY()+5;
+            if ($y>40){
+                $y=$this->pdf->GetY()+5;
+            }
         }
-        $pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
-        $pdf->rect(8,$y-2,194,12);
-        $pdf->Output();
+        $this->pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
+        $this->pdf->rect(8,$y-2,194,12);
+        $this->pdf->Output();
     }
 
-    private function report_header($pdf,$page,$title,$subtitle=""){
-        $page++;
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 22);
-        $image=url('/') . "/public/church/images/blacklogo.png";
-        $pdf->Image($image,10,5,25,25);
-        $pdf->text(40, 15, setting('general.church_name'));
-        $pdf->line(10, 29, 200, 29);
-        if ($subtitle==""){
-            $pdf->SetFont('Helvetica', '', 18);
-            $pdf->text(40, 23, $title);
+    private function report_header(){
+        $this->page++;
+        $this->pdf->AddPage('P');
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 22);
+        $this->pdf->Image($this->logo,10,5,25,25);
+        $this->pdf->text(40, 15, setting('general.church_name'));
+        $this->pdf->line(10, 29, 200, 29);
+        if ($this->subtitle==""){
+            $this->pdf->SetFont('DejaVu', '', 18);
+            $this->pdf->text(40, 23, $this->title);
         } else {
-            $pdf->SetFont('Helvetica', '', 16);
-            $pdf->text(40, 21, $title);
-            $pdf->SetFont('Helvetica', '', 11);
-            $pdf->text(40, 27,$subtitle);
+            $this->pdf->SetFont('DejaVu', '', 16);
+            $this->pdf->text(40, 21, $this->title);
+            $this->pdf->SetFont('DejaVu', '', 11);
+            $this->pdf->text(40, 27,$this->subtitle);
         }
-        $pdf->SetFont('Helvetica', '', 11);
-        if ($page>1){
-            $pdf->text(185,27,"page " . $page);
+        $this->pdf->SetFont('DejaVu', '', 11);
+        if ($this->page>1){
+            $this->pdf->text(185,27,"page " . $this->page);
         }
-        return $pdf;
+        return $this->pdf;
     }
 
     public function pg_names(){
         $names=Individual::where('giving','>',0)->orderBy('surname')->whereNull('deleted_at')->get();
-        $pdf = new Fpdf;
         $page=0;
-        $title="Planned givers by name";
-        $pdf=$this->report_header($pdf,$page,$title);
+        $this->title="Planned givers by name";
+        $this->pdf=$this->report_header();
         $y=35;
         foreach ($names as $name){
             if ($y>280){
                 $page++;
-                $pdf=$this->report_header($pdf,$page,$title);
+                $this->pdf=$this->report_header();
                 $y=35;
             }
-            $pdf->text(10,$y,$this->unicodefix($name->surname) . ", " . $this->unicodefix($name->firstname) . " (" . $name->giving . ")");
+            $this->pdf->text(10,$y,$name->surname . ", " . $name->firstname . " (" . $name->giving . ")");
             $y=$y+5;
         }
-        $pdf->Output('I','planned-giving-names');
+        $this->pdf->Output('I','planned-giving-names');
     }
 
     public function pg_numbers(){
         $names=Individual::where('giving','>',0)->orderBy('giving','ASC')->whereNull('deleted_at')->get();
-        $pdf = new Fpdf;
         $page=0;
-        $title="Planned givers by number";
-        $pdf=$this->report_header($pdf,$page,$title);
+        $this->title="Planned givers by number";
+        $this->pdf=$this->report_header();
         $y=35;
         foreach ($names as $name){
             if ($y>280){
                 $page++;
-                $pdf=$this->report_header($pdf,$page,$title);
+                $this->pdf=$this->report_header();
                 $y=35;
             }
-            $pdf->text(10,$y,$name->giving);
-            $pdf->text(17,$y,$name->surname . ", " . $name->firstname);
+            $this->pdf->text(10,$y,$name->giving);
+            $this->pdf->text(21,$y,$name->surname . ", " . $name->firstname);
             $y=$y+5;
         }
-        $pdf->Output('I','planned-giving-names');
+        $this->pdf->Output('I','planned-giving-names');
     }
 
     public function removenames(){
         $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
-        $pdf = new Fpdf;
-        $page=0;
-        $title="Name tags not used in over 6 months";
-        $pdf=$this->report_header($pdf,$page,$title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(10, 35, "Name");
-        $pdf->text(150, 35, "Last service");
-        $pdf->line(10, 29, 190, 29);
-        $pdf->SetFont('Helvetica', '', 12);
+        $this->title="Name tags not used in over 6 months";
+        $this->pdf=$this->report_header();
+        $this->pdf->SetFont('DejaVu', 'B', 14);
+        $this->pdf->text(10, 35, "Name");
+        $this->pdf->text(150, 35, "Last service");
+        $this->pdf->line(10, 29, 190, 29);
+        $this->pdf->SetFont('DejaVu', '', 12);
         $y=42;
         $remdate=strtotime('6 months ago');
         foreach ($removals as $removal){
             $stt=strtotime(substr($removal->lastseen,0,11));
             if ($stt<$remdate){
-                $pdf->text(10,$y,strtoupper($removal->surname) . ", " . $removal->firstname);
-                $pdf->text(150,$y,$removal->lastseen);
+                $this->pdf->text(10,$y,strtoupper($removal->surname) . ", " . $removal->firstname);
+                $this->pdf->text(150,$y,$removal->lastseen);
                 $y=$y+5;
                 if ($y > 280){
-                    $pdf->AddPage('P');
-                    $pdf->SetFont('Helvetica', 'B', 14);
-                    $pdf->text(10, 16, "Name tags not used in over 6 months");
-                    $pdf->text(10, 25, "Name");
-                    $pdf->text(150, 25, "Last service");
-                    $pdf->line(10, 29, 190, 29);
-                    $pdf->SetFont('Helvetica', '', 12);
+                    $this->pdf->AddPage('P');
+                    $this->pdf->SetFont('DejaVu', 'B', 14);
+                    $this->pdf->text(10, 16, "Name tags not used in over 6 months");
+                    $this->pdf->text(10, 25, "Name");
+                    $this->pdf->text(150, 25, "Last service");
+                    $this->pdf->line(10, 29, 190, 29);
+                    $this->pdf->SetFont('DejaVu', '', 12);
                     $y=35;  
                 }
             }
         }
-        $pdf->Output('I','name-tags-removal');
+        $this->pdf->Output('I','name-tags-removal');
         exit;
     }
 
     public function roster(string $id, int $year, int $month, $period=1, $output=null) {
-        $pdf = new Fpdf();
         for ($i=0;$i<$period;$i++){
             $reportdate = date('F Y',strtotime($year . '-' . $month . '-01'));
             $data = $this->getRosterData(date('Y-m',strtotime($year . '-' . $month . '-01')),$id);
             $roster = Roster::find($id);
-            $title = $roster->roster . " (" . $reportdate . ")";
-            $pdf->SetFillColor(0,0,0);
-            $pdf->AddPage('L');
-            $pdf->SetTitle($title);
-            $pdf->SetAutoPageBreak(true, 0);
-            $pdf->SetFont('Helvetica', 'B', 22);
-            $image=url('/') . "/public/church/images/colouredlogo.png";
-            $pdf-> Image($image,10,0,25,25);
-            $pdf->text(40, 12, setting('general.church_name'));
-            $pdf->SetFont('Helvetica', '', 16);
-            $pdf->text(40, 20, $title);
+            $this->title = $roster->roster . " (" . $reportdate . ")";
+            $this->pdf->SetFillColor(0,0,0);
+            $this->pdf->AddPage('L');
+            $this->pdf->SetTitle($this->title);
+            $this->pdf->SetAutoPageBreak(true, 0);
+            $this->pdf->SetFont('DejaVu', 'B', 22);
+            $this->pdf->Image($this->logo,10,0,25,25);
+            $this->pdf->text(40, 12, setting('general.church_name'));
+            $this->pdf->SetFont('DejaVu', '', 16);
+            $this->pdf->text(40, 20, $this->title);
             $xx = 66;
-            $pdf->SetFont('Helvetica', 'B', 12);
+            $this->pdf->SetFont('DejaVu', 'B', 12);
             if (count($data['columns'])==5){
                 $add=0;
             } else {
                 $add=10;
             }
-            $pdf->rect(10,26,280,11,'F');
-            $pdf->SetTextColor(255,255,255);
+            $this->pdf->rect(10,26,280,11,'F');
+            $this->pdf->SetTextColor(255,255,255);
             foreach ($data['columns'] as $week) {
                 $xx=$xx+$add;
-                $pdf->text($xx,33,$week);
+                $this->pdf->text($xx,33,$week);
                 $xx=$xx+44;
             }
-            $pdf->SetTextColor(0,0,0);
+            $this->pdf->SetTextColor(0,0,0);
             $yy = 42;
             $max = 1;
             $first=true;
             foreach ($data['rows'] as $key=>$col) {
-                $pdf->SetFont('Helvetica', 'B', 11);
-                $pdf->text(10,1+$yy,$key);
+                $this->pdf->SetFont('DejaVu', 'B', 11);
+                $this->pdf->text(10,1+$yy,$key);
                 if ($first){
                     $first=false;
                 } else {
-                    $pdf->line(10, $yy-5, 290, $yy-5);
+                    $this->pdf->line(10, $yy-5, 290, $yy-5);
                 }
                 $xx = 22;
-                $pdf->SetFont('Helvetica', '', 10.5);
+                $this->pdf->SetFont('DejaVu', '', 10.5);
                 $max=1;
                 foreach ($col as $kk=>$ii) {
                     if (($kk <> "id") and ($kk<>"extra")){
@@ -839,9 +846,9 @@ class ReportsController extends Controller
                         foreach ($ii as $pp){
                             if ($pp <>"-"){
                                 if (strpos($pp,", ")){
-                                    $pdf->text($xx,1+$yy+$count*5,substr($pp,2+strpos($pp,',')) . " " . substr($pp,0,strpos($pp,',')));
+                                    $this->pdf->text($xx,1+$yy+$count*5,substr($pp,2+strpos($pp,',')) . " " . substr($pp,0,strpos($pp,',')));
                                 } else {
-                                    $pdf->text($xx,1+$yy+$count*5,$pp);
+                                    $this->pdf->text($xx,1+$yy+$count*5,$pp);
                                 }
                                 $count++;
                             }
@@ -863,10 +870,10 @@ class ReportsController extends Controller
             }
         }
         if ($output){
-            $pdf->Output('F', storage_path('app/public/attachments/WMCrosters.pdf'));
+            $this->pdf->Output('F', storage_path('app/public/attachments/WMCrosters.pdf'));
             return;
         } else {
-            $pdf->Output();
+            $this->pdf->Output();
         }
         exit;
     }
@@ -876,77 +883,75 @@ class ReportsController extends Controller
         if (!$stime){
             $stime =  $set->servicetime;
         }
-        $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $title=date("j F Y",strtotime($set->servicedate));
-        $pdf->SetTitle($title . " - " . $set->servicetime);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 18);
-        $logo=url('/') . "/public/church/images/bwidelogo.png";
+        $this->pdf->AddPage('P');
+        $this->title=date("j F Y",strtotime($set->servicedate));
+        $this->pdf->SetTitle($this->title . " - " . $set->servicetime);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 18);
         $song=url('/') . "/public/church/images/song.png";
         $prayer=url('/') . "/public/church/images/prayer.png";
-        $pdf->Image($logo,123,8,77,30);
-        $pdf->rect(19,10,45,7.5,'F');
-        $pdf->SetTextColor(255,255,255);
+        $this->pdf->Image($this->widelogo,123,8,77,30);
+        $this->pdf->rect(19,10,53,7.5,'F');
+        $this->pdf->SetTextColor(255,255,255);
         if ($stime) {
-            $pdf->text(20, 16, $stime . " service");
+            $this->pdf->text(20, 16, $stime . " service");
         }
-        $pdf->SetTextColor(0,0,0);
-        $pdf->SetFont('Helvetica', '', 14);
-        $pdf->text(20, 23, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(20, 32, "Order of service");
-        $pdf->line(20, 35, 195, 35);
+        $this->pdf->SetTextColor(0,0,0);
+        $this->pdf->SetFont('DejaVu', '', 14);
+        $this->pdf->text(20, 23, $this->title);
+        $this->pdf->SetFont('DejaVu', 'B', 14);
+        $this->pdf->text(20, 32, "Order of service");
+        $this->pdf->line(20, 35, 195, 35);
 
         if (isset($set->series_id)){
-            $pdf->rect(70,18,50,16);
-            $pdf->SetFont('Helvetica', 'B', 12);
-            $pdf->text(72,23,"Sermon Series");
-            $pdf->SetFont('Helvetica', '', 10);
+            $this->pdf->rect(75,18,50,16);
+            $this->pdf->SetFont('DejaVu', 'B', 12);
+            $this->pdf->text(77,23,"Sermon Series");
+            $this->pdf->SetFont('DejaVu', '', 10);
             $series=Series::find($set->series_id);
-            $pdf->text(72,28,$series->series);
-            $pdf->text(72,32,"Week: " . 1 + (strtotime($set->servicedate) - strtotime($series->startingdate)) / 604800);
+            $this->pdf->text(77,28,$series->series);
+            $this->pdf->text(77,32,"Week: " . 1 + (strtotime($set->servicedate) - strtotime($series->startingdate)) / 604800);
         }
         $items=$set->setitems;
         $yy=44;
         $projectarray=['Bible re','Communio','Benedict','Lords Pr'];
         foreach ($items as $item){
             $item->extra = $this->GetExtraInfo($item);
-            $pdf->SetFont('Helvetica', '', 14);
+            $this->pdf->SetFont('DejaVu', '', 14);
             if (!$item->setitemable_id){
                 if (in_array(substr($item->note,0,8),$projectarray)){
-                    $pdf->Image($prayer,10,$yy-4.5,8);
+                    $this->pdf->Image($prayer,10,$yy-4.5,8);
                 }
-                $pdf->text(20, $yy, $item->note);
-                $width=$pdf->GetStringWidth($item->note);
-                $pdf->SetFont('Helvetica', '', 10);
-                $pdf->text(23+$width,$yy,$item->extra);
+                $this->pdf->text(20, $yy, $item->note);
+                $width=$this->pdf->GetStringWidth($item->note);
+                $this->pdf->SetFont('DejaVu', '', 10);
+                $this->pdf->text(23+$width,$yy,$item->extra);
             } else {
                 if ($item->setitemable_type=="song"){
-                    $pdf->Image($song,12,$yy-4,4);
-                    $pdf->SetFont('Helvetica', 'B', 14);
+                    $this->pdf->Image($song,12,$yy-4,4);
+                    $this->pdf->SetFont('DejaVu', 'B', 14);
                 } elseif ($item->setitemable_type=="prayer"){
-                    $pdf->Image($prayer,10,$yy-4.5,8);
+                    $this->pdf->Image($prayer,10,$yy-4.5,8);
                 }
                 if ($item->note){
-                    $pdf->text(20, $yy, $item->note);
-                    $width=$pdf->GetStringWidth($item->note);
-                    $pdf->SetFont('Helvetica', '', 10);
-                    if (23+$width+$pdf->GetStringWidth($item->extra)>200){
+                    $this->pdf->text(20, $yy, $item->note);
+                    $width=$this->pdf->GetStringWidth($item->note);
+                    $this->pdf->SetFont('DejaVu', '', 10);
+                    if (23+$width+$this->pdf->GetStringWidth($item->extra)>200){
                         $yy=$yy+5;
-                        $pdf->text(30,$yy,$item->extra);
+                        $this->pdf->text(30,$yy,$item->extra);
                     } else {
-                        $pdf->text(23+$width,$yy,$item->extra);
+                        $this->pdf->text(23+$width,$yy,$item->extra);
                     }
                 } else {
-                    $pdf->text(20, $yy, $item->setitemable->title);
-                    $width=$pdf->GetStringWidth($item->setitemable->title);
-                    $pdf->SetFont('Helvetica', '', 10);
-                    if (23+$width+$pdf->GetStringWidth($item->extra)>200){
+                    $this->pdf->text(20, $yy, $item->setitemable->title);
+                    $width=$this->pdf->GetStringWidth($item->setitemable->title);
+                    $this->pdf->SetFont('DejaVu', '', 10);
+                    if (23+$width+$this->pdf->GetStringWidth($item->extra)>200){
                         $yy=$yy+5;
-                        $pdf->text(30,$yy,$item->extra);
+                        $this->pdf->text(30,$yy,$item->extra);
                     } else {
-                        $pdf->text(23+$width,$yy,$item->extra);
+                        $this->pdf->text(23+$width,$yy,$item->extra);
                     }
                 }
             }
@@ -964,21 +969,21 @@ class ReportsController extends Controller
         $yy=258;
         if (count($rosternotes)){
             $yy=$yy-5*count($rosternotes);
-            $pdf->rect(18,$yy-6,140,5*count($rosternotes)+9);
-            $pdf->SetFont('Helvetica', 'B', 12);
-            $pdf->text(20, $yy, "Roster");
-            $pdf->SetFont('Helvetica', '', 11);
+            $this->pdf->rect(18,$yy-6,140,5*count($rosternotes)+9);
+            $this->pdf->SetFont('DejaVu', 'B', 12);
+            $this->pdf->text(20, $yy, "Roster");
+            $this->pdf->SetFont('DejaVu', '', 11);
             foreach ($rosternotes as $rosternote){
                 $yy=$yy+5;
-                $pdf->text(20, $yy, $rosternote);
+                $this->pdf->text(20, $yy, $rosternote);
             }
         }
-        $pdf->rect(18,$yy+5,180,27);
-        $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->text(20,$yy+9,"Feedback or suggestions");
-        $pdf->SetFont('Helvetica', '', 11);
-        $pdf->text(72,$yy+9,"(anything we can do to improve for next time)");
-        $pdf->Output('I',$filename);
+        $this->pdf->rect(18,$yy+5,180,27);
+        $this->pdf->SetFont('DejaVuCond', 'B', 12);
+        $this->pdf->text(20,$yy+9,"Feedback or suggestions");
+        $this->pdf->SetFont('DejaVuCond', '', 11);
+        $this->pdf->text(75,$yy+9,"(anything we can do to improve for next time)");
+        $this->pdf->Output('I',$filename);
         exit;
     }
     
@@ -998,19 +1003,17 @@ class ReportsController extends Controller
     public function song($id)
     {
         $song = Song::find($id);
-        $pdf = new Fpdf;
-        // define('FPDF_FONTPATH','/public/church/fonts/');
-        $pdf->AddPage('P');
-        $pdf->SetTitle($song->title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Courier', 'B', 14);
-        $pdf->text(20, 16, utf8_decode($song->title));
-        $pdf->SetFont('Courier', 'I', 10);
-        $pdf->text(20, 22, utf8_decode($song->author));
-        $pdf->SetFont('Courier', '', 10);
-        $pdf->text(185, 16, 'Key: ' . $song->key);
-        $pdf->text(190, 22, $song->tempo);
-        $pdf->line(20, 26, 200, 26);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetTitle($song->title);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('Courier', 'B', 14);
+        $this->pdf->text(20, 16, $song->title);
+        $this->pdf->SetFont('Courier', 'I', 10);
+        $this->pdf->text(20, 22, $song->author);
+        $this->pdf->SetFont('Courier', '', 10);
+        $this->pdf->text(185, 16, 'Key: ' . $song->key);
+        $this->pdf->text(190, 22, $song->tempo);
+        $this->pdf->line(20, 26, 200, 26);
         $x=20;
         $lines=explode(PHP_EOL, $song->lyrics);
         $y=34;
@@ -1020,11 +1023,11 @@ class ReportsController extends Controller
             if (strpos($line, '}')) {
                 $line=str_replace('{', '', $line);
                 $line=str_replace('}', '', $line);
-                $pdf->SetFont('Courier', 'B', 12);
-                $pdf->SetTextColor(160, 160, 160);
+                $this->pdf->SetFont('Courier', 'B', 12);
+                $this->pdf->SetTextColor(160, 160, 160);
                 $y=$y+3.5;
                 $shortline = substr($line, 0, 2);
-                $pdf->text(13, $y, $shortline);
+                $this->pdf->text(13, $y, $shortline);
                 $shortline=trim($shortline);
                 $y=$y-3.5;
                 $vos="";
@@ -1038,18 +1041,18 @@ class ReportsController extends Controller
                 }
                 if (strlen($vos)>6){
                     if (substr($vos,7,1)==" "){
-                        $pdf->text(170, $y+7, substr($vos,0,7));
-                        $pdf->text(170, $y+12, substr(trim($vos," "),7));
+                        $this->pdf->text(170, $y+7, substr($vos,0,7));
+                        $this->pdf->text(170, $y+12, substr(trim($vos," "),7));
                     } else {
-                        $pdf->text(170, $y+7, substr($vos,0,6));
-                        $pdf->text(170, $y+12, substr(trim($vos," "),6));
+                        $this->pdf->text(170, $y+7, substr($vos,0,6));
+                        $this->pdf->text(170, $y+12, substr(trim($vos," "),6));
                     }
                 } else {
-                    $pdf->text(170, $y+7, $vos);
+                    $this->pdf->text(170, $y+7, $vos);
                 }
-                $pdf->SetTextColor(0, 0, 0);
+                $this->pdf->SetTextColor(0, 0, 0);
             } else {
-                $pdf->SetFont('Courier', '', 12);
+                $this->pdf->SetFont('Courier', '', 12);
                 if (strpos($line, ']')) {
                     $y=$y+3.5;
                 }
@@ -1061,63 +1064,63 @@ class ReportsController extends Controller
                     if ($line[$i]=='[') {
                         $chordsub=substr($line, $i);
                         $chor=substr($chordsub, 1, -1+strpos($chordsub, ']'));
-                        $minlen=$pdf->GetStringWidth($chor);
+                        $minlen=$this->pdf->GetStringWidth($chor);
                         $chordline.=$chor;
-                        $pdf->SetFont('Courier', '', 12);
+                        $this->pdf->SetFont('Courier', '', 12);
                         $i=$i+strlen($chor)+1;
                     } else {
-                        $pdf->text($x, $y, $line[$i]);
+                        $this->pdf->text($x, $y, $line[$i]);
                         if ($minlen ==0){
                             $chordline.=" ";
                         } else {
-                            $minlen=$minlen-$pdf->GetStringWidth(" ");
+                            $minlen=$minlen-$this->pdf->GetStringWidth(" ");
                             if ($minlen < 0){
                                 $minlen=0;
                             }
                         }
-                        $x=$x+$pdf->GetStringWidth($line[$i]);
+                        $x=$x+$this->pdf->GetStringWidth($line[$i]);
                     }
                 }
-                $pdf->SetFont('Courier', 'B', 12);
-                $pdf->text(20, $y-3.5, $chordline);
-                $pdf->SetFont('Courier', '', 12);
+                $this->pdf->SetFont('Courier', 'B', 12);
+                $this->pdf->text(20, $y-3.5, $chordline);
+                $this->pdf->SetFont('Courier', '', 12);
             }
             $y=$y+3.5;
         }
         
         // Chord list
-        $pdf->SetTextColor(0,0,0);
+        $this->pdf->SetTextColor(0,0,0);
         $y=26;
         $chords = $this->_getChords($song->lyrics);
         if (is_array($chords)){
             foreach ($chords as $chord) {
-                $pdf->SetFont('Courier', '', 7);
+                $this->pdf->SetFont('Courier', '', 7);
                 $dbchord = Chord::where('chord',$chord)->get();
                 $x1=190;
                 if (count($dbchord)) {
-                    $pdf->setxy(180,$y);
-                    $pdf->SetFont('Courier', 'B', 10);
-                    $pdf->cell(30,5,$chord,0,0,'C');
+                    $this->pdf->setxy(180,$y);
+                    $this->pdf->SetFont('Courier', 'B', 10);
+                    $this->pdf->cell(30,5,$chord,0,0,'C');
                     if ($dbchord[0]->fret==0){
-                        $pdf->line(190,$y+5,200,$y+5);
+                        $this->pdf->line(190,$y+5,200,$y+5);
                         $f=0;
                     } else {
                         $f=1;
-                        $pdf->text(202,$y+8,$dbchord[0]->fret);
+                        $this->pdf->text(202,$y+8,$dbchord[0]->fret);
                     }
                     for ($i=6;$i>0;$i--){
                         $svar="s" . $i;
                         if ($dbchord[0]->{$svar}=="x"){
-                            $pdf->SetDrawColor(175,175,175);
-                            $pdf->line($x1,$y+5,$x1,$y+17);
+                            $this->pdf->SetDrawColor(175,175,175);
+                            $this->pdf->line($x1,$y+5,$x1,$y+17);
                         } else {
-                            $pdf->SetDrawColor(0,0,0);
-                            $pdf->line($x1,$y+5,$x1,$y+17);
+                            $this->pdf->SetDrawColor(0,0,0);
+                            $this->pdf->line($x1,$y+5,$x1,$y+17);
                         }
-                        $pdf->SetDrawColor(0,0,0);
+                        $this->pdf->SetDrawColor(0,0,0);
                         $x1=$x1+2;
                         if ($i<6){
-                            $pdf->line(190,2+$y+$i*3,200,2+$y+$i*3);
+                            $this->pdf->line(190,2+$y+$i*3,200,2+$y+$i*3);
                         }
                     }
                     $x=188.5;
@@ -1132,43 +1135,39 @@ class ReportsController extends Controller
                     foreach ($cdata as $cd){
                         if ($cd !== 'x'){
                             $cd = $cd - $dbchord[0]->fret + $f;
-                            $pdf->SetFont('Courier', 'B', 14);
+                            $this->pdf->SetFont('Courier', 'B', 14);
                             if ($cd > 0){
-                                $pdf->SetFont('Courier', 'B', 20);
+                                $this->pdf->SetFont('Courier', 'B', 20);
                                 $circle=url('/') . "/public/church/images/circle.png";
-                                $pdf->Image($circle,$x+0.5,$y+2.5+3*$cd,2,2);
-                                $pdf->SetFont('Courier', 'B', 14);
+                                $this->pdf->Image($circle,$x+0.5,$y+2.5+3*$cd,2,2);
+                                $this->pdf->SetFont('Courier', 'B', 14);
                             }
-                            $pdf->SetFont('Courier', '', 7);
+                            $this->pdf->SetFont('Courier', '', 7);
                         }
                         $x=$x+2;
                     }
                 } else {
-                    $pdf->SetTextColor(125,125,125);
-                    $pdf->setxy(180,$y);
-                    $pdf->SetFont('Courier', 'B', 10);
-                    $pdf->cell(30,5,$chord,0,0,'C');            
-                    $pdf->SetTextColor(0,0,0);
-                    $pdf->SetDrawColor(125,125,125);
+                    $this->pdf->SetTextColor(125,125,125);
+                    $this->pdf->setxy(180,$y);
+                    $this->pdf->SetFont('Courier', 'B', 10);
+                    $this->pdf->cell(30,5,$chord,0,0,'C');            
+                    $this->pdf->SetTextColor(0,0,0);
+                    $this->pdf->SetDrawColor(125,125,125);
                     for ($i=1;$i<7;$i++){
-                        $pdf->line($x1,$y+5,$x1,$y+17);
+                        $this->pdf->line($x1,$y+5,$x1,$y+17);
                         $x1=$x1+2;
                         if ($i<6){
-                            $pdf->line(190,2+$y+$i*3,200,2+$y+$i*3);
+                            $this->pdf->line(190,2+$y+$i*3,200,2+$y+$i*3);
                         }
                     }
-                    $pdf->SetFillColor(0,0,0);
+                    $this->pdf->SetFillColor(0,0,0);
                 }
                 $y=$y+18;
             }
         }
         $filename=Str::slug($song->title, "-");
-        $pdf->Output('I',$filename);
+        $this->pdf->Output('I',$filename);
         exit;
-    }
-
-    public function unicodefix($txt){
-        return mb_convert_encoding($txt, 'UTF-8', 'ISO-8859-1');
     }
     
     public function onTransposeUp($recordId){
@@ -1266,29 +1265,27 @@ class ReportsController extends Controller
         }
         $hours=['07h00','08h00','09h00','10h00','11h00','12h00','13h00','14h00','15h00','16h00','17h00','18h00','19h00','20h00','21h00','22h00'];
         $venue=Venue::find($id);
-        $title = $venue->venue . " Bookings: " . date('j F',strtotime($days[1])) . " - " . date('j F Y',strtotime($days[7]));
-        $pdf = new Fpdf;
-        $pdf->SetFillColor(190,190,190);
-        $pdf->AddPage('P');
-        $pdf->SetTitle($title);
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Arial', 'B', 22);
-        $image=url('/') . "/public/church/images/colouredlogo.png";
-        $pdf->Image($image,10,0,25,25);
-        $pdf->text(40, 12, setting('general.church_name'));
-        $pdf->SetFont('Arial', '', 16);
-        $pdf->text(40, 20, $title);
-        $pdf->SetFont('Arial', 'B', 12);
+        $this->title = $venue->venue . " Bookings: " . date('j F',strtotime($days[1])) . " - " . date('j F Y',strtotime($days[7]));
+        $this->pdf->SetFillColor(190,190,190);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('Arial', 'B', 22);
+        $this->pdf->Image($this->logo,10,0,25,25);
+        $this->pdf->text(40, 12, setting('general.church_name'));
+        $this->pdf->SetFont('Arial', '', 16);
+        $this->pdf->text(40, 20, $this->title);
+        $this->pdf->SetFont('Arial', 'B', 12);
         $yy=40;
         foreach ($hours as $hh){
             if ($hh<>$hours[count($hours)-1]){
-                $pdf->line(10,$yy-6,204,$yy-6);
-                $pdf->text(13,$yy,$hh);
+                $this->pdf->line(10,$yy-6,204,$yy-6);
+                $this->pdf->text(13,$yy,$hh);
                 $yy=$yy+17;
             }
         }
-        $pdf->line(10,$yy-6,204,$yy-6);
-        $pdf->line(10,34,10,289);
+        $this->pdf->line(10,$yy-6,204,$yy-6);
+        $this->pdf->line(10,34,10,289);
         $xx=35;
         foreach ($days as $dd){
             $bookings=Diaryentry::with('diarisable')->where(DB::raw('substr(diarydatetime, 1, 10)'),$dd)->where('venue_id',$id)->get();
@@ -1301,36 +1298,36 @@ class ReportsController extends Controller
                 $eh=substr($end,0,2);
                 $em=substr($end,3,2);
                 $ey=array_search($eh."h00",$hours) * 17 + 40 + intval($em)/60 * 17 - 6;
-                $pdf->rect($xx-6,$sy,25,$ey-$sy,'DF');
-                $pdf->setxy($xx-6,$sy+1);
-                $pdf->SetFont('Arial', '', 8);
+                $this->pdf->rect($xx-6,$sy,25,$ey-$sy,'DF');
+                $this->pdf->setxy($xx-6,$sy+1);
+                $this->pdf->SetFont('Arial', '', 8);
                 if (($booking->diarisable_id) and (isset($booking->diarisable->tenant))){
                     $msg=$booking->diarisable->tenant;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell(25,4,$msg,0,'C');
+                    $this->pdf->multicell(25,4,$msg,0,'C');
                 } elseif (($booking->diarisable_id) and (isset($booking->diarisable->groupname))){
                     $msg=$booking->diarisable->groupname;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell(25,4,$msg,0,'C');
+                    $this->pdf->multicell(25,4,$msg,0,'C');
                 } elseif (($booking->diarisable_id) and (isset($booking->diarisable->event))){
                     $msg=$booking->diarisable->event;
                     if ($booking->details){
                         $msg.=" (" . $booking->details . ")";
                     }
-                    $pdf->multicell(25,4,$msg,0,'C');
+                    $this->pdf->multicell(25,4,$msg,0,'C');
                 }
-                $pdf->SetFont('Arial', 'B', 12);
+                $this->pdf->SetFont('Arial', 'B', 12);
             }
-            $pdf->line($xx-6,34,$xx-6,289);
-            $pdf->text($xx,32,date('D j',strtotime($dd)));
+            $this->pdf->line($xx-6,34,$xx-6,289);
+            $this->pdf->text($xx,32,date('D j',strtotime($dd)));
             $xx=$xx+25;
         }
-        $pdf->line($xx-6,34,$xx-6,289);
-        $pdf->Output();
+        $this->pdf->line($xx-6,34,$xx-6,289);
+        $this->pdf->Output();
         exit;
     }
 

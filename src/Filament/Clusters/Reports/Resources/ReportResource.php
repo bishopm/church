@@ -1,9 +1,9 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Admin\Resources;
+namespace Bishopm\Church\Filament\Clusters\Reports\Resources;
 
-use Bishopm\Church\Filament\Clusters\Admin;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\Pages;
+use Bishopm\Church\Filament\Clusters\Reports;
+use Bishopm\Church\Filament\Clusters\Reports\Resources\ReportResource\Pages;
 use Bishopm\Church\Models\Report;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,7 +20,7 @@ class ReportResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $cluster = Admin::class;
+    protected static ?string $cluster = Reports::class;
 
     public static function form(Form $form): Form
     {

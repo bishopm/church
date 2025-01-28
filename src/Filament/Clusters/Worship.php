@@ -6,6 +6,8 @@ use Filament\Clusters\Cluster;
 
 class Worship extends Cluster
 {
+    protected static ?int $navigationSort = -3;
+
     protected static ?string $navigationIcon = 'heroicon-c-musical-note';
 
     public static function shouldRegisterNavigation(): bool

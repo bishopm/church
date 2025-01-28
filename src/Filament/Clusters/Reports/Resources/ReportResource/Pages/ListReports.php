@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Reports\Resources\ReportResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Admin\Resources\ReportResource;
+use Bishopm\Church\Filament\Clusters\Reports\Resources\ReportResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

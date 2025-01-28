@@ -4,11 +4,11 @@ namespace Bishopm\Church\Filament\Clusters;
 
 use Filament\Clusters\Cluster;
 
-class Website extends Cluster
+class Reports extends Cluster
 {
-    protected static ?int $navigationSort = -4;
+    protected static ?int $navigationSort = -7;
 
-    protected static ?string $navigationIcon = 'heroicon-c-globe-alt';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -18,7 +18,7 @@ class Website extends Cluster
     public static function canAccess(): bool 
     { 
         $user=auth()->user();
-        if (($user->can('view-any Post')) or (($user->can('view-any Series'))) or (($user->can('view-any Sermon')))){
+        if ($user->can('view-any Individual')){
             return true;
         } else {
             return false;

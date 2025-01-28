@@ -25,6 +25,7 @@ use Bishopm\Church\Filament\Widgets\MeasuresChart;
 use Bishopm\Church\Filament\Widgets\NewMembers;
 use Bishopm\Church\Filament\Widgets\StatsOverview;
 use Bishopm\Church\Filament\Widgets\TasksToDo;
+use Filament\Navigation\NavigationItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -73,6 +74,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Reports')
+                    ->url(url('/') . '/admin/reports/reports')
+                    ->icon('heroicon-o-document')
             ])
             ->userMenuItems([
                 MenuItem::make()

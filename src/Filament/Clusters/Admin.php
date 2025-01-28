@@ -7,6 +7,8 @@ use Filament\Clusters\Cluster;
 class Admin extends Cluster
 {
     protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
+    
+    protected static ?int $navigationSort = -10;
 
     public static function shouldRegisterNavigation(): bool
     {

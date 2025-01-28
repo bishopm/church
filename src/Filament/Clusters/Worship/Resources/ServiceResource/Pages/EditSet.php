@@ -20,7 +20,7 @@ class EditSet extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        $this->indiv = Individual::find(setting('worship.worship_email'));
+        $this->indiv = Individual::find(setting('admin.church_secretary'));
         if ($this->indiv){
             $this->notifyLabel=$this->indiv->firstname;
         } else {

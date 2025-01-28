@@ -47,6 +47,9 @@ class Settings extends BaseSettings
                             Select::make('admin.church_tenant')->label('Name of venue user for internal venue bookings')
                                 ->options(Tenant::all()->sortBy('tenant')->pluck('tenant', 'id'))
                                 ->searchable(),
+                            Select::make('admin.church_secretary')->label('Church secretary')
+                                ->options(Individual::all()->sortBy('surname')->pluck('fullname', 'id'))
+                                ->searchable(),
                         ]),
                     Tabs\Tab::make('Automation')
                         ->columns(2)
@@ -157,9 +160,6 @@ class Settings extends BaseSettings
                     Tabs\Tab::make('Worship')
                         ->columns(2)
                         ->schema([
-                            Select::make('worship.worship_email')->label('Send worship services to this person')
-                            ->options(Individual::all()->sortBy('surname')->pluck('fullname', 'id'))
-                            ->searchable(),
                             KeyValue::make('worship.order_of_service')->columnSpanFull()                            
                         ]),
                 ]),

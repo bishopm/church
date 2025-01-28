@@ -496,7 +496,7 @@ function AddFont($family, $style='', $file='', $uni=false)
 		}
 		if (!isset($type) ||  !isset($name) || $originalsize != $ttfstat['size']) {
 			$ttffile = $ttffilename;
-//			require_once($this->fontpath.'unifont/ttfonts.php');
+			require_once($this->fontpath.'unifont/ttfonts.php');
 			$ttf = new TTFontFile();
 			$ttf->getMetrics($ttffile);
 			$cw = $ttf->charWidths;
@@ -1894,7 +1894,7 @@ protected function _putfonts()
 		// TrueType embedded SUBSETS or FULL
 		else if ($type=='TTF') {
 			$this->fonts[$k]['n']=$this->n+1;
-//			require_once($this->fontpath.'unifont/ttfonts.php');
+			require_once($this->fontpath.'unifont/ttfonts.php');
 			$ttf = new TTFontFile();
 			$fontname = 'MPDFAA'.'+'.$font['name'];
 			$subset = $font['subset'];

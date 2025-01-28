@@ -616,20 +616,9 @@ class ReportsController extends Controller
         $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
         $title = $meeting->group->groupname  . " minutes";
         $pdf->SetTitle($title);
-        $page=1;
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
-        $pdf->SetFont('Helvetica', 'B', 22);
-        $image=url('/') . "/public/church/images/blacklogo.png";
-        $pdf->Image($image,10,5,25,25);
-        $pdf->text(40, 15, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 21, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->line(10, 29, 200, 29);
-        $pdf->SetFont('Helvetica', '', 11);
-        $pdf->text(40, 27,'Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")");
-        $pdf->text(185,27,"page " . $page);
+        $page=0;
+        $subtitle='Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")";
+        $pdf=$this->report_header($pdf,$page,$title,$subtitle);       
         $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
         $present = "Present: ";
         $y=33;
@@ -647,7 +636,7 @@ class ReportsController extends Controller
             $sub=1;
             if ((isset($agenda->minute)) or (count($agenda->tasks))){
                 if ($y>260){
-                    $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+                    $pdf=$this->report_header($pdf,$page,$title,$subtitle);
                     $page++;
                     $y=35;
                 }
@@ -663,7 +652,7 @@ class ReportsController extends Controller
                 }
                 foreach ($agenda->tasks as $task){
                     if ($y>260){
-                        $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+                        $pdf=$this->report_header($pdf,$page,$title,$subtitle);
                         $page++;
                         $y=35;
                     }
@@ -687,7 +676,7 @@ class ReportsController extends Controller
         }
         $pdf->SetFont('Helvetica', '', 11);
         if ($y>260){
-            $pdf=$this->minute_header($pdf,$page,$title,$meeting);
+            $pdf=$this->report_header($pdf,$page,$title,$subtitle);
             $page++;
             $y=35;
         } else {
@@ -698,7 +687,7 @@ class ReportsController extends Controller
         $pdf->Output();
     }
 
-    private function minute_header($pdf,$page,$title,$meeting){
+    private function report_header($pdf,$page,$title,$subtitle=""){
         $page++;
         $pdf->AddPage('P');
         $pdf->SetAutoPageBreak(true, 0);
@@ -706,28 +695,74 @@ class ReportsController extends Controller
         $image=url('/') . "/public/church/images/blacklogo.png";
         $pdf->Image($image,10,5,25,25);
         $pdf->text(40, 15, setting('general.church_name'));
-        $pdf->SetFont('Helvetica', '', 16);
-        $pdf->text(40, 21, $title);
-        $pdf->SetFont('Helvetica', 'B', 14);
         $pdf->line(10, 29, 200, 29);
+        if ($subtitle==""){
+            $pdf->SetFont('Helvetica', '', 18);
+            $pdf->text(40, 23, $title);
+        } else {
+            $pdf->SetFont('Helvetica', '', 16);
+            $pdf->text(40, 21, $title);
+            $pdf->SetFont('Helvetica', '', 11);
+            $pdf->text(40, 27,$subtitle);
+        }
         $pdf->SetFont('Helvetica', '', 11);
-        $pdf->text(40, 27,'Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")");
-        $pdf->text(185,27,"page " . $page);
+        if ($page>1){
+            $pdf->text(185,27,"page " . $page);
+        }
         return $pdf;
+    }
+
+    public function pg_names(){
+        $names=Individual::where('giving','>',0)->orderBy('surname')->whereNull('deleted_at')->get();
+        $pdf = new Fpdf;
+        $page=0;
+        $title="Planned givers by name";
+        $pdf=$this->report_header($pdf,$page,$title);
+        $y=35;
+        foreach ($names as $name){
+            if ($y>280){
+                $page++;
+                $pdf=$this->report_header($pdf,$page,$title);
+                $y=35;
+            }
+            $pdf->text(10,$y,$this->unicodefix($name->surname) . ", " . $this->unicodefix($name->firstname) . " (" . $name->giving . ")");
+            $y=$y+5;
+        }
+        $pdf->Output('I','planned-giving-names');
+    }
+
+    public function pg_numbers(){
+        $names=Individual::where('giving','>',0)->orderBy('giving','ASC')->whereNull('deleted_at')->get();
+        $pdf = new Fpdf;
+        $page=0;
+        $title="Planned givers by number";
+        $pdf=$this->report_header($pdf,$page,$title);
+        $y=35;
+        foreach ($names as $name){
+            if ($y>280){
+                $page++;
+                $pdf=$this->report_header($pdf,$page,$title);
+                $y=35;
+            }
+            $pdf->text(10,$y,$name->giving);
+            $pdf->text(17,$y,$name->surname . ", " . $name->firstname);
+            $y=$y+5;
+        }
+        $pdf->Output('I','planned-giving-names');
     }
 
     public function removenames(){
         $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
         $pdf = new Fpdf;
-        $pdf->AddPage('P');
-        $pdf->SetAutoPageBreak(true, 0);
+        $page=0;
+        $title="Name tags not used in over 6 months";
+        $pdf=$this->report_header($pdf,$page,$title);
         $pdf->SetFont('Helvetica', 'B', 14);
-        $pdf->text(10, 16, "Name tags not used in over 6 months");
-        $pdf->text(10, 25, "Name");
-        $pdf->text(150, 25, "Last service");
+        $pdf->text(10, 35, "Name");
+        $pdf->text(150, 35, "Last service");
         $pdf->line(10, 29, 190, 29);
         $pdf->SetFont('Helvetica', '', 12);
-        $y=35;
+        $y=42;
         $remdate=strtotime('6 months ago');
         foreach ($removals as $removal){
             $stt=strtotime(substr($removal->lastseen,0,11));
@@ -882,35 +917,10 @@ class ReportsController extends Controller
                 if (in_array(substr($item->note,0,8),$projectarray)){
                     $pdf->Image($prayer,10,$yy-4.5,8);
                 }
-                /*if ($item->note == "Notices"){
-                    $notices = Notice::where('servicedate',$set->servicedate)->get();
-                    $pdf->text(20, $yy, "Notices");
-                    $pdf->SetFont('Helvetica', '', 10);
-                    $noticesy = $yy;
-                    foreach ($notices as $ndx => $notice){
-                        $items = true;
-                        if ($ndx < 1) {
-                            $pdf->text(38,$yy," (* indicates that there is a slide to display)");
-                        }
-                        $yy=$yy+5;
-                        if ($notice->slide == 1){
-                            $pdf->text(21,$yy+1.5,"*");
-                        }
-                        $pdf->setxy(23,$yy-2);
-                        $pdf->multicell(0, 4, 1+$ndx . ". " . $notice->details, 0, 'L');
-                        $yy = $pdf->gety()-4;
-                        $noticefy = $yy;
-                    }
-                    if (isset($noticefy)){
-                        $pdf->rect(18,$noticesy-5,184,$noticefy-$noticesy+9);
-                        $yy=$yy+2;   
-                    }
-                } else {*/
                 $pdf->text(20, $yy, $item->note);
                 $width=$pdf->GetStringWidth($item->note);
                 $pdf->SetFont('Helvetica', '', 10);
                 $pdf->text(23+$width,$yy,$item->extra);
-                //}
             } else {
                 if ($item->setitemable_type=="song"){
                     $pdf->Image($song,12,$yy-4,4);
@@ -1155,6 +1165,10 @@ class ReportsController extends Controller
         $filename=Str::slug($song->title, "-");
         $pdf->Output('I',$filename);
         exit;
+    }
+
+    public function unicodefix($txt){
+        return mb_convert_encoding($txt, 'UTF-8', 'ISO-8859-1');
     }
     
     public function onTransposeUp($recordId){

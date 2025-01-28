@@ -13,6 +13,8 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Table;
 
 class MeetingResource extends Resource
@@ -62,6 +64,7 @@ class MeetingResource extends Resource
                             foreach ($group->individuals as $indiv){
                                 $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
                             }
+                            asort($data);
                             return $data;
                         }
                     })
@@ -98,9 +101,11 @@ class MeetingResource extends Resource
                 Tables\Columns\IconColumn::make('calendar')
                     ->boolean(),
             ])
-            ->defaultSort('meetingdatetime','DESC')
+            ->defaultSort('meetingdatetime','ASC')
             ->filters([
-                //
+                Filter::make('hide_older_meetings')
+                ->query(fn (Builder $query): Builder => $query->where('meetingdatetime', '>', date('Y-m-d H:i:00',strtotime('14 days ago'))))
+                ->default()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

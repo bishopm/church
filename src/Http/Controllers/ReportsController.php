@@ -616,7 +616,7 @@ class ReportsController extends Controller
         exit;
     }
 
-    public function minutes($id) {
+    public function minutes($id, $email="") {
         $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
         if (isset($meeting->group)){
             $this->title = $meeting->group->groupname  . " minutes";
@@ -698,7 +698,11 @@ class ReportsController extends Controller
         }
         $this->pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
         $this->pdf->rect(8,$y-2,194,12);
-        $this->pdf->Output();
+        if (!$email){
+            $this->pdf->Output();
+        } else {
+            return $this->pdf->Output('S');
+        }
     }
 
     private function report_header(){

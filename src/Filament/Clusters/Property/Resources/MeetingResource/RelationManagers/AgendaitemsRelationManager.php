@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\RelationManagers;
 
 use Bishopm\Church\Models\Group;
+use Bishopm\Church\Models\Individual;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -48,6 +49,9 @@ class AgendaitemsRelationManager extends RelationManager
                                 foreach ($group->individuals as $indiv){
                                     $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
                                 }
+                                $secretary=Individual::find(setting('admin.church_secretary'));
+                                $data[$secretary->id]=$secretary->firstname . " " . $secretary->surname;
+                                asort($data);
                                 return $data;
                             })
                             ->required(),

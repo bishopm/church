@@ -261,7 +261,6 @@ class IndividualResource extends Resource
     }
 
     public static function sendEmail($data, $indiv){
-        $data['url'] = "https://westvillemethodist.co.za";
         $data['firstname'] = $indiv['firstname'];
         if ($indiv['email']){
             Mail::to($indiv['email'])->queue(new ChurchMail($data));

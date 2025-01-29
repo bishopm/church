@@ -45,7 +45,7 @@ class EditMeeting extends EditRecord
         $count=0;
         foreach ($recipients->individuals as $indiv){
             $data['firstname'] = $indiv->firstname;
-            if ($indiv->email=="michael@westvillemethodist.co.za"){
+            if ($indiv->email){
                 Mail::to($indiv->email)->queue(new ChurchMail($data));
                 $count++;
             }

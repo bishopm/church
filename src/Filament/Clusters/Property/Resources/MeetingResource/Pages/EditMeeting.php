@@ -6,6 +6,7 @@ use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Meeting;
 use Filament\Actions;
 use Filament\Forms\Components\Textarea;
@@ -43,12 +44,22 @@ class EditMeeting extends EditRecord
         $data['attachdata']=base64_encode($report->minutes($this->record->id,true));
         $data['attachname']="minutes_" . date('ymd',strtotime($meeting->meetingdatetime)) . ".pdf";
         $count=0;
+        $secretary=Individual::find(setting('admin.church_secretary'));
+        $cc=false;
         foreach ($recipients->individuals as $indiv){
             $data['firstname'] = $indiv->firstname;
             if ($indiv->email){
+                if ($indiv->email==$secretary->email){
+                    $cc=true;
+                }
                 Mail::to($indiv->email)->queue(new ChurchMail($data));
                 $count++;
             }
+        }
+        if ((!$cc) and ($secretary)){
+            $data['firstname'] = $secretary->firstname;
+            $data['subject'] = "FYI: " . $data['subject'];
+            Mail::to($indiv->email)->queue(new ChurchMail($data));
         }
         if ($count>1){
             Notification::make('Email sent')->title('Email sent to ' . $count . ' recipients.')->send();

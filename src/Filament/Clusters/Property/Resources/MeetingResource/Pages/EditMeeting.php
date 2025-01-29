@@ -4,11 +4,14 @@ namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pa
 
 use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource;
 use Bishopm\Church\Http\Controllers\ReportsController;
+use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Meeting;
 use Filament\Actions;
 use Filament\Forms\Components\Textarea;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Mail;
 
 class EditMeeting extends EditRecord
 {
@@ -31,22 +34,27 @@ class EditMeeting extends EditRecord
         ];
     }
 
-    public function sendMinutes($data){
-        $message=$data['message'];
+    public function sendMinutes($form){
+        $data['body']=$form['message'];
         $report=new ReportsController();
-        $id=$this->record->id;
-        $meeting=Meeting::find($id);
+        $meeting=Meeting::find($this->record->id);
+        $data['subject']=$meeting->details . " minutes (" . date('j M Y',strtotime($meeting->meetingdatetime)) . ")";
         $recipients = Group::with('individuals')->where('id',$meeting->group_id)->first();
-        $minutespdf=$report->minutes($id);
-        $indivs = array();
-        foreach ($indivs as $id=>$indiv){
-            Mail::send('bishopm.churchsite::mail.general', $dat, function ($msg) use ($dat,$minutespdf) {
-                $msg->from(Settings::get('smtpemail'), Settings::get('church_name'));
-                $msg->subject($dat['title']);
-                $msg->to($dat['email']);
-                $msg->attachData($minutespdf, 'minutes.pdf', ['mime' => 'application/pdf']);
-            });
+        $data['attachdata']=base64_encode($report->minutes($this->record->id,true));
+        $data['attachname']="minutes_" . date('ymd',strtotime($meeting->meetingdatetime)) . ".pdf";
+        $count=0;
+        foreach ($recipients->individuals as $indiv){
+            $data['firstname'] = $indiv->firstname;
+            if ($indiv->email=="michael@westvillemethodist.co.za"){
+                Mail::to($indiv->email)->queue(new ChurchMail($data));
+                $count++;
+            }
         }
-        return "Emails sent: " . $emailcount;
+        if ($count>1){
+            Notification::make('Email sent')->title('Email sent to ' . $count . ' recipients.')->send();
+        } elseif ($count==1) {
+            Notification::make('Email sent')->title('Email sent to 1 recipient.')->send();
+        }
+        return $count;
     }
 }

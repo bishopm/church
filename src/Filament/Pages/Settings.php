@@ -33,6 +33,7 @@ class Settings extends BaseSettings
                         ->schema([
                             TextInput::make('general.church_name')->required(),
                             TextInput::make('general.church_abbreviation')->required(),
+                            TextInput::make('general.church_website'),
                             TextInput::make('general.site_logo'),
                             TextInput::make('general.physical_address'),
                             TextInput::make('general.app_version'),

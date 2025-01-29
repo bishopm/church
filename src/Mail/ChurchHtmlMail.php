@@ -9,7 +9,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class ChurchHtmlMail extends Mailable
 {
@@ -42,7 +41,6 @@ class ChurchHtmlMail extends Mailable
             html: 'church::mail.templates.htmlemail',
             with: [
                 'firstname' => $this->data['firstname'],
-                'url' => $this->data['url'],
                 'subject' => $this->data['subject'],
                 'body' => $this->data['body']
             ],
@@ -59,6 +57,11 @@ class ChurchHtmlMail extends Mailable
         if (array_key_exists('attachment',$this->data)){
             return [
                 Attachment::fromPath(storage_path('app/public/' . $this->data['attachment']))
+            ]; 
+        } elseif ((array_key_exists('attachdata',$this->data)) and ($this->data['attachdata']<>'')){
+            return [
+                Attachment::fromData(fn () => base64_decode($this->data['attachdata']), $this->data['attachname'])
+                ->withMime('application/pdf'),
             ]; 
         } else {
             return [];

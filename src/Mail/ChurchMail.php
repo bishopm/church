@@ -42,7 +42,6 @@ class ChurchMail extends Mailable
             markdown: 'church::mail.templates.email',
             with: [
                 'firstname' => $this->data['firstname'],
-                'url' => $this->data['url'],
                 'subject' => $this->data['subject'],
                 'body' => $this->data['body']
             ],
@@ -59,6 +58,11 @@ class ChurchMail extends Mailable
         if ((array_key_exists('attachment',$this->data)) and ($this->data['attachment']<>'')){
             return [
                 Attachment::fromPath(storage_path($this->data['attachment']))
+            ]; 
+        } elseif ((array_key_exists('attachdata',$this->data)) and ($this->data['attachdata']<>'')){
+            return [
+                Attachment::fromData(fn () => base64_decode($this->data['attachdata']), $this->data['attachname'])
+                ->withMime('application/pdf'),
             ]; 
         } else {
             return [];

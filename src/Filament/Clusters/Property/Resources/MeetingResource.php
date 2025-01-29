@@ -70,6 +70,12 @@ class MeetingResource extends Resource
                     })
                     ->searchable(),
                 Forms\Components\Checkbox::make('calendar')->label('Add to church calendar'),
+                Forms\Components\DateTimePicker::make('nextmeeting')
+                    ->label('Next meeting')
+                    ->default(now())
+                    ->native(true)
+                    ->displayFormat('Y-m-d H:i')
+                    ->format('Y-m-d H:i'),
                 Forms\Components\Select::make('agenda')
                     ->visibleOn('create')
                     ->dehydrated(false)

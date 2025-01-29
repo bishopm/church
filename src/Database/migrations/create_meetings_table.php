@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('group_id');
             $table->json('attendance');
             $table->time('endtime');
+            $table->dateTime('nextmeeting')->nullable();
             $table->tinyInteger('calendar')->nullable()->default(null);
         });
     }

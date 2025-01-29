@@ -11,7 +11,7 @@ return new class extends Migration
         {
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
-            $table->string('description', 255);
+            $table->text('description');
             $table->integer('individual_id');
             $table->integer('agendaitem_id')->nullable();
             $table->date('duedate')->nullable();

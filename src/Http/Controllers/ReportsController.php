@@ -647,23 +647,23 @@ class ReportsController extends Controller
         foreach ($meeting->agendaitems as $agenda){
             $sub=1;
             if ((isset($agenda->minute)) or (count($agenda->tasks))){
-                if ($y>260){
+                if ($y>255){
                     $this->pdf=$this->report_header();
                     $page++;
                     $y=35;
                 }
                 $this->pdf->SetFont('DejaVu', 'B', 14);
-                $this->pdf->text(10,$y,$count . ".  ");
-                $this->pdf->text(18,$y,$agenda->heading);
+                $this->pdf->text(10,$y,$count . ".");
+                $this->pdf->text(20,$y,$agenda->heading);
                 $this->pdf->SetFont('DejaVu', '', 11);
                 $y=$y+5;
                 if ($agenda->minute){
-                    $this->pdf->setxy(17,$y-4);
-                    $this->pdf->MultiCell(183,4.5,$agenda->minute,0,'J');
+                    $this->pdf->setxy(19,$y-4);
+                    $this->pdf->MultiCell(181,4.5,$agenda->minute,0,'J');
                     $y=$this->pdf->getY()+4;
                 }
                 foreach ($agenda->tasks as $task){
-                    if ($y>260){
+                    if ($y>255){
                         $this->pdf=$this->report_header();
                         $page++;
                         $y=35;
@@ -677,8 +677,8 @@ class ReportsController extends Controller
                     $this->pdf->cell(0,0,$task->individual->firstname . " " . $task->individual->surname);
                     $this->pdf->SetFont('DejaVu', '', 11);
                     $this->pdf->text(10,$y,$count . "." . $sub);
-                    $this->pdf->setxy(17,$y-3.5);
-                    $this->pdf->MultiCell(137,4.5,$task->description);
+                    $this->pdf->setxy(19,$y-3.5);
+                    $this->pdf->MultiCell(135,4.5,$task->description);
                     $sub++;
                     $y=$this->pdf->GetY()+3;
                 }
@@ -687,7 +687,7 @@ class ReportsController extends Controller
             }
         }
         $this->pdf->SetFont('DejaVu', '', 11);
-        if ($y>260){
+        if ($y>255){
             $this->pdf=$this->report_header();
             $page++;
             $y=35;
@@ -696,7 +696,12 @@ class ReportsController extends Controller
                 $y=$this->pdf->GetY()+5;
             }
         }
-        $this->pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
+        if ($meeting->nextmeeting){
+            $this->pdf->text(10,$y+15,"Next meeting: " . date('j F Y (H:i)',strtotime($meeting->nextmeeting)));
+            $this->pdf->text(10,$y+5,"Signed on " . date('j M Y',strtotime($meeting->nextmeeting)). " as a true record of the decisions taken at this meeting");
+        } else {
+            $this->pdf->text(10,$y+5,"Signed on                           as a true record of the decisions taken at this meeting");
+        }
         $this->pdf->rect(8,$y-2,194,12);
         if (!$email){
             $this->pdf->Output();

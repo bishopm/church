@@ -22,6 +22,7 @@ use Bishopm\Church\Classes\tFPDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
+use stdClass;
 
 class ReportsController extends Controller
 {
@@ -507,6 +508,12 @@ class ReportsController extends Controller
         $firstday=date('l',strtotime($today.'-01'));
         $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         $rostermodel=Roster::find($id);
+        $servicetimes = setting('general.services');
+        foreach ($servicetimes as $st){
+            if (str_contains($rostermodel->roster,$st)){
+                $servicetime=$st;
+            }
+        }
         $dday = 8 - array_search($firstday,$alldays) + array_search($rostermodel->dayofweek,$alldays);
         if ($dday > 7){
             $dday=$dday-7;
@@ -526,6 +533,13 @@ class ReportsController extends Controller
             ->where('rosters.id',$id)
             ->orderBy('groupname')
             ->get();
+        if ((isset($rostermodel->includepreacher)) and ($rostermodel->includepreacher==1)){
+            $preachergroup=new stdClass();
+            $preachergroup->groupname="Preacher";
+            $preachergroup->id=0;
+            $preachergroup->extrainfo="";
+            $groups[] = $preachergroup;
+        }
         foreach ($groups as $group){
             $data['rows'][$group->groupname]['id']=$group->id;
             if ($group->extrainfo=='yes'){
@@ -533,41 +547,51 @@ class ReportsController extends Controller
             } 
             foreach ($data['columns'] as $col){
                 $fixdate=date('Y-m-d',strtotime($col));
-                $dum=DB::table('rosteritems')->join('rostergroups','rosteritems.rostergroup_id','=','rostergroups.id')
-                    ->join('rosters','rostergroups.roster_id','=','rosters.id')
-                    ->join('groups','rostergroups.group_id','=','groups.id')
-                    ->join('individual_rosteritem','individual_rosteritem.rosteritem_id','rosteritems.id')
-                    ->select('individual_rosteritem.individual_id')
-                    ->where('rosteritems.rosterdate','=',$fixdate)
-                    ->where('groups.id',$group->id)
-                    ->where('rosters.id','=',$id)
-                    ->get();
-                if (count($dum)){
-                    foreach ($dum as $individ) {
-                        if ($individ->individual_id < 0){
-                            $indivextra=Rostergroup::where('roster_id',$id)->where('group_id',$group->id)->first()->extraoptions;
-                            $eoptions=explode(",",$indivextra);
-                            foreach ($eoptions as $ko=>$eo){
-                                if ($individ->individual_id == -1 * (1+$ko)){
-                                    $indivdata=$eo;
+                if ($group->id==0){
+                    $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $st . "/" . date('Y-m-d',strtotime($col));
+                    $response=Http::get($url);
+                    $extra = $response->body();
+                    if ((isset($set->series)) and ($set->series->series !== "")) {
+                        $extra = $extra . " (" . $set->series->series . ")";
+                    }
+                    $data['rows'][$group->groupname][$col][] = $extra;
+                } else {
+                    $dum=DB::table('rosteritems')->join('rostergroups','rosteritems.rostergroup_id','=','rostergroups.id')
+                        ->join('rosters','rostergroups.roster_id','=','rosters.id')
+                        ->join('groups','rostergroups.group_id','=','groups.id')
+                        ->join('individual_rosteritem','individual_rosteritem.rosteritem_id','rosteritems.id')
+                        ->select('individual_rosteritem.individual_id')
+                        ->where('rosteritems.rosterdate','=',$fixdate)
+                        ->where('groups.id',$group->id)
+                        ->where('rosters.id','=',$id)
+                        ->get();
+                    if (count($dum)){
+                        foreach ($dum as $individ) {
+                            if ($individ->individual_id < 0){
+                                $indivextra=Rostergroup::where('roster_id',$id)->where('group_id',$group->id)->first()->extraoptions;
+                                $eoptions=explode(",",$indivextra);
+                                foreach ($eoptions as $ko=>$eo){
+                                    if ($individ->individual_id == -1 * (1+$ko)){
+                                        $indivdata=$eo;
+                                    }
+                                }
+                            } else {
+                                $indiv=Individual::find($individ->individual_id);
+                                if ($indiv){
+                                    $indivdata=$indiv->surname . ', ' . $indiv->firstname;
                                 }
                             }
-                        } else {
-                            $indiv=Individual::find($individ->individual_id);
                             if ($indiv){
-                                $indivdata=$indiv->surname . ', ' . $indiv->firstname;
+                                $data['rows'][$group->groupname][$col][$indiv->id] = $indivdata;
+                            } else {
+                                $data['rows'][$group->groupname][$col][] = "-";
                             }
                         }
-                        if ($indiv){
-                            $data['rows'][$group->groupname][$col][$indiv->id] = $indivdata;
-                        } else {
-                            $data['rows'][$group->groupname][$col][] = "-";
-                        }
+                    } else {
+                        $data['rows'][$group->groupname][$col][] = "-";
                     }
-                } else {
-                    $data['rows'][$group->groupname][$col][] = "-";
+                    unset($dum);
                 }
-                unset($dum);
             }
         }
         return $data;

@@ -161,7 +161,8 @@ class Settings extends BaseSettings
                     Tabs\Tab::make('Worship')
                         ->columns(2)
                         ->schema([
-                            KeyValue::make('worship.order_of_service')->columnSpanFull()                            
+                            KeyValue::make('worship.order_of_service')->columnSpanFull(),
+                            TagsInput::make('worship.set_items'), 
                         ]),
                 ]),
         ];

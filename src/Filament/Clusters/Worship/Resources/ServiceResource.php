@@ -11,8 +11,10 @@ use Bishopm\Church\Models\Setitem;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -118,15 +120,34 @@ class ServiceResource extends Resource
                         })
                     ->addAction(function ($action) {
                         return $action->form([
-                            Forms\Components\MorphToSelect::make('setitemable')->label('Song or prayer')
-                                ->types([
-                                    Forms\Components\MorphToSelect\Type::make(Song::class)
-                                        ->titleAttribute('title'),
-                                    Forms\Components\MorphToSelect\Type::make(Prayer::class)
-                                        ->titleAttribute('title'),
-                                    ])
-                            ->searchable()
-                            ->model(Setitem::class),
+                            Forms\Components\Select::make('setitemable_type')->label('Item type')
+                                ->options([
+                                    'song' => 'Song',
+                                    'prayer' => 'Liturgy',
+                                    'other' => 'Other'
+                                ])
+                                ->default('song')
+                                ->live()
+                                ->selectablePlaceholder(false)
+                                ->afterStateUpdated(function (Set $set) {
+                                    $set('setitemable_id',null);
+                                }),
+                            Forms\Components\Select::make('setitemable_id')
+                                ->label('Item')
+                                ->searchable()
+                                ->selectablePlaceholder(false)
+                                ->options(function (Get $get) {
+                                    $id=$get('setitemable_type');
+                                    if ($id=='song'){
+                                        return Song::orderBy('title')->get()->pluck('title', 'id')->toArray();
+                                    } elseif ($id=='prayer'){
+                                        return Prayer::orderBy('title')->get()->pluck('title', 'id')->toArray();
+                                    } else {
+                                        $dat=setting('worship.set_items');
+                                        asort($dat);
+                                        return array_combine($dat,$dat);
+                                    }
+                            }),
                             Forms\Components\TextInput::make('note'),
                             ])
                             ->after(function ($data, Get $get, Repeater $component) {
@@ -141,6 +162,10 @@ class ServiceResource extends Resource
                                         } else {
                                             $data['note']=$data['note'] . " " . $song->tune;
                                         }
+                                    } elseif ($data['setitemable_type']=="other"){
+                                        $data['note']=$data['setitemable_id'];
+                                        $data['setitemable_type']=null;
+                                        $data['setitemable_id']=null;
                                     }
                                     $si = Setitem::create([
                                         'service_id' => $id,

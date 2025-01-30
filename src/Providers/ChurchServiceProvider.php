@@ -142,6 +142,7 @@ class ChurchServiceProvider extends ServiceProvider
         Queue::failing(function (JobFailed $event) {
             //$event->connectionName
             //$event->job
+            Log::notice($event->job);
             Log::error($event->exception);
         });
     }

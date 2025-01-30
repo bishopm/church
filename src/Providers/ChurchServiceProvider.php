@@ -13,8 +13,11 @@ use Bishopm\Church\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -135,6 +138,11 @@ class ChurchServiceProvider extends ServiceProvider
             $schedule->command('church:monthlymeasures')->monthlyOn(1, '5:30');
             // $schedule->command('church:givingemail')->dailyAt('9:00');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
+        });
+        Queue::failing(function (JobFailed $event) {
+            //$event->connectionName
+            //$event->job
+            Log::error($event->exception);
         });
     }
 

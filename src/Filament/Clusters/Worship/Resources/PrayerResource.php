@@ -43,14 +43,17 @@ class PrayerResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Placeholder::make('openlp')->label('OpenLP')
                     ->content(function (Get $get){
-                        $htmlContent = $get('words');
-                        preg_match_all('/<strong>(.*?)<\/strong>/s', $htmlContent, $matches);
-                        foreach ($matches[1] as $thisone){
-                            $htmlContent=str_replace($thisone,strtoupper($thisone),$htmlContent);
+                        $lyrics = $get('words');
+                        $lyrics=str_replace("&nbsp;",' ',$lyrics);
+                        preg_match_all('/<strong>(.*?)<\/strong>/s', $lyrics, $bolds);
+                        foreach ($bolds[0] as $bold){
+                            $lyrics=str_replace($bold,strtoupper($bold),$lyrics);
                         }
-                        $htmlContent=str_replace('<strong>','',$htmlContent);
-                        $htmlContent=str_replace('</strong>','',$htmlContent);
-                        return new HtmlString($htmlContent);
+                        $lyrics=str_replace("</p>","<br>",$lyrics);
+                        $lyrics=str_replace("<p>","<br>",$lyrics);
+                        $lyrics=str_replace("\\n","<br>",$lyrics);
+                        $lyrics=str_replace("\t", '', $lyrics);
+                        return new HtmlString($lyrics);
                     })
             ]);
     }

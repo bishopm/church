@@ -8,10 +8,12 @@ use Bishopm\Church\Models\Prayer;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class PrayerResource extends Resource
 {
@@ -39,6 +41,17 @@ class PrayerResource extends Resource
                 Forms\Components\RichEditor::make('words')
                     ->required()
                     ->columnSpanFull(),
+                Forms\Components\Placeholder::make('openlp')->label('OpenLP')
+                    ->content(function (Get $get){
+                        $htmlContent = $get('words');
+                        preg_match_all('/<strong>(.*?)<\/strong>/s', $htmlContent, $matches);
+                        foreach ($matches[1] as $thisone){
+                            $htmlContent=str_replace($thisone,strtoupper($thisone),$htmlContent);
+                        }
+                        $htmlContent=str_replace('<strong>','',$htmlContent);
+                        $htmlContent=str_replace('</strong>','',$htmlContent);
+                        return new HtmlString($htmlContent);
+                    })
             ]);
     }
 

@@ -36,11 +36,8 @@ class PrayerResource extends Resource
                     ->maxLength(191),
                 Forms\Components\TextInput::make('copyright')
                     ->maxLength(191),
-                SpatieTagsInput::make('tags')
-                    ->type('prayer'),
                 Forms\Components\RichEditor::make('words')
-                    ->required()
-                    ->columnSpanFull(),
+                    ->required(),
                 Forms\Components\Placeholder::make('openlp')->label('OpenLP')
                     ->content(function (Get $get){
                         $lyrics = $get('words');
@@ -54,7 +51,9 @@ class PrayerResource extends Resource
                         $lyrics=str_replace("\\n","<br>",$lyrics);
                         $lyrics=str_replace("\t", '', $lyrics);
                         return new HtmlString($lyrics);
-                    })
+                    }),
+                SpatieTagsInput::make('tags')
+                    ->type('prayer'),
             ]);
     }
 

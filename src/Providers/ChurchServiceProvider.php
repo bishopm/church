@@ -12,9 +12,11 @@ use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
@@ -139,6 +141,9 @@ class ChurchServiceProvider extends ServiceProvider
             // $schedule->command('church:givingemail')->dailyAt('9:00');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
         });
+        Event::listen(
+            MessageSending::class
+        );
         Queue::failing(function (JobFailed $event) {
             //$event->connectionName
             //$event->job

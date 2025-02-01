@@ -147,8 +147,8 @@ class ChurchServiceProvider extends ServiceProvider
         Queue::failing(function (JobFailed $event) {
             //$event->connectionName
             //$event->job
-            Log::error("MB added: " . $event->exception);
-            Log::notice("MB added: " . $event->job);
+            Log::error("MB added: " . json_encode($event->exception));
+            Log::notice("MB added: " . json_encode($event->job));
         });
     }
 

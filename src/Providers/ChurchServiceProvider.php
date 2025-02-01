@@ -141,15 +141,6 @@ class ChurchServiceProvider extends ServiceProvider
             // $schedule->command('church:givingemail')->dailyAt('9:00');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
         });
-        /*Event::listen(
-            MessageSending::class
-        );
-        Queue::failing(function (JobFailed $event) {
-            //$event->connectionName
-            //$event->job
-            Log::error("MB added: " . $event->exception);
-            Log::notice("MB added: " . $event->job);
-        });*/
     }
 
     /**

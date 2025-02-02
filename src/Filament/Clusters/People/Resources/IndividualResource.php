@@ -5,6 +5,7 @@ namespace Bishopm\Church\Filament\Clusters\People\Resources;
 use Bishopm\Church\Filament\Clusters\People\Resources\IndividualResource\Pages;
 use Bishopm\Church\Filament\Clusters\People\Resources\IndividualResource\RelationManagers;
 use Bishopm\Church\Filament\Clusters\People;
+use Bishopm\Church\Jobs\SendEmail;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Actions;
 use Bishopm\Church\Models\Individual;
@@ -263,7 +264,8 @@ class IndividualResource extends Resource
     public static function sendEmail($data, $indiv){
         $data['firstname'] = $indiv['firstname'];
         if ($indiv['email']){
-            Mail::to($indiv['email'])->queue(new ChurchMail($data));
+            $template = new ChurchMail($data);
+            SendEmail::dispatch($indiv['email'], $template);
         }
         Notification::make('Email sent')->title('Email sent to ' . $indiv->firstname . " " . $indiv->surname)->send();
     }

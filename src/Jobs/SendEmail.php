@@ -12,6 +12,8 @@ class SendEmail implements ShouldQueue
     use Queueable;
 
     public $email, $mailable;
+    public $tries = 5;
+    public $timeout = 60;
 
     /**
      * Create a new job instance.

@@ -32,7 +32,11 @@ class SendEmail implements ShouldQueue
         try {
             Mail::to($this->email)->send($this->mailable);
         } catch (\Exception $e) {
-            Log::error('Mail Sending Failed | ' . $e->getMessage());
+            Log::error('Mail sending failed on attempt: ' . ($this->attempts() + 1), [
+                'exception' => $e->getMessage(),
+                'job' => $this,
+            ]);
+            throw $e; 
         }
     }
 }

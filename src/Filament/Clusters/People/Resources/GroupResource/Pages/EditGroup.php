@@ -59,7 +59,7 @@ class EditGroup extends EditRecord
         foreach ($group->individuals as $indiv){
             $data['firstname'] = $indiv['firstname'];
             if ($indiv['email']){
-                Mail::to($indiv['email'])->queue(new ChurchMail($data));
+                Mail::to($indiv['email'])->send(new ChurchMail($data));
                 $count++;
             }
         }

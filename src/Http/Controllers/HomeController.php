@@ -232,7 +232,7 @@ class HomeController extends Controller
         if (null!==$request->input('message')){
             $data['message'] = $request->input('message');
             $data['user'] = $request->input('user');
-            Mail::to('michael@westvillemethodist.co.za')->queue(new MessageMail($data));
+            Mail::to('michael@westvillemethodist.co.za')->send(new MessageMail($data));
             $data['notification']="Thank you! We will reply to you by email";
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();

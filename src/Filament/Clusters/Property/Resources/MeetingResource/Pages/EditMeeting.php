@@ -52,14 +52,14 @@ class EditMeeting extends EditRecord
                 if ($indiv->email==$secretary->email){
                     $cc=true;
                 }
-                Mail::to($indiv->email)->queue(new ChurchMail($data));
+                Mail::to($indiv->email)->send(new ChurchMail($data));
                 $count++;
             }
         }
         if ((!$cc) and ($secretary)){
             $data['firstname'] = $secretary->firstname;
             $data['subject'] = "FYI: " . $data['subject'];
-            Mail::to($indiv->email)->queue(new ChurchMail($data));
+            Mail::to($indiv->email)->send(new ChurchMail($data));
         }
         if ($count>1){
             Notification::make('Email sent')->title('Email sent to ' . $count . ' recipients.')->send();

@@ -3,6 +3,8 @@
     @if($status<>"pinsent")
         <div data-mdb-input-init class="form-outline mb-4">
             @if ($status<>"phoneok")
+                <form wire:submit="send">
+                @csrf
                 <label class="form-label">Enter your cellphone number</label>
             @else
                 <h4>Phone: {{$phone}}</h4>
@@ -13,26 +15,24 @@
                 class="form-control my-2" 
                 placeholder="Cellphone number" 
             />
+            <x-honey />
             <span class="text-warning">{!!$error!!}</span><span class="text-success">{{$addmessage}}</span><span class="text-success">{{$message}}</span>
             @if($addmessage)
                 <input wire:model="firstname" class="form-control my-2" placeholder="First name" />
                 <input wire:model="surname" class="form-control my-2" placeholder="Surname" />
             @endif
             <div>{{$pin}}</div>
+            @if (($status<>"toomany") and ($status<>"addind"))
+                <div class="text-center pt-1 mb-5 pb-1">
+                    <button class="btn btn-dark btn-block fa-lg gradient-custom-2 mb-3" type="submit">Send verification SMS to this number</button>
+                </div>
+                </form>
+            @elseif ($status=="addind")
+                <div class="text-center pt-1 mb-5 pb-1">
+                    <button class="btn btn-dark btn-block fa-lg gradient-custom-2 mb-3" type="button" wire:click="addindiv">OK</button>
+                </div>
+            @endif
         </div>
-        @if (($status<>"toomany") and ($status<>"addind"))
-            <div class="text-center pt-1 mb-5 pb-1">
-                <button class="btn btn-dark btn-block fa-lg gradient-custom-2 mb-3" type="button" wire:click="send">
-                    Send verification SMS to this number
-                </button>
-            </div>
-        @elseif ($status=="addind")
-            <div class="text-center pt-1 mb-5 pb-1">
-                <button class="btn btn-dark btn-block fa-lg gradient-custom-2 mb-3" type="button" wire:click="addindiv">
-                    OK
-                </button>
-            </div>
-        @endif
     @endif
     @if($status=="pinsent")
         <div data-mdb-input-init class="form-outline mb-4">

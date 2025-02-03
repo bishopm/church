@@ -34,7 +34,7 @@ Route::middleware(['web',GivingRoute::class])->group(function () {
 Route::domain($url)->group(function() {
     Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
         Route::get('/', 'home')->name('web.home');
-        Route::post('/', 'home')->name('web.home');
+        Route::post('/', 'home')->middleware(['honey'])->name('web.home');
         Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('web.blogpost');
         Route::get('/blog', 'blog')->name('web.blog');
         Route::get('/blog/{slug}', 'blogger')->name('web.blogger');

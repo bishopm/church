@@ -53,7 +53,7 @@ Route::domain($url)->group(function() {
         Route::get('/stayingconnected', 'stayingconnected')->name('web.stayingconnected');
         Route::get('/subject/{slug}', 'subject')->name('web.subject');
         Route::get('/sundaydetails', 'sunday')->name('web.sunday');
-        if (substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"admin"){
+        if ((substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"admin") and (substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"pulse")){
             Route::get('/{page}', 'page')->name('web.page');
         }
     });

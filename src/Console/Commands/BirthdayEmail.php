@@ -91,7 +91,7 @@ class BirthdayEmail extends Command
             $data['sender']=$churchemail;
             $data['body']=$msg;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+            Mail::to($data['email'])->send(new ChurchHtmlMail($data));
         }
     }
 }

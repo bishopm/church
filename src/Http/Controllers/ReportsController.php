@@ -911,6 +911,42 @@ class ReportsController extends Controller
         exit;
     }
 
+    public function seriesplan($start=""){
+        if (!$start){
+            $start=date('Y-m-d');
+        }
+        $end = date('Y-m-d',strtotime($start . ' + 1 year - 1 day'));
+        $this->title="Preaching series plan";
+        $this->subtitle=date('j M Y',strtotime($start)) . " - " . date('j M Y',strtotime($end));
+        $this->pdf=$this->report_header();
+        $services = Service::with('series')->where('livestream',1)->where('servicedate','>=',$start)->where('servicedate','<=',$end)->orderBy('servicedate','ASC')->get();
+        $yy=35;
+        $this->pdf->SetFont('DejaVu', 'B', 11);
+        $this->pdf->text(10,$yy,"Date");
+        $this->pdf->text(25,$yy,"Series");
+        $this->pdf->text(90,$yy,"Reading");
+        $this->pdf->text(170,$yy,"Preacher");
+        $yy=42;
+        foreach($services as $service){
+            $this->pdf->SetFont('DejaVu', '', 10);
+            $this->pdf->text(10,$yy,date('j M',strtotime($service->servicedate)));
+            $this->pdf->SetFont('DejaVu', 'B', 10);
+            if (isset($service->series->series)){
+                $this->pdf->text(25,$yy,$service->series->series);
+            }
+            $this->pdf->SetFont('DejaVu', '', 10);
+            $this->pdf->text(90,$yy,$service->readings);
+            $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $service->servicetime . "/" . $service->servicedate;
+            $response=Http::get($url);
+            $preacher = $response->body();
+            if ($preacher){
+                $this->pdf->text(170,$yy,$preacher);
+            }
+            $yy=$yy+5;
+        }
+        $this->pdf->Output();
+    }
+
     public function service ($id,$stime=""){
         $set=Service::with(['setitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$id)->first();
         if (!$stime){

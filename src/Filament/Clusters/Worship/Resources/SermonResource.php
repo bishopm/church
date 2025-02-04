@@ -1,16 +1,19 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Website\Resources;
+namespace Bishopm\Church\Filament\Clusters\Worship\Resources;
 
-use Bishopm\Church\Filament\Clusters\Website;
-use Bishopm\Church\Filament\Clusters\Website\Resources\SermonResource\Pages;
-use Bishopm\Church\Filament\Clusters\Website\Resources\SermonResource\RelationManagers;
+use Bishopm\Church\Filament\Clusters\Worship;
+use Bishopm\Church\Filament\Clusters\Worship\Resources\SermonResource\Pages;
+use Bishopm\Church\Filament\Clusters\Worship\Resources\SermonResource\RelationManagers;
+use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Series;
+use Bishopm\Church\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,16 +21,18 @@ use Hugomyb\FilamentMediaAction\Forms\Components\Actions\MediaAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class SermonResource extends Resource
 {
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 6;
     
     protected static ?string $model = Sermon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-microphone';
 
-    protected static ?string $cluster = Website::class;
+    protected static ?string $cluster = Worship::class;
 
     public static function form(Form $form): Form
     {
@@ -36,6 +41,35 @@ class SermonResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('service_id')
+                    ->label('Service')
+                    ->relationship(
+                        name: 'service',
+                        modifyQueryUsing: fn (Builder $query) => $query->doesnthave('sermon')->orderBy('servicedate','DESC'),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->servicedate} ({$record->servicetime})")
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, $state){
+                        $service=Service::find($state);
+                        $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $service->servicetime . "/" . $service->servicedate;
+                        $response=Http::get($url);
+                        $fullname=$response->body();
+                        $preacher=Person::where(DB::raw('concat(firstname," ",surname)') , '=' , $fullname)->first();
+                        if ($preacher){
+                            $set('person_id',$preacher->id);  
+                        }
+                    })
+                    ->required(),
+                Forms\Components\TextInput::make('video')
+                    ->suffixAction(MediaAction::make('showVideo')
+                        ->icon('heroicon-m-video-camera')
+                        ->media(fn (Get $get) => $get('video'))
+                ),
+                Forms\Components\TextInput::make('audio')
+                    ->suffixAction(MediaAction::make('playAudio')
+                        ->icon('heroicon-m-musical-note')
+                        ->media(fn (Get $get) => $get('audio'))
+                ),
                 Forms\Components\Select::make('person_id')
                     ->label('Preacher')
                     ->relationship(
@@ -63,43 +97,7 @@ class SermonResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Toggle::make('active'),
                     ]),
-                Forms\Components\DatePicker::make('servicedate')
-                    ->label('Service date')
-                    ->native(false)
-                    ->displayFormat('Y-m-d')
-                    ->format('Y-m-d')
-                    ->required(),
-                Forms\Components\TextInput::make('readings')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('video')
-                    ->suffixAction(MediaAction::make('showVideo')
-                        ->icon('heroicon-m-video-camera')
-                        ->media(fn (Get $get) => $get('video'))
-                ),
-                Forms\Components\TextInput::make('audio')
-                    ->suffixAction(MediaAction::make('playAudio')
-                        ->icon('heroicon-m-musical-note')
-                        ->media(fn (Get $get) => $get('audio'))
-                ),
                 SpatieTagsInput::make('tags'),
-                Forms\Components\Select::make('series_id')
-                    ->relationship(name: 'series', titleAttribute: 'series')
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('series')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('startingdate')
-                            ->required(),
-                        Forms\Components\FileUpload::make('image')
-                            ->image()
-                            ->required(),
-                        Forms\Components\TextInput::make('slug')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\Textarea::make('description')
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),                
                 Forms\Components\Toggle::make('published'),
             ]);
     }
@@ -114,18 +112,18 @@ class SermonResource extends Resource
                     ->label('Preacher')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('servicedate')
+                Tables\Columns\TextColumn::make('service.servicedate')
+                    ->label('Date')
                     ->date('Y-m-d')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tags.name')
-                    ->badge()
-                    ->forceSearchCaseInsensitive(true)
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('service.servicetime')
+                    ->label('Time')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('series.series')
                     ->numeric()
                     ->sortable(),
             ])
-            ->defaultSort('servicedate','DESC')
+            ->defaultSort('service.servicedate','DESC')
             ->filters([
                 //
             ])

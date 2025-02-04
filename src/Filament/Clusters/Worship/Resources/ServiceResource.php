@@ -23,7 +23,7 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
+    protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
     protected static ?string $cluster = Worship::class;
 
@@ -64,6 +64,12 @@ class ServiceResource extends Resource
                             $sarray[$st]=$st;
                         }
                         return $sarray;
+                    })
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, $state){
+                        if ($state==setting('worship.live_streamed_service')){
+                            $set('livestream',true);
+                        }
                     })
                     ->placeholder(''),
                 Forms\Components\TextInput::make('reading')

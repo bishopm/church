@@ -1,6 +1,6 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Website\Resources\SeriesResource\RelationManagers;
+namespace Bishopm\Church\Filament\Clusters\Worship\Resources\SeriesResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;

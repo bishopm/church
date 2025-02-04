@@ -5,6 +5,7 @@ namespace Bishopm\Church\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Service extends Model
 {
@@ -20,5 +21,10 @@ class Service extends Model
     public function setitems(): HasMany
     {
         return $this->hasMany(Setitem::class);
+    }
+
+    public function sermon(): HasOne
+    {
+        return $this->hasOne(Sermon::class);
     }
 }

@@ -23,4 +23,11 @@ class Sermon extends Model
     {
         return $this->belongsTo(Person::class);
     }
+
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+
 }

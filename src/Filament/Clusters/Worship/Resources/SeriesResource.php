@@ -1,10 +1,10 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Website\Resources;
+namespace Bishopm\Church\Filament\Clusters\Worship\Resources;
 
-use Bishopm\Church\Filament\Clusters\Website;
-use Bishopm\Church\Filament\Clusters\Website\Resources\SeriesResource\Pages;
-use Bishopm\Church\Filament\Clusters\Website\Resources\SeriesResource\RelationManagers;
+use Bishopm\Church\Filament\Clusters\Worship;
+use Bishopm\Church\Filament\Clusters\Worship\Resources\SeriesResource\Pages;
+use Bishopm\Church\Filament\Clusters\Worship\Resources\SeriesResource\RelationManagers;
 use Bishopm\Church\Models\Series;
 use Filament\Forms;
 use Filament\Forms\Set;
@@ -16,15 +16,13 @@ use Illuminate\Support\Str;
 
 class SeriesResource extends Resource
 {
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 7;
 
     protected static ?string $model = Series::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
 
-    protected static bool $shouldRegisterNavigation = false;
-
-    protected static ?string $cluster = Website::class;
+    protected static ?string $cluster = Worship::class;
 
     protected static ?string $modelLabel = 'Sermon series';
 

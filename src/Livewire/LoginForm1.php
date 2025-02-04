@@ -23,8 +23,6 @@ class LoginForm extends Component
     public $status = "start";
  
     public function send(){
-        dd('Hi!');
-        $this->message=$this->honeyPasses();
         if (strlen($this->phone) !== 10){
             $this->error = "Error: The number should be 10 digits long";
         } elseif (!is_numeric($this->phone)) {

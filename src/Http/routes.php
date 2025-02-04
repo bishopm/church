@@ -20,6 +20,7 @@ Route::get('/admin/reports/meeting/a5/{id}', ['uses' => '\Bishopm\Church\Http\Co
 Route::get('/admin/reports/minutes/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@minutes','as' => 'reports.minutes']);
 Route::get('/admin/reports/removenames', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@removenames','as' => 'reports.removenames']);
 Route::get('/admin/reports/roster/{id}/{year}/{month}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@roster','as' => 'reports.roster']);
+Route::get('/admin/reports/seriesplan/{start?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@seriesplan','as' => 'reports.seriesplan']);
 Route::get('/admin/reports/service/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@service','as' => 'reports.service']);
 Route::get('/admin/reports/song/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@song','as' => 'reports.song']);
 Route::get('/admin/reports/venue/{id}/{reportdate}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@venue','as' => 'reports.venue']);

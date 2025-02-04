@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Website\Resources\SeriesResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Worship\Resources\SeriesResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Website\Resources\SeriesResource;
+use Bishopm\Church\Filament\Clusters\Worship\Resources\SeriesResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

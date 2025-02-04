@@ -935,7 +935,7 @@ class ReportsController extends Controller
                 $this->pdf->text(25,$yy,$service->series->series);
             }
             $this->pdf->SetFont('DejaVu', '', 10);
-            $this->pdf->text(90,$yy,$service->readings);
+            $this->pdf->text(90,$yy,$service->reading);
             $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $service->servicetime . "/" . $service->servicedate;
             $response=Http::get($url);
             $preacher = $response->body();

@@ -34,6 +34,8 @@ class SermonResource extends Resource
 
     protected static ?string $cluster = Worship::class;
 
+    public $record;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -45,7 +47,7 @@ class SermonResource extends Resource
                     ->label('Service')
                     ->relationship(
                         name: 'service',
-                        modifyQueryUsing: fn (Builder $query) => $query->doesnthave('sermon')->orderBy('servicedate','DESC'),
+                        modifyQueryUsing: fn (Builder $query, Sermon $record) => $query->doesnthave('sermon')->orWhere('id',$record->service_id)->orderBy('servicedate','DESC'),
                     )
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->servicedate} ({$record->servicetime})")
                     ->live(onBlur: true)

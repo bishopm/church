@@ -88,7 +88,7 @@ class SeriesResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\SermonsRelationManager::class,
+            RelationManagers\ServicesRelationManager::class,
         ];
     }
 

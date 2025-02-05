@@ -57,7 +57,7 @@
                 <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
             @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
-        @elseif (isset($item->readings))
+        @elseif (isset($item->reading))
             <div class="lead pt-3">
                 <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
             </div>
@@ -65,7 +65,7 @@
             <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
                 <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
-            <div class="lead pt-3">{{$item->readings}}
+            <div class="lead pt-3">{{$item->reading}}
                 <small class="text-muted">{{$item->person->fullname}}</small>
             </div>
         @elseif ($item->image)

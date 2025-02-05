@@ -79,7 +79,6 @@ class ChurchServiceProvider extends ServiceProvider
         Blade::componentNamespace('Bishopm\\Church\\Resources\\Views\\Components', 'church');
         Relation::morphMap([
             'book' => 'Bishopm\Church\Models\Book',
-            'sermon' => 'Bishopm\Church\Models\Sermon',
             'prayer' => 'Bishopm\Church\Models\Prayer',
             'post' => 'Bishopm\Church\Models\Post',
             'song' => 'Bishopm\Church\Models\Song',

@@ -9,7 +9,7 @@
     @if (count($sermons))
         <hr><h4>Sermons</h4>
         @foreach ($sermons as $sermon)
-            <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->title}}</a><br>
+            <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->sermon_title}}</a><br>
         @endforeach
     @endif
     @if (count($books))

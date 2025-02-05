@@ -20,7 +20,7 @@ class Person extends Model
         return $this->firstname . ' ' . $this->surname;
     }
 
-    public function sermons(): HasMany
+    public function services(): HasMany
     {
         return $this->hasMany(Service::class);
     }

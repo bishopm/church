@@ -10,7 +10,7 @@ class Series extends Model
     public $table = 'series';
     protected $guarded = ['id'];
 
-    public function sermons(): HasMany
+    public function services(): HasMany
     {
         return $this->hasMany(Service::class);
     }

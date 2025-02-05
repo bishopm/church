@@ -286,7 +286,7 @@ class HomeController extends Controller
     }
 
     public function person($slug){
-        $data['person']=Person::with('sermons','posts')->where('slug',$slug)->first();
+        $data['person']=Person::with('services','posts')->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.person',$data);
     }
 
@@ -341,18 +341,18 @@ class HomeController extends Controller
     }
 
     public function series($year,$slug){
-        $data['series']=Series::with('sermons.person')->where('slug',$slug)->first();
+        $data['series']=Series::with('services.person')->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);
     }
     
     public function sermons() {
-        $data['series']=Series::with('sermons')->orderBy('startingdate','DESC')->paginate(10);
+        $data['series']=Series::with('services')->orderBy('startingdate','DESC')->paginate(10);
         return view('church::' . $this->routeName . '.sermons',$data);
     }
 
     public function sermon($year,$slug, $id){
         $data['sermon']=Service::with('person')->where('id',$id)->first();
-        $data['series']=Series::with('sermons')->where('id',$data['sermon']->series_id)->first();
+        $data['series']=Series::with('services')->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }
 

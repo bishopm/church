@@ -29,7 +29,7 @@ class SermonsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('sermon_title'),
             ])
             ->filters([
                 //

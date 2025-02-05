@@ -22,6 +22,7 @@ use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -341,17 +342,17 @@ class HomeController extends Controller
     }
 
     public function series($year,$slug){
-        $data['series']=Series::with('services.person')->where('slug',$slug)->first();
+        $data['series']=Series::with('services.person')->whereHas('services', function (Builder $q) { $q->where('published',1);})->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);
     }
     
     public function sermons() {
-        $data['series']=Series::with('services')->orderBy('startingdate','DESC')->paginate(10);
+        $data['series']=Series::with('services')->whereHas('services', function (Builder $q) { $q->where('published',1);})->orderBy('startingdate','DESC')->paginate(10);
         return view('church::' . $this->routeName . '.sermons',$data);
     }
 
     public function sermon($year,$slug, $id){
-        $data['sermon']=Service::with('person')->where('id',$id)->first();
+        $data['sermon']=Service::with('person')->where('published',1)->where('id',$id)->first();
         $data['series']=Series::with('services')->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }

@@ -13,7 +13,8 @@ class ListSeries extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('Sermon series plan')->url(fn (): string => route('reports.seriesplan')),
+            Actions\Action::make('Sermon series plan - ' . date('Y'))->url(fn (): string => route('reports.seriesplan',['start'=>date('Y').'-01-01'])),
+            Actions\Action::make('Sermon series rolling plan')->url(fn (): string => route('reports.seriesplan')),
             Actions\CreateAction::make(),
         ];
     }

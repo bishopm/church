@@ -8,7 +8,7 @@
                     <h4>{{$serie->series}} <small style="color:grey;">{{date('F Y',strtotime($serie->startingdate))}}</small></h4>
                 </a>
                 {{$serie->description}}<br>
-                Sermons: {{count($serie->sermons)}}
+                Sermons: {{count($serie->services)}}
             </div>
         </div>
     @empty

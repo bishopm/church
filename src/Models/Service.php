@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,5 +30,10 @@ class Service extends Model
     public function setitems(): HasMany
     {
         return $this->hasMany(Setitem::class);
+    }
+
+    public function scopePublishedsermon($query)
+    {
+        return $query->where('published', '1');
     }
 }

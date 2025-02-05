@@ -12,6 +12,6 @@ class Series extends Model
 
     public function sermons(): HasMany
     {
-        return $this->hasMany(Sermon::class);
+        return $this->hasMany(Service::class);
     }
 }

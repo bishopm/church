@@ -19,6 +19,7 @@ use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
+use Bishopm\Church\Models\Sermon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -919,7 +920,7 @@ class ReportsController extends Controller
         $this->title="Preaching series plan";
         $this->subtitle=date('j M Y',strtotime($start)) . " - " . date('j M Y',strtotime($end));
         $this->pdf=$this->report_header();
-        $services = Service::with('series')->where('livestream',1)->where('servicedate','>=',$start)->where('servicedate','<=',$end)->orderBy('servicedate','ASC')->get();
+        $services = Service::with('series','person')->where('livestream',1)->where('servicedate','>=',$start)->where('servicedate','<=',$end)->orderBy('servicedate','ASC')->get();
         $yy=35;
         $this->pdf->SetFont('DejaVu', 'B', 11);
         $this->pdf->text(10,$yy,"Date");
@@ -936,11 +937,8 @@ class ReportsController extends Controller
             }
             $this->pdf->SetFont('DejaVu', '', 10);
             $this->pdf->text(90,$yy,$service->reading);
-            $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $service->servicetime . "/" . $service->servicedate;
-            $response=Http::get($url);
-            $preacher = $response->body();
-            if ($preacher){
-                $this->pdf->text(170,$yy,$preacher);
+            if ($service->person){
+                $this->pdf->text(170,$yy,$service->person->fullname);
             }
             $yy=$yy+5;
         }

@@ -19,7 +19,6 @@ use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
-use Bishopm\Church\Models\Sermon;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Carbon\Carbon;
@@ -56,7 +55,7 @@ class HomeController extends Controller
         $today=date('Y-m-d');
         $data['content']=array();
         $monthago=date('Y-m-d',strtotime('-80 days'));      
-        $sermons=Sermon::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
+        $sermons=Service::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
         }
@@ -236,7 +235,7 @@ class HomeController extends Controller
             $data['notification']="Thank you! We will reply to you by email";
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
-        $data['sermon']=Sermon::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
+        $data['sermon']=Service::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";
         return view('church::web.home',$data);
     }
@@ -352,7 +351,7 @@ class HomeController extends Controller
     }
 
     public function sermon($year,$slug, $id){
-        $data['sermon']=Sermon::with('person')->where('id',$id)->first();
+        $data['sermon']=Service::with('person')->where('id',$id)->first();
         $data['series']=Series::with('sermons')->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }
@@ -387,7 +386,7 @@ class HomeController extends Controller
     public function subject($slug){
         $data['tag']=Tag::findFromString($slug);
         $data['posts']=Post::withAnyTags($data['tag']->name)->where('published',1)->get();
-        $data['sermons']=Sermon::withAnyTags($data['tag']->name)->where('published',1)->get();
+        $data['sermons']=Service::withAnyTags($data['tag']->name)->where('published',1)->get();
         $data['books']=Book::withAnyTags($data['tag']->name)->get();
         return view('church::' . $this->routeName . '.tag',$data);
     }

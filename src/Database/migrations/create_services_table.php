@@ -13,10 +13,15 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->date('servicedate');
             $table->string('servicetime', 191);
-            $table->string('servicetitle', 191)->default(null);
+            $table->tinyInteger('published')->nullable()->default(null);
+            $table->string('sermon_title', 191)->default(null);
+            $table->string('audio', 191)->default(null);
+            $table->string('video', 191)->default(null);
             $table->string('reading', 191)->default(null);
             $table->integer('series_id')->default(null);
+            $table->integer('person_id')->default(null);
             $table->integer('livestream')->default(null);
+            $table->json('tags')->default(null);
         });
     }
     

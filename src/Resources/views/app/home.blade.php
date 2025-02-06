@@ -66,7 +66,9 @@
                 <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
             <div class="lead pt-3">{{$item->reading}}
+                @if ($item->person)
                 <small class="text-muted">{{$item->person->fullname}}</small>
+                @endif
             </div>
         @elseif ($item->image)
             <a href="{{route('app.devotionals')}}">

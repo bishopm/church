@@ -2,80 +2,102 @@
  
 namespace Bishopm\Church\Livewire;
 
+use Bishopm\Church\Classes\BulksmsService;
+use Bishopm\Church\Jobs\SendSMSNow;
 use Bishopm\Church\Models\Household;
 use Bishopm\Church\Models\Individual;
+use Filament\Notifications\Notification;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 use Lukeraymonddowning\Honey\Traits\WithHoney;
 
 class LoginForm extends Component
 {
     use WithHoney;
 
+    #[Validate('digits:10', message: 'Not a valid cellphone number')]
     public $phone = '';
+    public $feedback = '';
     public $surname = '';
     public $firstname = '';
     public $message = '';
-    public $addmessage = '';
-    public $error = '';
     public $pin = '';
     public $hashed = '';
     public $userpin = '';
-    public $status = "start";
- 
-    public function send(){
-        dd('Hi!');
-        $this->message=$this->honeyPasses();
-        if (strlen($this->phone) !== 10){
-            $this->error = "Error: The number should be 10 digits long";
-        } elseif (!is_numeric($this->phone)) {
-            $this->error = "Error: Only numbers - no letters should be included";
-        } else {
-            $this->status= "phoneok";
-            $indiv=Individual::where('cellphone',$this->phone)->get();
-            if (count($indiv)>1){
-                $names='';
-                foreach ($indiv as $ind){
-                    $names = $names . $ind->firstname . " / ";
-                }
-                $this->error="Sorry, " . substr($names,0,-2) . "this number is associated with more than one person. Please contact our office and we'll help you to complete your registration.";
-                $this->status="toomany";
-            } elseif (count($indiv)==1){
-                $this->error = "";
-                $this->firstname=$indiv[0]->firstname;
-                $this->message = "Hello, " . $indiv[0]->firstname . "! We are sending you an SMS now.";
-                $this->pin = rand(1000,9999);
-                if ($indiv[0]->uid<>''){
-                    $this->hashed=$indiv[0]->uid;
-                } else {
-                    $this->hashed = hash('sha256', $this->pin);
-                    $indiv[0]->uid=$this->hashed;
-                    $indiv[0]->save();
-                }
-                $this->status = "pinsent";
+    public $block_submit=true;
+    public $showform=false;
+
+    protected $rules = [
+        'phone' => 'required|digits:10',
+        'firstname' => 'required',
+        'surname' => 'required'
+    ];
+
+    public function updated($propertyName)
+    {
+        if (($propertyName=="firstname") or ($propertyName=="surname")){
+            if ((!$this->firstname) or (!$this->surname)){
+                $this->block_submit=true;
             } else {
-                $this->error = "";
-                $this->addmessage = "We don't have your details in our system yet. Please enter your name and press OK";
-                $this->status="addind";
+                $this->block_submit=false;
             }
+        } elseif (count($this->validateOnly($propertyName))){
+            if (substr($this->phone,0,1)!=='0'){
+                $this->block_submit = true;
+                $this->feedback="";
+                $this->showform=false;
+            } else {
+                $indiv=Individual::where('cellphone',$this->phone)->get();
+                if (count($indiv)>1){
+                    $this->feedback="Sorry! This number is linked to more than one person in our record (possibly you and a family member). Please contact our office so that we can help you complete your app registration.";
+                    $this->showform=false;
+                    $this->block_submit = true;
+                } elseif (count($indiv)==1){
+                    $this->feedback="Hello <b>" . $indiv[0]->firstname . " " . $indiv[0]->surname . "!</b><br>Click the button above to verify your cell number.";
+                    $this->showform=false;
+                    $this->block_submit = false;
+                } else {
+                    $this->showform=true;
+                    $this->feedback="Welcome! We don't have your details on record. Please enter your name and then press the button above";
+                    $this->block_submit = true;
+                }
+            }
+        } else {
+            $this->feedback="";
+            $this->showform=false;
+            $this->block_submit = true;
         }
     }
 
-    public function addindiv(){
-        if (($this->firstname=='') or ($this->surname=='')){
-            $this->error = "Error: Please enter a first name and surname<br>";
-        } else {                
-            $household = Household::create(['addressee'=>$this->firstname . " " . $this->surname]);
-            $this->hashed = hash('sha256', $this->pin);
-            $indiv=Individual::create([
-                'firstname'=>$this->firstname,
-                'surname'=>$this->surname,
-                'cellphone'=>$this->phone,
-                'uid'=>$this->hashed,
-                'household_id'=>$household->id
-            ]);
-            $this->message = "Hello, " . $indiv->firstname . "! We are sending you an SMS now.";
+    public function sendsms(){
+        if ($this->honeyPasses()){
+            $this->feedback="";
+            $indiv=Individual::where('cellphone',$this->phone)->first();
+            if (!$indiv){
+                $household = Household::create(['addressee'=>$this->firstname . " " . $this->surname]);
+                $this->hashed = hash('sha256', $this->pin);
+                $indiv=Individual::create([
+                    'firstname'=>$this->firstname,
+                    'surname'=>$this->surname,
+                    'cellphone'=>$this->phone,
+                    'uid'=>$this->hashed,
+                    'household_id'=>$household->id
+                ]);
+            } else if ($indiv->uid<>''){
+                $this->hashed=$indiv->uid;
+            }
             $this->pin = rand(1000,9999);
-            $this->status = "pinsent";
+            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+            $credits = $smss->get_credits();
+            if ($credits >0 ){
+                $newno="+27" . substr($this->phone, 1);
+                $body="Hi " . $indiv->firstname . ". Your 4 digit PIN number for the " . setting('general.church_abbreviation') . " app is " . $this->pin . "  ";
+                $messages[]=array('to' => $newno, 'body' => $body);
+                $smss->send_message($messages);
+                $this->feedback="Your SMS is on it's way!";
+            } else {
+                $this->feedback="Sorry! There was a problem sending you an SMS. Please contact the office for help.";
+            }
         }
     }
 

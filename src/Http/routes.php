@@ -3,12 +3,13 @@
 use Bishopm\Church\Http\Middleware\CheckLogin;
 use Bishopm\Church\Http\Middleware\GivingRoute;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 $url=substr(env('APP_URL'),3+strpos(env('APP_URL'),':'));
 
-// Livewire::setUpdateRoute(function ($handle) {
+//Livewire::setUpdateRoute(function ($handle) {
 //    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
-// });
+//});
 
 // Admin routes
 Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);

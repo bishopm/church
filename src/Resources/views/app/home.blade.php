@@ -35,7 +35,9 @@
             <div class="py-2">
                 <h5>Reading: <small><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a></small></h5>
                 <h5>Preacher: <small>{{$preacher}}</small></h5>
+                @if ($service->series)
                 <h5>Series: <small><a href="{{url('/')}}/sermons/{{date('Y',strtotime($service->series->startingdate))}}/{{$service->series->slug}}">{{$service->series->series}}</a></small></h5>
+                @endif
                 <h5>Songs</h5>
                 <ul class="list-unstyled">
                     @forelse ($service->setitems as $song)
@@ -57,14 +59,18 @@
                 <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
             @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
-        @elseif (isset($item->reading))
+        @elseif (isset($item->reading) and ($service))
             <div class="lead pt-3">
-                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
+                @if ($service->series)
+                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
+                @endif
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
+            @if ($service->series)
             <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
                 <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
             </a>
+            @endif
             <div class="lead pt-3">{{$item->reading}}
                 @if ($item->person)
                 <small class="text-muted">{{$item->person->fullname}}</small>

@@ -16,7 +16,7 @@ use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Loan;
 use Bishopm\Church\Models\Page;
 use Bishopm\Church\Models\Pastor;
-use Bishopm\Church\Models\Pastorable;
+use Bishopm\Church\Models\Pastoralnote;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
@@ -281,12 +281,22 @@ class HomeController extends Controller
     }
 
     public function pastoralcase($type,$id){
+        $pastor=Pastor::where('individual_id',$_COOKIE['wmc-id'])->first();
         if ($type=="household"){
-            $case=Household::with('pastoralnotes')->find($id);
+            $data['case']=Household::with('pastoralnotes.pastor.individual')->find($id);
         } else {
-            $case=Individual::with('pastoralnotes')->find($id);
+            $data['case']=Individual::with('pastoralnotes.pastor.individual')->find($id);
         }
-        dd($case);
+        $pastors=$data['case']->pastors->pluck('id')->toArray();
+        if (in_array($pastor->id,$pastors)){
+            $data['detail']=1;
+        } else {
+            $data['detail']=0;
+        }
+        $data['type']=$type;
+        $data['mostrecent']=Pastoralnote::with('pastoralnotable')->whereHas('pastoralnotable', function($q) use($type,$id) {
+            $q->where('pastoralnotable_id', $id)->where('pastoralnotable_type',$type);})->orderBy('pastoraldate','DESC')->first();
+        return view('church::app.pastoralcase',$data);
     }
 
     public function practices(){

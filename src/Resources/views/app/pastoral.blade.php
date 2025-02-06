@@ -14,13 +14,13 @@
             @forelse ($my_cases->individuals->sortBy('firstname') as $indiv)
                 <p><a href="{{route('app.pastoralcase',['id'=>$indiv->id, 'type'=>'individual'])}}">{{$indiv->fullname}}</a></p>
             @empty
-                Empty
+                <p>No individuals</p>
             @endforelse
             <b>Households</b>
             @forelse ($my_cases->households->sortBy('sortsurname') as $fam)
                 <p><a href="{{route('app.pastoralcase',['id'=>$fam->id, 'type'=>'household'])}}">{{$fam->addressee}}</a></p>
             @empty
-                Empty
+                <p>No households</p>
             @endforelse
         </div>
         <div class="tab-pane" id="othercases" role="tabpanel">
@@ -30,13 +30,13 @@
                     <p><a href="{{route('app.pastoralcase',['id'=>$indiv->id, 'type'=>'individual'])}}">{{$indiv->fullname}}</p>
                 @endif
             @empty
-                Empty
+                <p>No individuals</p>
             @endforelse
             <b>Households</b>
             @forelse ($all_cases['households'] as $fam)
                 <p><a href="{{route('app.pastoralcase',['id'=>$fam->id, 'type'=>'household'])}}">{{$fam->addressee}}</a></p>
             @empty
-                Empty
+                <p>No households</p>
             @endforelse
         </div>
     </div>

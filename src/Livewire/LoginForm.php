@@ -26,6 +26,7 @@ class LoginForm extends Component
     public $userpin = '';
     public $block_submit=true;
     public $showform=false;
+    public $individual_id;
 
     protected $rules = [
         'phone' => 'required|digits:10',
@@ -86,6 +87,7 @@ class LoginForm extends Component
             } else if ($indiv->uid<>''){
                 $this->hashed=$indiv->uid;
             }
+            $this->individual_id=$indiv->id;
             $this->pin = rand(1000,9999);
             $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
             $credits = $smss->get_credits();
@@ -102,11 +104,13 @@ class LoginForm extends Component
     }
 
     public function sendpin(){
+        $indiv=Individual::find($this->individual_id);
         if ($this->userpin == $this->pin){
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
+            setcookie('wmc-id',$this->individual_id, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');
             setcookie('wmc-version',setting('general.app_version'), 2147483647,'/');
-            session()->flash('message', 'Welcome, ' . $this->firstname . '! You are now logged in on this device.');
+            session()->flash('message', 'Welcome, ' . $indiv->firstname . '! You are now logged in on this device.');
             return redirect()->route('app.home');
         } else {
             session()->flash('message', 'Sorry! That PIN was not correct, you will need to try again. Contact the office if you need any help.');

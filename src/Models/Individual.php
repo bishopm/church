@@ -77,4 +77,9 @@ class Individual extends Model
     {
         return $this->morphToMany(Pastor::class,'pastorable');
     }
+
+    public function pastor(): HasOne
+    {
+        return $this->hasOne(Pastor::class);
+    }
 }

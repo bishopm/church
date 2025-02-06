@@ -241,14 +241,19 @@ class SongResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(['title','lyrics']),
+                    ->searchable(['title','lyrics','author']),
                 Tables\Columns\TextColumn::make('lastused')
                     ->label('Last used'),
-                Tables\Columns\TextColumn::make('musictype')->label('Type')
-                    ->searchable()
-                    ->formatStateUsing(fn (string $state) => Str::title($state)),
+                Tables\Columns\IconColumn::make('musictype')->label('Type')
+                    ->icon(fn (string $state): string => match ($state) {
+                        'archive' => 'heroicon-o-archive-box-x-mark',
+                        'hymn' => 'heroicon-o-building-library',
+                        'contemporary' => 'heroicon-o-musical-note',
+                    }),
                 Tables\Columns\IconColumn::make('music')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('key')
+                    ->label('Key'),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()
                     ->forceSearchCaseInsensitive(true)

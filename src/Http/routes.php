@@ -82,6 +82,7 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/projects/{id}', 'project')->name('app.project');
         Route::get('/projects', 'projects')->name('app.projects');
         Route::get('/pastoral', 'pastoral')->name('app.pastoral');
+        Route::get('/pastoral/{type}/{id}', 'pastoralcase')->name('app.pastoralcase');
         Route::get('/preacher/{slug}', 'preacher')->name('app.preacher');
         Route::get('/sermons', 'sermons')->name('app.sermons');
         Route::get('/sermons/{year}/{slug}', 'series')->name('app.series');

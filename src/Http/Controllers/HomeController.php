@@ -11,9 +11,12 @@ use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Document;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
+use Bishopm\Church\Models\Household;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Loan;
 use Bishopm\Church\Models\Page;
+use Bishopm\Church\Models\Pastor;
+use Bishopm\Church\Models\Pastorable;
 use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Post;
 use Bishopm\Church\Models\Project;
@@ -252,6 +255,38 @@ class HomeController extends Controller
     public function page($page){
         $data['page']=Page::where('slug',$page)->where('published',1)->firstOrFail();
         return view('church::web.page',$data);
+    }
+
+    public function pastoral(){
+        $data['pastor']=Individual::with('pastor')->where('id',$_COOKIE['wmc-id'])->first();
+        $data['my_cases']=Pastor::with('individuals','households')->where('id',$data['pastor']->pastor->id)->first();
+        $all_cases=Pastor::with('individuals','households')->where('id','<>',$data['pastor']->pastor->id)->get();
+        $data['all_cases']['individuals']=array();
+        $data['all_cases']['households']=array();
+        foreach ($all_cases as $pastor){
+            foreach ($pastor->individuals as $indiv){
+                if ($indiv->pivot->active){
+                    $data['all_cases']['individuals'][$indiv->firstname.$indiv->surname]=$indiv;
+                }
+            }
+            foreach ($pastor->households as $hld){
+                if ($hld->pivot->active){
+                    $data['all_cases']['households'][$hld->sortsurname]=$hld;
+                }
+            }
+        }
+        ksort($data['all_cases']['individuals']);
+        ksort($data['all_cases']['households']);
+        return view('church::app.pastoral',$data);
+    }
+
+    public function pastoralcase($type,$id){
+        if ($type=="household"){
+            $case=Household::with('pastoralnotes')->find($id);
+        } else {
+            $case=Individual::with('pastoralnotes')->find($id);
+        }
+        dd($case);
     }
 
     public function practices(){

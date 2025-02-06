@@ -106,7 +106,6 @@
                 {{$member['firstname']}}'s menu
               </a>
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{route('app.practices')}}">WMC practices</a>
                 <a class="dropdown-item" href="{{route('app.details')}}">Personal details</a>
                 @if (isset($member['pastor_id']))
                   <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>

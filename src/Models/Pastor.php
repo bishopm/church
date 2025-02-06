@@ -24,11 +24,11 @@ class Pastor extends Model
 
     public function individuals(): MorphToMany
     {
-        return $this->morphedByMany(Individual::class, 'pastorable');
+        return $this->morphedByMany(Individual::class, 'pastorable')->withPivot('active');
     }
 
     public function households(): MorphToMany
     {
-        return $this->morphedByMany(Household::class, 'pastorable');
+        return $this->morphedByMany(Household::class, 'pastorable')->withPivot('active');;
     }
 }

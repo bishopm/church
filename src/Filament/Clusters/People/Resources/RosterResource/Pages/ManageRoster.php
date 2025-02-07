@@ -100,7 +100,7 @@ class ManageRoster extends Page implements HasForms
             foreach ($ri->individuals as $indiv){
                 if ($indiv->cellphone){
                     $msg = $indiv->firstname . ", " . $record->message . " (" . $ri->rostergroup->group->groupname . ")";
-                    if ($ri->rostergroup->extrainfo){
+                    if ($ri->rostergroup->extrainfo==="yes"){
                         if ($ri->rostergroup->extrainfo=="reading"){
                             $servicetimes=setting('general.services');
                             foreach ($servicetimes as $service){

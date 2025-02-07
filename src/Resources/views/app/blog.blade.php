@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Blog">
+<x-church::layouts.app pageName="Blog">
     <h1>Blog</h1>
     @forelse ($posts as $post)
         <div class="mb-4 row">

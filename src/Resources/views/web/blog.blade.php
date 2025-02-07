@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Blog">
+<x-church::layouts.web pageName="Blog">
     <h1>Blog</h1>
     @forelse ($posts as $post)
         <div class="mb-4 row">

@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Blog post">
+<x-church::layouts.web pageName="Blog post">
     <h1>{{$post->title}}</h1>
     <div class="meta mb-3">
         <span class="date">{{date('j F Y',strtotime($post->published_at))}}</span> •

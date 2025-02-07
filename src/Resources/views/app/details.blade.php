@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Groups">
+<x-church::layouts.app pageName="Groups">
     <h4>{{$indiv->fullname}}</h4>
     These are the details we have for you on our system. Please let us know if they need to be updated
     <table class="table mt-3">

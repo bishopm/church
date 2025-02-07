@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="People">
+<x-church::layouts.web pageName="People">
     <h1>{{$person->fullname}}</h1>
     <div style="min-height: 270px;">
         <img style="float:left; padding-right:10px;" height="250px" src="{{url('/storage/' . $person->image)}}" alt="Image" class="rounded">

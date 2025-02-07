@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Blog post">
+<x-church::layouts.app pageName="Blog post">
     <h1>{{$post->title}}</h1>
     <div class="meta mb-3">
         <small><span class="date">{{date('j M Y',strtotime($post->published_at))}}</span> •<a href="{{url('/people') . '/' . $post->person->slug}}" class="cat">{{$post->person->fullname}}</a></small>

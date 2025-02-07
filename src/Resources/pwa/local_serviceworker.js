@@ -80,3 +80,8 @@ self.addEventListener('fetch', (event) => {
     });
   }));
 });
+
+// Update new serviceworker
+self.addEventListener('update', () => {
+    console.log('New version found');
+});

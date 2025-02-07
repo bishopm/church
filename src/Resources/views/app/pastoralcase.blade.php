@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Pastoral care">
+<x-church::layouts.app pageName="Pastoral care">
     @if ($type=="individual")
         <h3>{{$case->fullname}}</h3>
     @else

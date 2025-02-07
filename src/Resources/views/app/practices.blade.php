@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="People">
+<x-church::layouts.app pageName="People">
     <p class="pb-4">Our calling as a church is to make disciples of Jesus, which means helping our members to grow in maturity and Christlikeness. We have adopted four practices that we believe will help us to do this: We <b>CONNECT</b> meaningfully, <b>WORSHIP</b> intentionally, <b>GIVE</b> generously and <b>SERVE</b> passionately. This section of the app helps you to track your growth and points out next steps if you want to explore new areas of commitment.</p> 
     <ul style="display: flex; justify-content: center;" class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">

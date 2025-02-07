@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Books">    
+<x-church::layouts.app pageName="Books">    
     <h1>Books</h1>
     <div class="pb-3">
         <div class="accordion" id="accordionExample">

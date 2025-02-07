@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Phone verification">
+<x-church::layouts.web pageName="Phone verification">
     <div class="mb-4 row">
         <div class="col-md-6">
             @livewire('login')
@@ -9,4 +9,4 @@
             <div>Enter your phone number and then submit the code that will be SMS'ed to you. (If we don't have your phone number on record, you will be prompted to enter your name too).</div>
         </div>
     </div>
-</x-church::website.layout>                
+</x-church::layouts.web>                

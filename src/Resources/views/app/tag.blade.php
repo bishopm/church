@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Blog post">
+<x-church::layouts.app pageName="Blog post">
     <h1 class="text-uppercase">{{$tag->name}}</h1>
     @if (count($posts))
         <h4>Blog posts</h4>

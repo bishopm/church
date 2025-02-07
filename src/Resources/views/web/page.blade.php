@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="{{$page->title}}">
+<x-church::layouts.web pageName="{{$page->title}}">
     <h1>{{$page->title}}</h1>
     <div style="min-height: 270px;">
         @if ($page->image)

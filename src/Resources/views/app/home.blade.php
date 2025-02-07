@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="App home">
+<x-church::layouts.app pageName="App home">
     @if (count($member))
         <div class="text-center">
             <button class="btn btn-secondary mb-2" id="installbutton" hidden>Install the {{setting('general.church_abbreviation')}} App</button>
@@ -150,4 +150,4 @@
             }
         })
     </script>
-</x-church::website.applayout>
+</x-church::layouts.app>

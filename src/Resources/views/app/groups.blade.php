@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Groups">
+<x-church::layouts.app pageName="Groups">
     <h1>Small groups</h1>
     <ul class="list-unstyled">
         @foreach ($groups as $group)

@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Song">
+<x-church::layouts.app pageName="Song">
     @if (count($member))
         <h4>Songs</h4>
         <form method="get">

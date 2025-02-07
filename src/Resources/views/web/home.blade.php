@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Home">
+<x-church::layouts.web pageName="Home">
 <!-- About Section -->
 <div id="about">
     <div data-aos="fade-up" data-aos-delay="400">

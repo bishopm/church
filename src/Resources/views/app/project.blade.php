@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Blog post">
+<x-church::layouts.app pageName="Blog post">
     <h3 class="text-uppercase">{{$project->title}}</h3>
     <div class="pb-3">
         <div>

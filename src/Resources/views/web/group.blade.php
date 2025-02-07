@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Groups">
+<x-church::layouts.web pageName="Groups">
     <h1>{{$group->groupname}}</h1>
     <div class="my-3 row">
         <div class="col-lg-4">

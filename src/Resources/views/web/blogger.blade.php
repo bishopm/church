@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Blogger">
+<x-church::layouts.web pageName="Blogger">
     <h1>Blog</h1>
     @foreach ($posts as $post)
         <div class="mb-4 row">

@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Pastoral care">
+<x-church::layouts.app pageName="Pastoral care">
     <h3>Pastoral care</h3>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">

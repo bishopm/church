@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="People">
+<x-church::layouts.web pageName="People">
     <h1>{{$member['fullname']}} </h1> 
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">

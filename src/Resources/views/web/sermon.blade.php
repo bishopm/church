@@ -1,4 +1,4 @@
-<x-church::website.layout pageName="Sermon">
+<x-church::layouts.web pageName="Sermon">
     <div>
         <div class="row gy-2">
             <div class="col-md-6 col-sm-12">

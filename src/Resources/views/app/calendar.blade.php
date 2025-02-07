@@ -1,4 +1,4 @@
-<x-church::website.applayout pageName="Groups">
+<x-church::layouts.app pageName="Groups">
     <h3>
         {{setting('general.church_abbreviation')}} Diary
         @if ($full=="")

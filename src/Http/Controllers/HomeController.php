@@ -258,9 +258,9 @@ class HomeController extends Controller
     }
 
     public function pastoral(){
-        $data['pastor']=Individual::with('pastor')->where('id',$_COOKIE['wmc-id'])->first();
-        $data['my_cases']=Pastor::with('individuals','households')->where('id',$data['pastor']->pastor->id)->first();
-        $all_cases=Pastor::with('individuals','households')->where('id','<>',$data['pastor']->pastor->id)->get();
+        $data['pastor']=Pastor::with('individual')->where('individual_id',$_COOKIE['wmc-id'])->first();
+        $data['my_cases']=Pastor::with('individuals','households')->where('id',$data['pastor']->id)->first();
+        $all_cases=Pastor::with('individuals','households')->where('id','<>',$data['pastor']->id)->get();
         $data['all_cases']['individuals']=array();
         $data['all_cases']['households']=array();
         foreach ($all_cases as $pastor){
@@ -283,16 +283,22 @@ class HomeController extends Controller
     public function pastoralcase($type,$id){
         $pastor=Pastor::where('individual_id',$_COOKIE['wmc-id'])->first();
         if ($type=="household"){
-            $data['case']=Household::with('pastoralnotes.pastor.individual')->find($id);
+            $data['case']=Household::with('pastoralnotes','pastors.individual')->find($id);
+            $data['name']=$data['case']->addressee;
         } else {
-            $data['case']=Individual::with('pastoralnotes.pastor.individual')->find($id);
+            $data['case']=Individual::with('pastoralnotes','pastors.individual')->find($id);
+            $data['name']=$data['case']->firstname;
         }
-        $pastors=$data['case']->pastors->pluck('id')->toArray();
-        if (in_array($pastor->id,$pastors)){
+        $pastors=$data['case']->pastors;
+        foreach ($pastors as $pastor){
+            $pastorids[]=$pastor->id;
+        }
+        if (in_array($pastor->id,$pastorids)){
             $data['detail']=1;
         } else {
             $data['detail']=0;
         }
+        $data['pastor_id']=$pastor->id;
         $data['type']=$type;
         $data['mostrecent']=Pastoralnote::with('pastoralnotable')->whereHas('pastoralnotable', function($q) use($type,$id) {
             $q->where('pastoralnotable_id', $id)->where('pastoralnotable_type',$type);})->orderBy('pastoraldate','DESC')->first();

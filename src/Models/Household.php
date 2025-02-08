@@ -27,10 +27,10 @@ class Household extends Model
     {
         return $this->morphMany(Pastoralnote::class,'pastoralnotable');
     }
-
+    
     public function pastors(): MorphToMany
     {
-        return $this->morphToMany(Pastor::class,'pastorable');
+        return $this->morphToMany(Pastor::class,'pastorable')->withPivot('active','details','prayerlist','prayernote');
     }
 
     public function getNameAttribute()

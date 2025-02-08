@@ -7,6 +7,7 @@ use Bishopm\Church\Http\Middleware\AdminRoute;
 use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\LoginForm;
+use Bishopm\Church\Livewire\PastoralNote;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
@@ -73,6 +74,7 @@ class ChurchServiceProvider extends ServiceProvider
         Livewire::component('login', LoginForm::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);
+        Livewire::component('pastoralnote', PastoralNote::class);
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }

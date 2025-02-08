@@ -75,11 +75,7 @@ class Individual extends Model
 
     public function pastors(): MorphToMany
     {
-        return $this->morphToMany(Pastor::class,'pastorable');
+        return $this->morphToMany(Pastor::class,'pastorable')->withPivot('active','details','prayerlist','prayernote');
     }
 
-    public function pastor(): HasOne
-    {
-        return $this->hasOne(Pastor::class);
-    }
 }

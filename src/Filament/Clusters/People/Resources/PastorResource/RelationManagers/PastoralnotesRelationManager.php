@@ -9,10 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Bishopm\Church\Models\Pastoralnote;
-use Filament\Forms\Components\MorphToSelect;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PastoralnotesRelationManager extends RelationManager
 {

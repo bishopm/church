@@ -299,7 +299,7 @@ class HomeController extends Controller
             $data['detail']=0;
         }
         $data['pastor_id']=$pastor->id;
-        $data['type']=$type;
+        $data['pastoralnotable_type']=$type;
         $data['mostrecent']=Pastoralnote::with('pastoralnotable')->whereHas('pastoralnotable', function($q) use($type,$id) {
             $q->where('pastoralnotable_id', $id)->where('pastoralnotable_type',$type);})->orderBy('pastoraldate','DESC')->first();
         return view('church::app.pastoralcase',$data);

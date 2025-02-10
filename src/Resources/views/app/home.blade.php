@@ -59,21 +59,36 @@
                 <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
             @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
-        @elseif (isset($item->reading) and ($service))
+        @elseif (isset($service))
             <div class="lead pt-3">
                 @if ($service->series)
                     <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
                 @endif
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
-            @if ($service->series)
-            <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
-                <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
-            </a>
+            @if ($service)
+                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
+                    <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
+                </a>
             @endif
             <div class="lead pt-3">{{$item->reading}}
                 @if ($item->person)
                 <small class="text-muted">{{$item->person->fullname}}</small>
+                @endif
+            </div>
+        @elseif ($item->reading)
+            @if ($item->series)
+                <div class="lead pt-3">
+                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
+                </div>
+                <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
+                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
+                    <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
+                </a>
+            @endif
+            <div class="lead pt-3">{{$item->reading}}
+                @if ($item->person)
+                    <small class="text-muted">{{$item->person->fullname}}</small>
                 @endif
             </div>
         @elseif ($item->image)

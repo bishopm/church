@@ -58,8 +58,8 @@ class HomeController extends Controller
     public function app(){
         $today=date('Y-m-d');
         $data['content']=array();
-        $monthago=date('Y-m-d',strtotime('-80 days'));      
-        $sermons=Service::where('servicedate','>',$monthago)->orderBy('servicedate','DESC')->get();
+        $monthago=date('Y-m-d',strtotime('-61 days'));      
+        $sermons=Service::where('servicedate','>',$monthago)->whereNotNull('audio')->where('published',1)->where('livestream',1)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
         }
@@ -394,12 +394,12 @@ class HomeController extends Controller
     }
 
     public function series($year,$slug){
-        $data['series']=Series::with('services.person')->whereHas('services', function (Builder $q) { $q->where('published',1);})->where('slug',$slug)->first();
+        $data['series']=Series::with('services.person')->whereHas('services', function (Builder $q) { $q->where('livestream',1)->where('published',1);})->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);
     }
     
     public function sermons() {
-        $data['series']=Series::with('services')->whereHas('services', function (Builder $q) { $q->where('published',1);})->orderBy('startingdate','DESC')->paginate(10);
+        $data['series']=Series::with('services')->whereHas('services', function (Builder $q) { $q->where('livestream',1)->where('published',1);})->orderBy('startingdate','DESC')->paginate(10);
         return view('church::' . $this->routeName . '.sermons',$data);
     }
 

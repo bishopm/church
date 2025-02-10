@@ -281,12 +281,13 @@ class HomeController extends Controller
     }
 
     public function pastoralcase($type,$id){
-        $pastor=Pastor::where('individual_id',$_COOKIE['wmc-id'])->first();
+        $data['pastor']=Pastor::where('individual_id',$_COOKIE['wmc-id'])->first();
         if ($type=="household"){
-            $data['case']=Household::with('pastoralnotes','pastors.individual')->find($id);
+            $data['case']=Household::with('pastors.individual','pastoralnotes')
+            ->orderBy(Pastoralnote::select('pastoraldate')->whereColumn('pastoralnotable_id','households.id')->orderByDesc('pastoraldate'))->find($id);
             $data['name']=$data['case']->addressee;
         } else {
-            $data['case']=Individual::with('pastoralnotes','pastors.individual')->find($id);
+            $data['case']=Individual::with(['pastors.individual','pastoralnotes'=>function ($q){$q->orderBy('pastoraldate','DESC');}])->where('id',$id)->first();
             $data['name']=$data['case']->firstname;
         }
         $pastors=$data['case']->pastors;
@@ -298,10 +299,10 @@ class HomeController extends Controller
         } else {
             $data['detail']=0;
         }
-        $data['pastor_id']=$pastor->id;
         $data['pastoralnotable_type']=$type;
         $data['mostrecent']=Pastoralnote::with('pastoralnotable')->whereHas('pastoralnotable', function($q) use($type,$id) {
             $q->where('pastoralnotable_id', $id)->where('pastoralnotable_type',$type);})->orderBy('pastoraldate','DESC')->first();
+        $data['pastoraldate']=date('Y-m-d');
         return view('church::app.pastoralcase',$data);
     }
 

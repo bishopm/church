@@ -40,6 +40,7 @@ class ChurchServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
         Config::set('app.name',setting('general.church_abbreviation'));
         Config::set('auth.providers.users.model','Bishopm\Church\Models\User');
+        Config::set('google-calendar.calendar_id',setting('email.church_email'));
         Config::set('mail.default',setting('email.mailer'));
         Config::set('mail.mailers.' . setting('email.mailer') . '.host',setting('email.mail_host'));
         Config::set('mail.mailers.' . setting('email.mailer') . '.port',setting('email.mail_port'));

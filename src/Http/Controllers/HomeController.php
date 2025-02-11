@@ -187,6 +187,10 @@ class HomeController extends Controller
         }
     }
 
+    public function contact(){
+        return view('church::' . $this->routeName . '.contact');
+    }
+
     public function details(){
         $data['indiv']=Individual::find($this->member['id']);
         return view('church::app.details',$data);

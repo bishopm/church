@@ -123,6 +123,7 @@ class Settings extends BaseSettings
                             TextInput::make('website.whatsapp'),
                             TextInput::make('website.youtube_channel'),
                             TextInput::make('website.youtube_channel_id'),
+                            TextInput::make('website.youtube_playlist_id'),
                             TextInput::make('website.facebook_page'),
                             TextInput::make('website.youversion_page'),
                             TextInput::make('website.instagram_account'),

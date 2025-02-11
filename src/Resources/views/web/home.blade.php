@@ -65,11 +65,13 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
+                    @if ($upcoming->video)
                     <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
                         <div class="ratio ratio-16x9">
-                            <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
+                            <iframe src='{{$upcoming->video}}' frameborder='0' allowfullscreen></iframe>
                         </div>
                     </div>
+                    @endif
                     <div class="tab-pane fade" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
                         <div class="card">
                             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">

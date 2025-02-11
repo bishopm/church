@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Http\Controllers;
 
+use Bishopm\Church\Classes\YoutubeService;
 use Bishopm\Church\Mail\MessageMail;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
@@ -235,6 +236,9 @@ class HomeController extends Controller
 
     public function home(FormRequest $request)
     {
+        $youtube= new YoutubeService();
+        dd($youtube->createStream());
+        $today=date('Y-m-d');
         if (null!==$request->input('message')){
             $data['message'] = $request->input('message');
             $data['user'] = $request->input('user');
@@ -242,6 +246,7 @@ class HomeController extends Controller
             $data['notification']="Thank you! We will reply to you by email";
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
+        $data['upcoming']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->whereNotNull('video')->orderBy('servicedate','ASC')->first();
         $data['sermon']=Service::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";
         return view('church::web.home',$data);

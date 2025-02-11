@@ -104,6 +104,7 @@
               </a>
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{{route('app.details')}}">Personal details</a>
+                <a class="dropdown-item" href="{{route('app.practices')}}">Discipleship</a>
                 @if (isset($member['pastor_id']))
                   <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
                 @endif

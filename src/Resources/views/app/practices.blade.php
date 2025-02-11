@@ -34,7 +34,7 @@
                     </ul>
                     <a class="btn btn-secondary" href="{{url('/contact')}}">Let the office know if these details need to be updated</a> 
                 @else
-                    To join a home group, click here
+                    <a class="btn btn-secondary" href="{{url('/contact')}}">To find out about joining a group, send us a message</a> 
                 @endif
             </div>
         </div>
@@ -57,7 +57,7 @@
                         @endforeach
                     </table>
                 @else
-                    To sign up as a planned giver, click here
+                    <a class="btn btn-secondary" href="{{url('/contact')}}">To sign up as a planned giver, send us a message</a> 
                 @endif
             </div>
         </div>
@@ -77,7 +77,7 @@
                         You have no upcoming roster duties
                     @endforelse
                 @else
-                    To join a service team, click here
+                    <a class="btn btn-secondary" href="{{url('/contact')}}">To join a service team, send us a message</a> 
                 @endif
             </div>
         </div>

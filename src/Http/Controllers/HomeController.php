@@ -162,7 +162,6 @@ class HomeController extends Controller
                 }
             }
         }
-        $data['olddate']="";
         $data['full']=$full;
         return view('church::' . $this->routeName . '.calendar',$data);
     }
@@ -235,7 +234,7 @@ class HomeController extends Controller
         if (null!==$request->input('message')){
             $data['message'] = $request->input('message');
             $data['user'] = $request->input('user');
-            Mail::to('michael@westvillemethodist.co.za')->send(new MessageMail($data));
+            Mail::to(setting('general.church_email'))->send(new MessageMail($data));
             $data['notification']="Thank you! We will reply to you by email";
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
@@ -404,7 +403,7 @@ class HomeController extends Controller
     }
 
     public function sermon($year,$slug, $id){
-        $data['sermon']=Service::with('person')->where('published',1)->where('id',$id)->first();
+        $data['sermon']=Service::with('person')->where('published',1)->where('livestream',1)->whereNotNull('audio')->where('id',$id)->first();
         $data['series']=Series::with('services')->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }

@@ -317,7 +317,7 @@ class ServiceResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\Toggle::make('active'),
                             ]),
-                        Forms\Components\TextInput::make('title')
+                        Forms\Components\TextInput::make('sermon_title')
                             ->label('Sermon title')
                             ->maxLength(255),
                             Forms\Components\TextInput::make('video')
@@ -376,9 +376,9 @@ class ServiceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSets::route('/'),
-            'create' => Pages\CreateSet::route('/create'),
-            'edit' => Pages\EditSet::route('/{record}/edit'),
+            'index' => Pages\ListServices::route('/'),
+            'create' => Pages\CreateService::route('/create'),
+            'edit' => Pages\EditService::route('/{record}/edit'),
         ];
     }
 }

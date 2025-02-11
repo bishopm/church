@@ -12,7 +12,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Mail;
 
-class EditSet extends EditRecord
+class EditService extends EditRecord
 {
     protected static string $resource = ServiceResource::class;
 

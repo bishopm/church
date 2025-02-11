@@ -27,19 +27,20 @@ class ServicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('livestream', 1))
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('sermon_title'),
+                Tables\Columns\TextColumn::make('servicetime')->label('Service'),
+                Tables\Columns\IconColumn::make('published')->label('Published')->boolean(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('edit')->url(fn ($record): string => route('filament.admin.worship.resources.services.edit', $record))->icon('heroicon-m-pencil-square'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

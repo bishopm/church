@@ -86,10 +86,12 @@
                     <img class="card-img-top" src="{{url('/storage/' . $item->series->image)}}" alt="{{$item->series->series}}">
                 </a>
             @endif
-            <div class="lead pt-3">{{$item->reading}}
+            <div class="pt-3 text-center">
+                <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($item->reading)}}&version=GNT";">{{$item->reading}}</a><br>
                 @if ($item->person)
-                    <small class="text-muted">{{$item->person->fullname}}</small>
+                    <small class="text-muted">{{$item->sermon_title}} ({{$item->person->fullname}})</small>
                 @endif
+                <audio controls><source src="{{$item->audio}}" type="audio/mpeg">Your device or browser does not support the audio tag.</audio>
             </div>
         @elseif ($item->image)
             <a href="{{route('app.devotionals')}}">

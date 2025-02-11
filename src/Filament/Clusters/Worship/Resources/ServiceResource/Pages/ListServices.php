@@ -6,7 +6,7 @@ use Bishopm\Church\Filament\Clusters\Worship\Resources\ServiceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListSets extends ListRecords
+class ListServices extends ListRecords
 {
     protected static string $resource = ServiceResource::class;
 

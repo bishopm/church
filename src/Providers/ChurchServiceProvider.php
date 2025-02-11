@@ -13,14 +13,9 @@ use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -82,6 +77,7 @@ class ChurchServiceProvider extends ServiceProvider
         Relation::morphMap([
             'book' => 'Bishopm\Church\Models\Book',
             'prayer' => 'Bishopm\Church\Models\Prayer',
+            'sermon' => 'Bishopm\Church\Models\Service',
             'post' => 'Bishopm\Church\Models\Post',
             'song' => 'Bishopm\Church\Models\Song',
             'group' => 'Bishopm\Church\Models\Group',
@@ -111,6 +107,9 @@ class ChurchServiceProvider extends ServiceProvider
             $phone=$_COOKIE['wmc-mobile'];
             $uid=$_COOKIE['wmc-access'];
             $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
+            if (!isset($_COOKIE['wmc-id'])){
+                setcookie('wmc-id',$indiv->id, 2147483647,'/');
+            }
             if ($indiv){
                 $member['id']=$indiv->id;
                 $member['firstname']=$indiv->firstname;

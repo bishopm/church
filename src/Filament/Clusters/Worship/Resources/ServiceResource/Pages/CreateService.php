@@ -8,7 +8,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 
-class CreateSet extends CreateRecord
+class CreateService extends CreateRecord
 {
     protected static string $resource = ServiceResource::class;
 

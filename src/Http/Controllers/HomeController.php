@@ -58,7 +58,7 @@ class HomeController extends Controller
     public function app(){
         $today=date('Y-m-d');
         $data['content']=array();
-        $monthago=date('Y-m-d',strtotime('-61 days'));      
+        $monthago=date('Y-m-d',strtotime('-41 days'));      
         $sermons=Service::where('servicedate','>',$monthago)->whereNotNull('audio')->where('published',1)->where('livestream',1)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;

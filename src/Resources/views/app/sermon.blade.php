@@ -9,8 +9,13 @@
                     <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->reading)}}&version=GNT";">{{$sermon->reading}} </a>
                     ({{$sermon->person->firstname}} {{$sermon->person->surname}})
                 </p>
-                <div id="sermon" width="400px"></div>
-                @if (count($series->services) > 1))
+                <div id="sermon" width="400px">
+                    <audio controls>
+                        <source src="{{$sermon->audio}}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                @if (count($series->services) > 1)
                     <h3>Other sermons in the series</h3>
                     <ul class="list-unstyled">
                         @foreach ($series->services as $ss)
@@ -27,7 +32,9 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <h3>Service video</h3>
-                <iframe width="560" height="315" src="https://youtube.com/embed/{{$sermon->video}}" frameborder="0" allowfullscreen></iframe>
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://youtube.com/embed/{{$sermon->video}}" frameborder="0" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
     </div>

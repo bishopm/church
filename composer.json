@@ -27,7 +27,7 @@
         "spatie/laravel-google-calendar": "~3",
         "yaza/laravel-google-drive-storage": "^3",
         "lukeraymonddowning/honey": "^1",
-        "laravel/pulse": "^1"
+        "sarfraznawaz2005/loading": "^1"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

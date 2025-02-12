@@ -24,9 +24,9 @@
     @if ($service) 
         <div class="bg-black p-2 text-white">
             <h3>Upcoming service</h3>
-                @if ($service->servicedate == date('Y-m-d'))
+                @if (($service->servicedate == date('Y-m-d')) and ($service->video))
                     <div class="ratio ratio-16x9">
-                        <iframe src='https://www.youtube.com/embed/live_stream?autoplay=1&channel={{setting('website.youtube_channel_id')}}' frameborder='0' allowfullscreen></iframe>
+                        <iframe src='https://youtube.com/embed/{{$service->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
                     </div>
                 @else
                     <div>Live stream starts in {{ $floor }} ({{date('j M Y',strtotime($service->servicedate))}} {{$service->servicetime}})

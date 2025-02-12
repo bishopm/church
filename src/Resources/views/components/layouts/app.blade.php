@@ -80,6 +80,9 @@
             <a class="nav-link active" href="{{route('app.home')}}">Home</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('app.blog')}}">Blog</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{route('app.books')}}">Books</a>
           </li>
           <li class="nav-item">
@@ -87,6 +90,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('app.sermons')}}">Sermons</a>
           </li>
           @if (count($member))
             <li class="nav-item">

@@ -68,7 +68,7 @@
                     @if ($upcoming->video)
                     <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
                         <div class="ratio ratio-16x9">
-                            <iframe src='{{$upcoming->video}}' frameborder='0' allowfullscreen></iframe>
+                            <iframe src='https://youtube.com/embed/{{$upcoming->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
                         </div>
                     </div>
                     @endif
@@ -96,7 +96,7 @@
                     </div>
                     <div class="tab-pane fade" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab">
                         <div class="ratio ratio-16x9">
-                            <iframe src="https://youtube.com/embed/{{substr($sermon->video,8+strpos($sermon->video,'watch?v='))}}" frameborder="0" allowfullscreen>
+                            <iframe src="https://youtube.com/embed/{{$sermon->video}}?autoplay=1" frameborder="0" allowfullscreen>
                             </iframe>
                         </div>
                     </div>

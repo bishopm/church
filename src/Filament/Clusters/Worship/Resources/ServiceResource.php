@@ -320,10 +320,12 @@ class ServiceResource extends Resource
                         Forms\Components\TextInput::make('sermon_title')
                             ->label('Sermon title')
                             ->maxLength(255),
-                            Forms\Components\TextInput::make('video')
+                        Forms\Components\TextInput::make('video')
                             ->suffixAction(MediaAction::make('showVideo')
                                 ->icon('heroicon-m-video-camera')
-                                ->media(fn (Get $get) => $get('video'))
+                                ->media(function (Get $get){
+                                    return "https://youtube.com/watch?v=" . $get('video');
+                                })
                         ),
                         Forms\Components\TextInput::make('audio')
                             ->suffixAction(MediaAction::make('playAudio')

@@ -17,24 +17,26 @@
                 </div>
                 @if (count($series->services) > 1)
                     <h3>Other sermons in the series</h3>
+                    <ul class="list-unstyled">
+                        @foreach ($series->services as $ss)
+                            @if ($ss->id <> $sermon->id)
+                                <li>{{date('d M',strtotime($ss->servicedate))}}&nbsp;&nbsp;
+                                    <a href="{{url('/')}}/sermon/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}">{{$ss->sermon_title}}</a> 
+                                    &nbsp;<span class="bi bi-book"></span>&nbsp;<a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($ss->reading)}}&version=GNT";">{{$ss->reading}} </a>
+                                    <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$ss->person->slug}}">{{$ss->person->fullname}}</a>
+                                </li>
+                            @endif
+                        @endforeach    
+                    </ul>
                 @endif
-                <ul class="list-unstyled">
-                    @foreach ($series->services as $ss)
-                        @if ($ss->id <> $sermon->id)
-                            <li>{{date('d M',strtotime($ss->servicedate))}}&nbsp;&nbsp;
-                                <a href="{{url('/')}}/sermon/{{date('Y',strtotime($ss->servicedate))}}/{{$ss->series->slug}}/{{$ss->id}}">{{$ss->title}}</a> 
-                                &nbsp;<span class="bi bi-book"></span>&nbsp;<a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($ss->reading)}}&version=GNT";">{{$ss->reading}} </a>
-                                <span class="bi bi-person-circle"></span>&nbsp;<a title="Preacher" href="{{url('/')}}/people/{{$ss->person->slug}}">{{$ss->person->fullname}}</a>
-                            </li>
-                        @endif
-                    @endforeach    
-                </ul>
             </div>
             <div class="col-md-6 col-sm-12">
-                <h3>Service video</h3>
-                <div class="ratio ratio-16x9">
-                    <iframe src="https://youtube.com/embed/{{substr($sermon->video,8+strpos($sermon->video,'watch?v='))}}" frameborder="0" allowfullscreen></iframe>
-                </div>
+                @if ($sermon->video)
+                    <h3>Service video</h3>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://youtube.com/embed/{{$sermon->video}}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

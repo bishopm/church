@@ -236,8 +236,6 @@ class HomeController extends Controller
 
     public function home(FormRequest $request)
     {
-        $youtube= new YoutubeService();
-        dd($youtube->createStream());
         $today=date('Y-m-d');
         if (null!==$request->input('message')){
             $data['message'] = $request->input('message');
@@ -247,7 +245,7 @@ class HomeController extends Controller
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
         $data['upcoming']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->whereNotNull('video')->orderBy('servicedate','ASC')->first();
-        $data['sermon']=Service::with('person','series')->where('published',1)->orderBy('servicedate','DESC')->first();
+        $data['sermon']=Service::with('person','series')->where('published',1)->whereNotNull('audio')->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";
         return view('church::web.home',$data);
     }
@@ -402,18 +400,18 @@ class HomeController extends Controller
     }
 
     public function series($year,$slug){
-        $data['series']=Series::with('services.person')->whereHas('services', function (Builder $q) { $q->where('livestream',1)->where('published',1);})->where('slug',$slug)->first();
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video');})->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);
     }
     
     public function sermons() {
-        $data['series']=Series::with('services')->whereHas('services', function (Builder $q) { $q->where('livestream',1)->where('published',1);})->orderBy('startingdate','DESC')->paginate(10);
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video');})->orderBy('startingdate','DESC')->paginate(10);
         return view('church::' . $this->routeName . '.sermons',$data);
     }
 
     public function sermon($year,$slug, $id){
-        $data['sermon']=Service::with('person')->where('published',1)->where('livestream',1)->whereNotNull('audio')->where('id',$id)->first();
-        $data['series']=Series::with('services')->where('id',$data['sermon']->series_id)->first();
+        $data['sermon']=Service::with('person')->where('published','=',1)->where('livestream',1)->whereNotNull('audio')->whereNotNull('video')->where('id',$id)->first();
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }
 

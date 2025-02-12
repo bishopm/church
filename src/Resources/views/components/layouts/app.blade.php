@@ -66,7 +66,6 @@
       }
   </script>
 </head>
-
 <body style="background-color: #f6f6f6;">
   <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
     <div id="container" class="container-fluid">
@@ -125,8 +124,7 @@
       <div>
     </div>
   </nav>
-
-  <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px; padding-bottom:90px;">
+  <main class="main" style="padding-top:20px; padding-left:10px; padding-right:10px; padding-bottom:90px;">  
     @if (session()->has('message'))
       <div class="alert alert-success alert-dismissible fade show" role="alert">  
         <p>{{ session('message') }}</p>          

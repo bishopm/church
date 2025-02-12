@@ -3,10 +3,10 @@
         <div class="row gy-2">
             <div class="col-md-6 col-sm-12">
                 <h3>Sermon audio</h3>
-                <img width="400px" src="{{url('/storage/' . $series->image)}}" alt="{{$series->series}}">
-                <h5 class="h5 font-weight-bold"><a href="#" target="_blank">{{$sermon->sermon_title}}</a></h5>
+                <img class="img-fluid rounded" width="400px" src="{{url('/storage/' . $series->image)}}" alt="{{$series->series}}">
+                <h5 class="h5 font-weight-bold">{{$sermon->sermon_title}}</h5>
                 <p class="mb-0">
-                    <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->reading)}}&version=GNT";">{{$sermon->reading}} </a>
+                    <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($sermon->reading)}}&version=GNT";">{{$sermon->reading}}</a>
                     ({{$sermon->person->firstname}} {{$sermon->person->surname}})
                 </p>
                 <div id="sermon" width="400px">

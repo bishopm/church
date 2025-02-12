@@ -72,7 +72,7 @@ class HomeController extends Controller
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
-        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
+        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
         if ($data['service']){
             $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
             if ($floor == 1){

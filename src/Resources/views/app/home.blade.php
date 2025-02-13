@@ -59,6 +59,16 @@
                 <div><img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded"></div>
             @endif
             <div>{!! nl2br($item->excerpt) !!}</div>
+        @elseif (isset($item->event))
+            <div class="lead pt-3">
+                Coming up: <a href="{{route('app.event',['id'=>$item->id])}}">{{$item->event}}</a>
+                <p>{{$item->description}}</p>
+                @if(!empty($item->image))
+                    <a href="{{route('app.event',['id'=>$item->id])}}">
+                        <img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded">
+                    </a>
+                @endif
+            </div>
         @elseif (isset($service))
             <div class="lead pt-3">
                 @if ($service->series)

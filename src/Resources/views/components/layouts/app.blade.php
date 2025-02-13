@@ -88,6 +88,9 @@
             <a class="nav-link" href="{{route('app.calendar')}}">Calendar</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('app.events')}}">Coming up at {{setting('general.church_abbreviation')}}</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
           </li>
           <li class="nav-item">

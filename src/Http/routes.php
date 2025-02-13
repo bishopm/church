@@ -41,6 +41,8 @@ Route::domain($url)->group(function() {
         Route::get('/blog', 'blog')->name('web.blog');
         Route::get('/blog/{slug}', 'blogger')->name('web.blogger');
         Route::get('/contact', 'contact')->name('web.contact');
+        Route::get('/events', 'events')->name('web.events');
+        Route::get('/events/{id}', 'event')->name('web.event');        
         Route::get('/groups', 'groups')->name('web.groups');
         Route::get('/groups/{id}', 'group')->name('web.group');
         Route::get('/offline', 'offline')->name('web.offline');
@@ -56,7 +58,7 @@ Route::domain($url)->group(function() {
         Route::get('/stayingconnected', 'stayingconnected')->name('web.stayingconnected');
         Route::get('/subject/{slug}', 'subject')->name('web.subject');
         Route::get('/sundaydetails', 'sunday')->name('web.sunday');
-        if ((substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"admin") and (substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"pulse")){
+        if (substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"admin"){
             Route::get('/{page}', 'page')->name('web.page');
         }
     });
@@ -75,6 +77,8 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/contact', 'contact')->name('app.contact');
         Route::get('/details', 'details')->name('app.details');
         Route::get('/devotionals', 'devotionals')->name('app.devotionals');
+        Route::get('/events', 'events')->name('app.events');
+        Route::get('/events/{id}', 'event')->name('app.event');
         Route::get('/groups', 'groups')->name('app.groups');
         Route::get('/groups/{id}', 'group')->name('app.group');
         Route::get('/login', 'login')->name('app.login');

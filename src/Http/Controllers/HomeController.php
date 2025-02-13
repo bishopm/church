@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as FormRequest;
 use Illuminate\Support\Facades\Mail;
 use Spatie\GoogleCalendar\Event;
+use Bishopm\Church\Models\Event as ChurchEvent;
 use Spatie\Tags\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
@@ -59,8 +60,8 @@ class HomeController extends Controller
     public function app(){
         $today=date('Y-m-d');
         $data['content']=array();
-        $monthago=date('Y-m-d',strtotime('-41 days'));      
-        $sermons=Service::where('servicedate','>',$monthago)->whereNotNull('audio')->where('published',1)->where('livestream',1)->orderBy('servicedate','DESC')->get();
+        $monthago=date('Y-m-d',strtotime('-31 days'));      
+        $sermons=Service::where('servicedate','>',$monthago)->where('servicedate','<',$today)->whereNotNull('audio')->where('published',1)->where('livestream',1)->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
         }
@@ -71,6 +72,11 @@ class HomeController extends Controller
         $devs=Devotional::where('publicationdate','>',$monthago)->orderBy('publicationdate','DESC')->get();
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
+        }
+        $soon=date('Y-m-d',strtotime('2 weeks'));
+        $events=ChurchEvent::where('eventdate','>',$today)->where('eventdate','<',$soon)->orderBy('eventdate','ASC')->get();
+        foreach ($events as $event){
+            $data['content'][strtotime($event->eventdate)]=$event;
         }
         $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
         if ($data['service']){
@@ -222,6 +228,17 @@ class HomeController extends Controller
             $data['prayers'][] = $prayer;
         }
         return view('church::app.devotionals',$data);
+    }
+
+    public function event($id){
+        $data['event']=ChurchEvent::find($id);
+        return view('church::' . $this->routeName . '.event',$data);
+    }
+
+    public function events(){
+        $today=date('Y-m-d');
+        $data['events']=ChurchEvent::orderBy('eventdate')->where('eventdate','>=',$today)->get();
+        return view('church::' . $this->routeName . '.events',$data);
     }
 
     public function group($id){

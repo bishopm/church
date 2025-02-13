@@ -8,6 +8,7 @@ use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Cache;
 use Bishopm\Church\Models\Comment;
+use Bishopm\Church\Models\Course;
 use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Document;
 use Bishopm\Church\Models\Gift;
@@ -73,7 +74,11 @@ class HomeController extends Controller
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
-        $soon=date('Y-m-d',strtotime('2 weeks'));
+        $soon=date('Y-m-d',strtotime('+2 weeks'));
+        $courses=Course::where('coursedate','>',$today)->where('coursedate','<',$soon)->orderBy('coursedate','ASC')->get();
+        foreach ($courses as $course){
+            $data['content'][strtotime($course->coursedate)]=$course;
+        }
         $events=ChurchEvent::where('eventdate','>',$today)->where('eventdate','<',$soon)->orderBy('eventdate','ASC')->get();
         foreach ($events as $event){
             $data['content'][strtotime($event->eventdate)]=$event;
@@ -196,6 +201,17 @@ class HomeController extends Controller
 
     public function contact(){
         return view('church::' . $this->routeName . '.contact');
+    }
+
+    public function course($id){
+        $data['course']=Course::find($id);
+        return view('church::' . $this->routeName . '.course',$data);
+    }
+
+    public function courses(){
+        $today=date('Y-m-d');
+        $data['courses']=Course::orderBy('coursedate')->where('coursedate','>=',$today)->get();
+        return view('church::' . $this->routeName . '.courses',$data);
     }
 
     public function details(){

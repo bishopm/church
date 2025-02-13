@@ -41,6 +41,8 @@ Route::domain($url)->group(function() {
         Route::get('/blog', 'blog')->name('web.blog');
         Route::get('/blog/{slug}', 'blogger')->name('web.blogger');
         Route::get('/contact', 'contact')->name('web.contact');
+        Route::get('/courses', 'courses')->name('web.courses');
+        Route::get('/courses/{id}', 'course')->name('web.course');        
         Route::get('/events', 'events')->name('web.events');
         Route::get('/events/{id}', 'event')->name('web.event');        
         Route::get('/groups', 'groups')->name('web.groups');
@@ -75,6 +77,8 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/books', 'books')->name('app.books');
         Route::get('/calendar/{full?}', 'calendar')->name('app.calendar');
         Route::get('/contact', 'contact')->name('app.contact');
+        Route::get('/courses', 'courses')->name('app.courses');
+        Route::get('/courses/{id}', 'course')->name('app.course');        
         Route::get('/details', 'details')->name('app.details');
         Route::get('/devotionals', 'devotionals')->name('app.devotionals');
         Route::get('/events', 'events')->name('app.events');

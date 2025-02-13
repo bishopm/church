@@ -69,6 +69,16 @@
                     </a>
                 @endif
             </div>
+        @elseif (isset($item->course))
+            <div class="lead pt-3">
+                Coming up: <a href="{{route('app.course',['id'=>$item->id])}}">{{$item->course}}</a>
+                <p>{{$item->description}}</p>
+                @if(!empty($item->image))
+                    <a href="{{route('app.course',['id'=>$item->id])}}">
+                        <img src="{{url('/storage/' . $item->image)}}" alt="Image" class="img-fluid rounded">
+                    </a>
+                @endif
+            </div>
         @elseif (isset($service))
             <div class="lead pt-3">
                 @if ($service->series)

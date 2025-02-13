@@ -115,12 +115,12 @@ class ChurchServiceProvider extends ServiceProvider
                 $member['id']=$indiv->id;
                 $member['firstname']=$indiv->firstname;
                 $member['fullname']=$indiv->fullname;
+                $pastor = Pastor::where('individual_id',$member['id'])->first();
+                if ($pastor){
+                    $member['pastor_id']=$pastor->id;
+                }
+                Config::set('member',$member);    
             }
-            $pastor = Pastor::where('individual_id',$member['id'])->first();
-            if ($pastor){
-                $member['pastor_id']=$pastor->id;
-            }
-            Config::set('member',$member);
         }
         View::share('member',$member);
         if (env('APP_ENV')=="local"){

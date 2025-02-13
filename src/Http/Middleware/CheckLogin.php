@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Http\Middleware;
 
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Pastor;
 use Closure;
 use Illuminate\Http\Request;
@@ -25,6 +26,15 @@ class CheckLogin
                 $pastor=Pastor::where('individual_id',$_COOKIE['wmc-id'])->get();
                 if (!count($pastor)){
                     return redirect(route('app.home'));
+                }
+            }
+        } else {
+            if (isset($_COOKIE['wmc-mobile']) and (isset($_COOKIE['wmc-access']))){
+                $indiv=Individual::where('uid',$_COOKIE['wmc-access'])->where('cellphone',$_COOKIE['wmc-mobile'])->first();
+                if ($indiv){
+                    return redirect(route('app.home'));
+                } else {
+                    return $next($request);            
                 }
             }
         }

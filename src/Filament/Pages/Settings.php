@@ -115,6 +115,8 @@ class Settings extends BaseSettings
                             TextInput::make('services.drive_clientid')->label('Google Drive Client ID'),
                             TextInput::make('services.drive_clientsecret')->label('Google Drive Client Secret'),
                             TextInput::make('services.drive_refreshtoken')->label('Google Drive refresh token'),
+                            TextInput::make('services.facebook_access_token')->label('Facebook access token'),
+                            TextInput::make('services.facebook_page_id')->label('Facebook page ID'),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)

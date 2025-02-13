@@ -127,7 +127,9 @@ class SongResource extends Resource
                         Forms\Components\TextInput::make('video')
                             ->suffixAction(MediaAction::make('showVideo')
                                 ->icon('heroicon-m-video-camera')
-                                ->media(fn (Get $get) => $get('video'))
+                                ->media(function (Get $get){
+                                    return "https://youtube.com/watch?v=" . $get('video');
+                                })
                         ),
                         Forms\Components\FileUpload::make('music')
                             ->hiddenOn('create')

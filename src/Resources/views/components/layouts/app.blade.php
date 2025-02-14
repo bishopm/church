@@ -50,7 +50,6 @@
   <!-- Tile for Win8 -->
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="/public/church/images/icons/icon-512x512.png">
-  
   <script type="text/javascript">
       // Initialize the service worker
       if ('serviceWorker' in navigator) {
@@ -118,6 +117,9 @@
                 <a class="dropdown-item" href="{{route('app.practices')}}">Discipleship</a>
                 @if (isset($member['pastor_id']))
                   <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
+                @endif
+                @if ($member['directory'])
+                  <a class="dropdown-item" href="{{route('app.directory')}}">Find a name</a>
                 @endif
               </div>
             </li>

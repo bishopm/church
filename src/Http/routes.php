@@ -83,6 +83,7 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/devotionals', 'devotionals')->name('app.devotionals');
         Route::get('/events', 'events')->name('app.events');
         Route::get('/events/{id}', 'event')->name('app.event');
+        Route::get('/find', 'find')->name('app.directory');
         Route::get('/groups', 'groups')->name('app.groups');
         Route::get('/groups/{id}', 'group')->name('app.group');
         Route::get('/login', 'login')->name('app.login');

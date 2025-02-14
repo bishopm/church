@@ -34,7 +34,7 @@
             </div>
             <div class="py-2">
                 <h5>Reading: <small><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a></small></h5>
-                <h5>Preacher: <small>{{$preacher}}</small></h5>
+                <h5>Preacher: <small>{{$service->person->fullname}}</small></h5>
                 @if ($service->series)
                     <h5>Series: <small><a href="{{url('/')}}/sermons/{{date('Y',strtotime($service->series->startingdate))}}/{{$service->series->slug}}">{{$service->series->series}}</a></small></h5>
                 @endif

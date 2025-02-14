@@ -45,6 +45,7 @@ class Settings extends BaseSettings
                         ->schema([
                             KeyValue::make('admin.agendas')->columnSpanFull(),
                             Textarea::make('admin.bank_details')->columnSpanFull()->rows(4),
+                            Textinput::make('admin.sms_master_pin')->label('SMS master PIN'),
                             Select::make('admin.church_tenant')->label('Name of venue user for internal venue bookings')
                                 ->options(Tenant::all()->sortBy('tenant')->pluck('tenant', 'id'))
                                 ->searchable(),

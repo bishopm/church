@@ -83,7 +83,7 @@ class HomeController extends Controller
         foreach ($events as $event){
             $data['content'][strtotime($event->eventdate)]=$event;
         }
-        $data['service']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
+        $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
         if ($data['service']){
             $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
             if ($floor == 1){
@@ -91,9 +91,6 @@ class HomeController extends Controller
             } else {
                 $data['floor'] = $floor . " days";
             }
-            $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $data['service']->servicetime . "/" . substr($data['service']->servicedate,0,10);
-            $response=Http::get($url);
-            $data['preacher']=$response->body();
         }
         krsort($data['content']);
         return view('church::app.home',$data);
@@ -255,6 +252,10 @@ class HomeController extends Controller
         $today=date('Y-m-d');
         $data['events']=ChurchEvent::orderBy('eventdate')->where('eventdate','>=',$today)->get();
         return view('church::' . $this->routeName . '.events',$data);
+    }
+
+    public function find(){
+        return view('church::app.find');
     }
 
     public function group($id){

@@ -9,11 +9,11 @@
             @error('phone') 
                 <small class="muted text-danger">{{ $message }}</small> 
             @enderror
-            @if (!$block_submit)
+            @if ((!$block_submit) and (!$pin))
                 <button class="btn btn-dark btn-block fa-lg gradient-custom-2 mb-3" type="submit">Send verification SMS to this number</button><br>
             @endif 
             @if($feedback)
-                {!!$feedback!!}          
+                {!!$feedback!!}<br>
             @endif
             @if ($showform) 
                 <input wire:model.live="firstname" id="firstname" name="firstname" class="form-control my-2" placeholder="First name"/>

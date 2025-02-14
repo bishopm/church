@@ -6,7 +6,7 @@ use Filament\Clusters\Cluster;
 
 class Reports extends Cluster
 {
-    protected static ?int $navigationSort = -7;
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $navigationIcon = 'heroicon-o-document';
 

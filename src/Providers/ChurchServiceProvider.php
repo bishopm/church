@@ -6,6 +6,7 @@ use Bishopm\Church\Church;
 use Bishopm\Church\Http\Middleware\AdminRoute;
 use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
+use Bishopm\Church\Livewire\Find;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Livewire\PastoralNote;
 use Bishopm\Church\Models\Individual;
@@ -68,6 +69,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
         Config::set('filesystems.disks.google.folder','');
         Livewire::component('login', LoginForm::class);
+        Livewire::component('find', Find::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);
         Livewire::component('pastoralnote', PastoralNote::class);
@@ -107,7 +109,7 @@ class ChurchServiceProvider extends ServiceProvider
         if (isset($_COOKIE['wmc-mobile']) and (isset($_COOKIE['wmc-access']))){
             $phone=$_COOKIE['wmc-mobile'];
             $uid=$_COOKIE['wmc-access'];
-            $indiv=Individual::where('cellphone',$phone)->where('uid',$uid)->first();
+            $indiv=Individual::with('user.roles')->where('cellphone',$phone)->where('uid',$uid)->first();
             if (!isset($_COOKIE['wmc-id'])){
                 setcookie('wmc-id',$indiv->id, 2147483647,'/');
             }
@@ -118,6 +120,14 @@ class ChurchServiceProvider extends ServiceProvider
                 $pastor = Pastor::where('individual_id',$member['id'])->first();
                 if ($pastor){
                     $member['pastor_id']=$pastor->id;
+                }
+                $member['directory']=false;
+                if (isset($indiv->user->roles)){
+                    foreach ($indiv->user->roles as $role){
+                        if ($role->name=="Super Admin"){
+                            $member['directory']=true;
+                        }
+                    }
                 }
                 Config::set('member',$member);    
             }

@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Providers;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use Bishopm\Church\Filament\Pages\Dashboard;
 use Bishopm\Church\Filament\Widgets\Birthdays;
 use Bishopm\Church\Filament\Widgets\PastoralContact;
 use Filament\Http\Middleware\Authenticate;
@@ -43,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: base_path('vendor/bishopm/church/src/Filament/Pages'), for: 'Bishopm\\Church\\Filament\\Pages')
             ->discoverClusters(in: base_path('vendor/bishopm/church/src/Filament/Clusters'), for: 'Bishopm\\Church\\Filament\\Clusters')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->plugins([
                 FilamentSpatieRolesPermissionsPlugin::make(),

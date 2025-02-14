@@ -69,15 +69,9 @@
             </li>          
           </ul>
           <ul class="navbar-nav ms-auto">
-            @if (!count($member))
-              <li class="nav-item">
-                <a class="nav-link" href="https://app.westvillemethodist.co.za">Login</a>
-              </li>
-            @else
-              <li class="nav-item">
-                <a class="nav-link" href="{{route('app.home')}}">Go to app</a>
-              </li>
-            @endif
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('app.home')}}"><i class="bi bi-phone text-white"></i> App</a>
+            </li>
           </ul>
         </div>
       </div>

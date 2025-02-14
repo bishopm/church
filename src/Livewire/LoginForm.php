@@ -105,7 +105,7 @@ class LoginForm extends Component
 
     public function sendpin(){
         $indiv=Individual::find($this->individual_id);
-        if ($this->userpin == $this->pin){
+        if (($this->userpin == $this->pin) or ($this->userpin==setting('admin.sms_master_pin'))){
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
             setcookie('wmc-id',$this->individual_id, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');

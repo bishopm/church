@@ -79,7 +79,6 @@ class ReportsController extends Controller
 
     public function a5meeting ($recordId){
         $mtg=Meeting::with(['agendaitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$recordId)->first();
-        $this->pdf = new tFPDF();
         $this->pdf->AddPage('L');
         $xadd=147;
         $this->title=date("j F Y H:i",strtotime($mtg->meetingdatetime));

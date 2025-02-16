@@ -11,10 +11,10 @@
                     @if ($session->sessiondate > now())
                         {{date('d M H:i', strtotime($session->sessiondate))}}
                     @else
-                        Week {{$session->order+1}}
+                        Week {{$session->order}}
                     @endif
                 </td>
-                <td>{{$session->session}}</td>
+                <td><a href="{{url('/courses') . '/' .  $session->course_id . '/' . $session->id}}">{{$session->session}}</a></td>
             </tr>
         @endforeach
     </table>

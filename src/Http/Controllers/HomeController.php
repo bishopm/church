@@ -9,6 +9,7 @@ use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Cache;
 use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Course;
+use Bishopm\Church\Models\Coursesession;
 use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Document;
 use Bishopm\Church\Models\Gift;
@@ -447,6 +448,11 @@ class HomeController extends Controller
         $data['sermon']=Service::with('person')->where('published','=',1)->where('livestream',1)->whereNotNull('audio')->whereNotNull('video')->where('id',$id)->first();
         $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
+    }
+
+    public function session($id, $session){
+        $data['session']=Coursesession::with('course')->where('id',$session)->first();
+        return view('church::' . $this->routeName . '.session',$data);
     }
 
     public function song($id) {

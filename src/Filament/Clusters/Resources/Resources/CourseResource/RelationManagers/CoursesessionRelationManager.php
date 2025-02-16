@@ -55,8 +55,9 @@ class CoursesessionRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('session')
             ->columns([
+                Tables\Columns\TextColumn::make('order')->label('Week'),
                 Tables\Columns\TextColumn::make('session'),
-                Tables\Columns\TextColumn::make('sessiondate'),
+                Tables\Columns\TextColumn::make('sessiondate')->label('Date and time'),
             ])
             ->filters([
                 //
@@ -65,7 +66,7 @@ class CoursesessionRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data, RelationManager $livewire): array {
                         $course=Course::with('coursesessions')->where('id',$livewire->getOwnerRecord()->id)->first();
-                        $data['order'] = count($course->coursesessions);
+                        $data['order'] = 1+count($course->coursesessions);
                         return $data;
                     })
                     ->after(function (Coursesession $session, RelationManager $livewire) {
@@ -74,13 +75,15 @@ class CoursesessionRelationManager extends RelationManager
                                 'diarisable_type' => 'course',
                                 'diarisable_id' => $livewire->getOwnerRecord()->id,
                                 'venue_id' => $livewire->getOwnerRecord()->venue_id,
-                                'details' => $livewire->getOwnerRecord()->course . " (week " . $session['order']+1 . ")",
+                                'details' => $livewire->getOwnerRecord()->course . " (week " . $session['order'] . ")",
                                 'diarydatetime' => $session['sessiondate'],
                                 'endtime' => $session['endtime']
                             ]);
                         }
                     }),
             ])
+            ->reorderable('order')
+            ->defaultSort('order')
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -74,7 +74,7 @@ class HomeController extends Controller
         foreach ($devs as $dev){
             $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
-        $soon=date('Y-m-d',strtotime('+12 weeks'));
+        $soon=date('Y-m-d',strtotime('+2 weeks'));
         $courses=Course::withWhereHas('coursesessions', function ($q) use($monthago,$soon) { $q->where('sessiondate','>',$monthago)->where('sessiondate','<',$soon);})->orderBy('course','ASC')->get();
         foreach ($courses as $course){
             $data['content'][$course->course]=$course;

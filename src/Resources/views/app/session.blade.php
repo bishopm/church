@@ -15,7 +15,7 @@
         @if ($session->file)
             <div>
                 <h3>PDF</h3>
-                <a href="{{storage_path('/' . $session->file)}}">Download</a>
+                <a href="{{url('/storage/' . $session->file)}}">Download</a>
             </div>
         @endif
     </div>

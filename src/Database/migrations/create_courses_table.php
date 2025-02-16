@@ -12,11 +12,9 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->string('course', 199);
-            $table->dateTime('coursedate');
             $table->text('description');
             $table->string('image', 199);
             $table->integer('venue_id');
-            $table->tinyInteger('calendar')->nullable()->default(null);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

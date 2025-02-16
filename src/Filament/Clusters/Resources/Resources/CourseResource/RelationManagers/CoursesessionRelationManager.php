@@ -2,6 +2,9 @@
 
 namespace Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource\RelationManagers;
 
+use Bishopm\Church\Models\Course;
+use Bishopm\Church\Models\Coursesession;
+use Bishopm\Church\Models\Diaryentry;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -22,9 +25,21 @@ class CoursesessionRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make('session')->label('Session name')
-                    ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\DateTimePicker::make('sessiondate')
+                    ->label('Date and time')
+                    ->default(now())
+                    ->native(true)
+                    ->seconds(false)
+                    ->displayFormat('Y-m-d H:i')
+                    ->format('Y-m-d H:i')
+                    ->required(),
+                Forms\Components\TimePicker::make('endtime')
+                    ->label('End time')
+                    ->seconds(false),
+                Forms\Components\Checkbox::make('calendar')
+                    ->label('Add to church calendar'),
                 Forms\Components\TextInput::make('video')
                     ->suffixAction(MediaAction::make('showVideo')
                         ->icon('heroicon-m-video-camera')),
@@ -41,12 +56,30 @@ class CoursesessionRelationManager extends RelationManager
             ->recordTitleAttribute('session')
             ->columns([
                 Tables\Columns\TextColumn::make('session'),
+                Tables\Columns\TextColumn::make('sessiondate'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data, RelationManager $livewire): array {
+                        $course=Course::with('coursesessions')->where('id',$livewire->getOwnerRecord()->id)->first();
+                        $data['order'] = count($course->coursesessions);
+                        return $data;
+                    })
+                    ->after(function (Coursesession $session, RelationManager $livewire) {
+                        if (($session['sessiondate']) and ($session['endtime'])){
+                            Diaryentry::create([
+                                'diarisable_type' => 'course',
+                                'diarisable_id' => $livewire->getOwnerRecord()->id,
+                                'venue_id' => $livewire->getOwnerRecord()->venue_id,
+                                'details' => $livewire->getOwnerRecord()->course . " (week " . $session['order']+1 . ")",
+                                'diarydatetime' => $session['sessiondate'],
+                                'endtime' => $session['endtime']
+                            ]);
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

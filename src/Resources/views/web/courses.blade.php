@@ -3,7 +3,7 @@
     <ul class="list-unstyled">
         @foreach ($courses as $course)
             <li>
-            {{date('j M',strtotime($course->coursedate))}} <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a>
+                <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a>
             </li>
         @endforeach
     </ul>

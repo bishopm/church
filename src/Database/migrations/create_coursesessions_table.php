@@ -12,11 +12,14 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->string('session', 191)->default(null);
+            $table->datetime('sessiondate')->default(null);
+            $table->datetime('endtime')->default(null);
             $table->integer('course_id')->default(null);
             $table->text('notes')->default(null);
             $table->string('video', 191)->default(null);
             $table->string('file', 191)->default(null);
             $table->integer('order')->default(null);
+            $table->tinyInteger('calendar')->nullable()->default(null);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

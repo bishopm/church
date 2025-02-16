@@ -32,19 +32,10 @@ class CourseResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('coursedate')
-                    ->label('Date and time')
-                    ->default(now())
-                    ->native(true)
-                    ->displayFormat('Y-m-d H:i')
-                    ->format('Y-m-d H:i')
-                    ->required(),
                 Forms\Components\Select::make('venue_id')
                     ->label('Venue')
                     ->relationship('venue', 'venue')
                     ->required(),
-                Forms\Components\Checkbox::make('calendar')
-                    ->label('Add to church calendar'),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/course')
                     ->previewable(false)
@@ -58,12 +49,8 @@ class CourseResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('course')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('coursedate')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('calendar')
-                    ->boolean(),
             ])
-            ->defaultSort('coursedate','DESC')
+            ->defaultSort('course','DESC')
             ->filters([
                 //
             ])

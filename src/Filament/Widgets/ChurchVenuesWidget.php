@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Filament\Widgets;
 
+use Bishopm\Church\Models\Course;
 use Guava\Calendar\Widgets\CalendarWidget;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Event;
@@ -150,6 +151,8 @@ class ChurchVenuesWidget extends CalendarWidget
                         ->options(function (Get $get) {
                             if ($get('diarisable_type')=="group") {
                                 return GroupModel::orderBy('groupname')->get()->pluck('groupname', 'id');
+                            } elseif ($get('diarisable_type')=="course") {
+                                return Course::orderBy('course')->get()->pluck('event', 'id');
                             } elseif ($get('diarisable_type')=="event") {
                                 return Event::orderBy('event')->get()->pluck('event', 'id');
                             } else {
@@ -162,8 +165,9 @@ class ChurchVenuesWidget extends CalendarWidget
                         ->label('User type')
                         ->options([
                             'tenant' => 'External group',
-                            'group' => setting('general.church_abbreviation') . ' group',
-                            'event' => setting('general.church_abbreviation') . ' event'
+                            'course' => setting('general.church_abbreviation') . ' course',
+                            'event' => setting('general.church_abbreviation') . ' event',
+                            'group' => setting('general.church_abbreviation') . ' group'
                         ])
                         ->selectablePlaceholder(false)
                         ->default('tenant')

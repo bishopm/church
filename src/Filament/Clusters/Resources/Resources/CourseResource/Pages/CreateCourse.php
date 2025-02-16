@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource;
+use Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource;
 use Bishopm\Church\Models\Diaryentry;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;

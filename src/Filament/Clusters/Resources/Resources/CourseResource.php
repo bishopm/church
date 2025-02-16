@@ -1,10 +1,10 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources;
+namespace Bishopm\Church\Filament\Clusters\Resources\Resources;
 
-use Bishopm\Church\Filament\Clusters\Property;
-use Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource\Pages;
-use Bishopm\Church\Filament\Clusters\Property\Resources\CourseResource\RelationManagers;
+use Bishopm\Church\Filament\Clusters\Resources;
+use Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource\Pages;
+use Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource\RelationManagers;
 use Bishopm\Church\Models\Course;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,13 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CourseResource extends Resource
 {
-    protected static ?int $navigationSort = 5;
-
     protected static ?string $model = Course::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?string $cluster = Property::class;
+    protected static ?string $cluster = Resources::class;
 
     public static function form(Form $form): Form
     {
@@ -82,7 +80,7 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CoursesessionRelationManager::class,
         ];
     }
 

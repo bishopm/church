@@ -14,8 +14,6 @@ use Filament\Tables\Table;
 
 class ReportResource extends Resource
 {
-    protected static ?int $navigationSort = 5;
-
     protected static ?string $model = Report::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

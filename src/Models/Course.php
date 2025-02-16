@@ -4,6 +4,7 @@ namespace Bishopm\Church\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
@@ -19,5 +20,10 @@ class Course extends Model
     public function venue(): BelongsTo
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function coursesessions(): HasMany
+    {
+        return $this->hasMany(Coursesession::class);
     }
 }

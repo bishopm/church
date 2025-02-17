@@ -9,4 +9,4 @@
             <div>Enter your phone number and then submit the code that will be SMS'ed to you. (If we don't have your phone number on record, you will be prompted to enter your name too).</div>
         </div>
     </div>
-</x-church::layouts.web>                
+</x-church::layouts.app>                

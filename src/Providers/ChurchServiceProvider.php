@@ -6,6 +6,7 @@ use Bishopm\Church\Church;
 use Bishopm\Church\Http\Middleware\AdminRoute;
 use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
+use Bishopm\Church\Livewire\Calendar;
 use Bishopm\Church\Livewire\Find;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Livewire\PastoralNote;
@@ -68,10 +69,11 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));
         Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
         Config::set('filesystems.disks.google.folder','');
-        Livewire::component('login', LoginForm::class);
-        Livewire::component('find', Find::class);
-        Livewire::component('bookreview', BookReview::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);
+        Livewire::component('bookreview', BookReview::class);
+        Livewire::component('calendar', Calendar::class);
+        Livewire::component('find', Find::class);
+        Livewire::component('login', LoginForm::class);
         Livewire::component('pastoralnote', PastoralNote::class);
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();

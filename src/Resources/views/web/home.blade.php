@@ -54,46 +54,75 @@
             @if (isset($sermon))
             <div class="col-lg-6 order-lg-1">                
                 <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-upcoming-tab" data-bs-toggle="pill" data-bs-target="#pills-upcoming" type="button" role="tab" aria-controls="pills-upcoming" aria-selected="true">Coming up</button>
-                    </li>    
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-audio-tab" data-bs-toggle="pill" data-bs-target="#pills-audio" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Latest sermon audio</button>
-                    </li>
+                    @if (isset($upcoming))
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-upcoming-tab" data-bs-toggle="pill" data-bs-target="#pills-upcoming" type="button" role="tab" aria-controls="pills-upcoming" aria-selected="true">Coming up</button>
+                        </li>    
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-audio-tab" data-bs-toggle="pill" data-bs-target="#pills-audio" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Latest sermon audio</button>
+                        </li>
+                    @else 
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-audio-tab" data-bs-toggle="pill" data-bs-target="#pills-audio" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Latest sermon audio</button>
+                        </li>
+                    @endif
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-video-tab" data-bs-toggle="pill" data-bs-target="#pills-video" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Latest service video</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    @if ($upcoming->video)
-                    <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
-                        <div class="ratio ratio-16x9">
-                            <iframe src='https://youtube.com/embed/{{$upcoming->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
+                    @if (isset($upcoming)) and ($upcoming->video))
+                        <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
+                            <div class="ratio ratio-16x9">
+                                <iframe src='https://youtube.com/embed/{{$upcoming->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
+                            </div>
                         </div>
-                    </div>
+                        <div class="tab-pane fade" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
+                            <div class="card">
+                                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
+                                    alt="{{$sermon->series->series}}">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="h5 font-weight-bold">
+                                        <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->sermon_title}}</a>
+                                    </h5>
+                                    <p class="mb-0">{{$sermon->reading}} ({{$sermon->person->firstname}} {{$sermon->person->surname}})</p>
+                                    <div id="sermon"></div>
+                                </div>
+                                <div class="text-center">
+                                    <audio controls>
+                                        <source src="{{$sermon->audio}}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="tab-pane fade show active" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
+                            <div class="card">
+                                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
+                                    alt="{{$sermon->series->series}}">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="h5 font-weight-bold">
+                                        <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->sermon_title}}</a>
+                                    </h5>
+                                    <p class="mb-0">{{$sermon->reading}} ({{$sermon->person->firstname}} {{$sermon->person->surname}})</p>
+                                    <div id="sermon"></div>
+                                </div>
+                                <div class="text-center">
+                                    <audio controls>
+                                        <source src="{{$sermon->audio}}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            </div>
+                        </div>    
                     @endif
-                    <div class="tab-pane fade" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab">
-                        <div class="card">
-                            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                                <a href="{{url('/')}}/sermons/{{date('Y',strtotime($sermon->series->startingdate))}}/{{$sermon->series->slug}}"><img class="card-img-top" src="{{url('/storage/' . $sermon->series->image)}}"
-                                alt="{{$sermon->series->series}}">
-                                </a>
-                            </div>
-                            <div class="card-body text-center">
-                                <h5 class="h5 font-weight-bold">
-                                    <a href="{{url('/')}}/sermon/{{date('Y',strtotime($sermon->servicedate))}}/{{$sermon->series->slug}}/{{$sermon->id}}">{{$sermon->sermon_title}}</a>
-                                </h5>
-                                <p class="mb-0">{{$sermon->reading}} ({{$sermon->person->firstname}} {{$sermon->person->surname}})</p>
-                                <div id="sermon"></div>
-                            </div>
-                            <div class="text-center">
-                                <audio controls>
-                                    <source src="{{$sermon->audio}}" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        </div>
-                    </div>
                     <div class="tab-pane fade" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab">
                         <div class="ratio ratio-16x9">
                             <iframe src="https://youtube.com/embed/{{$sermon->video}}?autoplay=1" frameborder="0" allowfullscreen>

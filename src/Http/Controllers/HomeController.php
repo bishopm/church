@@ -152,28 +152,32 @@ class HomeController extends Controller
     }
 
     public function calendar($full=""){
-        $today=date('Y-m-d');
-        $events=Event::get(new Carbon($today),new Carbon(date('Y-12-31',strtotime('+1 year'))));
-        foreach ($events as $event){
-            $me=$this->calendar_attend($event->description);
-            if (($full=="yes") or ($me=="yes")){
-                if (is_null($event->startDateTime)){
-                    $data['events'][date('Y-m-d',strtotime($event->startDate))][]=[
-                        'name' => $event->name,
-                        'time' => "",
-                        'me' => $me
-                    ];
-                } else {
-                    $data['events'][date('Y-m-d',strtotime($event->startDateTime))][]=[
-                        'name' => $event->name,
-                        'time' => date('H:i',strtotime($event->startDateTime)),
-                        'me' => $me
-                    ];
+        if ($this->routeName=="web"){
+            $today=date('Y-m-d');
+            $events=Event::get(new Carbon($today),new Carbon(date('Y-12-31',strtotime('+1 year'))));
+            foreach ($events as $event){
+                $me=$this->calendar_attend($event->description);
+                if (($full=="yes") or ($me=="yes")){
+                    if (is_null($event->startDateTime)){
+                        $data['events'][date('Y-m-d',strtotime($event->startDate))][]=[
+                            'name' => $event->name,
+                            'time' => "",
+                            'me' => $me
+                        ];
+                    } else {
+                        $data['events'][date('Y-m-d',strtotime($event->startDateTime))][]=[
+                            'name' => $event->name,
+                            'time' => date('H:i',strtotime($event->startDateTime)),
+                            'me' => $me
+                        ];
+                    }
                 }
             }
+            $data['full']=$full;
+            return view('church::web.calendar',$data);
+        } else {
+            return view('church::app.calendar');
         }
-        $data['full']=$full;
-        return view('church::' . $this->routeName . '.calendar',$data);
     }
 
     private function calendar_attend($description){

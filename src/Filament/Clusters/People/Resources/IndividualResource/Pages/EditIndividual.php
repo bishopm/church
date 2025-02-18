@@ -51,7 +51,7 @@ class EditIndividual extends EditRecord
                 $individual->groups()->detach();
                 $individual->pastoralnotes()->delete();
                 $individual->rosteritems()->delete();
-                $individual->pastor()->delete();
+                $individual->pastors()->delete();
                 if (isset($data['deleteHousehold']) and ($data['deleteHousehold']==true)){
                     $individual->household()->delete();
                 } elseif (isset($data['anniversarydate']) and ($data['anniversarydate']<>"")){

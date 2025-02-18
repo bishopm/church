@@ -47,7 +47,7 @@ class EditIndividual extends EditRecord
                     }),               
             ])
             ->action(function (array $data): void {
-                $individual=Individual::with('groups','household','pastor','rosteritems','pastoralnotes')->where('id',$this->record->id)->first();
+                $individual=Individual::with('groups','household','pastors','rosteritems','pastoralnotes')->where('id',$this->record->id)->first();
                 $individual->groups()->detach();
                 $individual->pastoralnotes()->delete();
                 $individual->rosteritems()->delete();

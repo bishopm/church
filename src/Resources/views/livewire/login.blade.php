@@ -1,7 +1,10 @@
 <div>
-    <h3>Member login</h3>
+    <h3>Member <span wire:click="toggleOverride">login</span></h3>
     <div data-mdb-input-init class="form-outline mb-4">
         <form wire:submit="sendsms">
+            @if ($override)
+                <p><input wire:model="master" id="master" name="master" class="form-control my-2" placeholder="Master PIN"/></p>
+            @endif
             @csrf
             <x-honey />
             <label class="form-label">Please enter your cellphone number</label>

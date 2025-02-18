@@ -27,12 +27,24 @@ class LoginForm extends Component
     public $block_submit=true;
     public $showform=false;
     public $individual_id;
+    public $override=0;
+    public $master;
 
     protected $rules = [
         'phone' => 'required|digits:10',
         'firstname' => 'required',
         'surname' => 'required'
     ];
+
+    public function toggleOverride(){
+        if ($this->phone){
+            $this->override="Enter Override PIN";
+            $indiv=Individual::where('cellphone',$this->phone)->first();
+            $this->individual_id=$indiv->id;
+            $this->hashed=$indiv->uid;
+            $this->pin=setting('admin.sms_master_pin');
+        }
+    }
 
     public function updated($propertyName)
     {
@@ -105,7 +117,7 @@ class LoginForm extends Component
 
     public function sendpin(){
         $indiv=Individual::find($this->individual_id);
-        if (($this->userpin == $this->pin) or ($this->userpin==setting('admin.sms_master_pin'))){
+        if (($this->userpin == $this->pin) or ($this->master==setting('admin.sms_master_pin'))){
             setcookie('wmc-access',$this->hashed, 2147483647,'/');
             setcookie('wmc-id',$this->individual_id, 2147483647,'/');
             setcookie('wmc-mobile',$this->phone, 2147483647,'/');

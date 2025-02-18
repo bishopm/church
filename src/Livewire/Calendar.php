@@ -12,34 +12,54 @@ class Calendar extends Component
     public $events = [];
     public $status="Full church calendar";
     public $me;
+    public $mth,$first;
     public $loaded=false;
  
     public function loadEvents()
     {
         $today=date('Y-m-d');
         $events=Event::get(new Carbon($today),new Carbon(date('Y-12-31',strtotime('+1 year'))));
+        $this->events=[];
+        $this->first=false;
         foreach ($events as $event){
             $this->me=$this->calendar_attend($event->description);
-            if (($this->status<>"Full church calendar") or ($this->me=="yes")){
+            if (($this->status!=="Full church calendar") or ($this->me=="yes")){
                 if (is_null($event->startDateTime)){
-                    $this->events[date('Y-m-d',strtotime($event->startDate))][]=[
+                    $this->events[]=[
                         'id' => $event->id,
                         'name' => $event->name,
+                        'date' => date('Y-m-d',strtotime($event->startDate)),
                         'time' => "",
+                        'heading' => $this->makeheading(date('F',strtotime($event->startDate))),
                         'me' => $this->me
                     ];
                 } else {
-                    $this->events[date('Y-m-d',strtotime($event->startDateTime))][]=[
+                    $this->events[]=[
                         'id' => $event->id,
                         'name' => $event->name,
+                        'date' => date('Y-m-d',strtotime($event->startDateTime)),
                         'time' => date('H:i',strtotime($event->startDateTime)),
+                        'heading' => $this->makeheading(date('F',strtotime($event->startDateTime))),
                         'me' => $this->me
                     ];
                 }
             } else {}
         }
-        dd($this->events);
         $this->loaded = true;
+    }
+
+    private function makeheading($curr){
+        if (!$this->first){
+            $this->first=true;
+            return true;
+        } else {
+            $ndx =  count($this->events)-1;
+            if (date('F',strtotime($this->events[$ndx]['date']))==$curr){
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 
     public function toggleStatus(){

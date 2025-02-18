@@ -1,28 +1,15 @@
 <div>
     <h3 class="text-center">
-        {{setting('general.church_abbreviation')}} Diary
+        {{setting('general.church_abbreviation')}} Diary <a class="btn btn-secondary" wire:click="toggleStatus">{{$status}}</a>
     </h3>
-    <p class="text-center">
-        <a class="btn btn-secondary" wire:click="toggleStatus">{{$status}}</a>
-    </p>
     <div wire:init="loadEvents">
         <table class="table table-compact">
-            @php
-                $mth=date('F');
-            @endphp
-            <tr><th colspan="3" class="text-center">{{$mth}}</th></tr>
-            @forelse ($events as $thisdate=>$dayevents)
-                @if (date('F',strtotime($thisdate))<>$mth)
-                    @php
-                        $mth=date('F',strtotime($thisdate));
-                    @endphp
-                    <tr><th colspan="3" class="text-center">{{$mth}}</th></tr>
+            @forelse ($events as $event)
+                <tr wire:key="{{$event['id']}}">
+                @if ($event['heading'])
+                    <th colspan="3" class="text-center">{{date("F",strtotime($event['date']))}}</th></tr>
                 @endif
-                @foreach ($dayevents as $dayevent)
-                    <tr wire:key="{{$dayevent['id']}}">
-                        <td>{{date('D d M',strtotime($thisdate))}}</td><td>{{$dayevent['time']}}</td><td>{{$dayevent['name']}}</td>
-                    </tr>
-                @endforeach
+                <td>{{date('D d M',strtotime($event['date']))}}</td><td>{{$event['time']}}</td><td>{{$event['name']}}</td></tr>
             @empty
                 <tr><td colspan="3">
                     @if ($loaded)
@@ -33,4 +20,5 @@
                     </td></tr>
             @endforelse
         </table>
+    </div>
 </div>

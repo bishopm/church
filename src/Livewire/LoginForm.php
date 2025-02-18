@@ -39,9 +39,10 @@ class LoginForm extends Component
     public function toggleOverride(){
         if ($this->phone){
             $this->override="Enter Override PIN";
+            $this->hashed = hash('sha256', $this->master);
             $indiv=Individual::where('cellphone',$this->phone)->first();
             $this->individual_id=$indiv->id;
-            if ($indiv->uid){
+            if (!$indiv->uid==null){
                 $this->hashed=$indiv->uid;
             } else {
                 $indiv->uid=$this->hashed;

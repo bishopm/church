@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class MeasuresChart extends ChartWidget
 {
-    protected static ?string $heading = 'Discipleship measures';
+    protected static ?string $heading = 'Growth measures';
 
     protected function getData(): array
     {

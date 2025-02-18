@@ -20,7 +20,6 @@ use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
 use Bishopm\Church\Models\Gift;
-use Bishopm\Church\Models\Sermon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;

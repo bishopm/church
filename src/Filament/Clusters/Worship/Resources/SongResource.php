@@ -88,8 +88,21 @@ class SongResource extends Resource
                             ->maxLength(191),
                         Forms\Components\TextInput::make('copyright')
                             ->maxLength(191),
-                        Forms\Components\TextInput::make('key')
-                            ->maxLength(191),
+                        Forms\Components\Select::make('key')
+                            ->options([
+                                'A' => 'A',
+                                'A#/Bb' => 'A#/Bb',
+                                'B' => 'B',
+                                'C' => 'C',
+                                'C#/Db' => 'C#/Db',
+                                'D' => 'D',
+                                'D#/Eb' => 'D#/Eb',
+                                'E' => 'E',
+                                'F' => 'F',
+                                'F#/Gb' => 'F#/Gb',
+                                'G' => 'G',
+                                'G#/Ab' => 'G#/Ab'
+                            ]),
                         Forms\Components\TextInput::make('verseorder')
                             ->maxLength(191)
                             ->label('Verse order'),

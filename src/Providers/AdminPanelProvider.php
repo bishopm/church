@@ -88,6 +88,11 @@ class AdminPanelProvider extends PanelProvider
                     ->openUrlInNewTab()
                     ->icon('heroicon-o-globe-alt'),
                 MenuItem::make()
+                    ->label('Help')
+                    ->url('https://wiki.westvillemethodist.co.za/doku.php/wmcdb:index')
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-question-mark-circle'),
+                MenuItem::make()
                     ->label('Settings')
                     ->url('/admin/settings')
                     ->visible(fn (): bool => auth()->user()->isSuperAdmin())

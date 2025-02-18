@@ -846,7 +846,7 @@ class ReportsController extends Controller
     }
 
     public function removenames(){
-        $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->orderBy('surname')->get();
+        $removals=Individual::whereHas('attendances')->where('memberstatus','<>','inactive')->whereNull('deleted_at')->orderBy('surname')->get();
         $this->title="Name tags not used in over 6 months";
         $this->pdf=$this->report_header();
         $this->pdf->SetFont('DejaVu', 'B', 14);

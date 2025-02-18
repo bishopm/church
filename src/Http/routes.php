@@ -28,6 +28,7 @@ Route::get('/admin/reports/venue/{id}/{reportdate}', ['uses' => '\Bishopm\Church
 
 // Giving routes
 Route::middleware(['web',GivingRoute::class])->group(function () {
+    Route::get('/admin/reports/givingamounts/{yr?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@pg_amounts','as' => 'reports.givingamounts']);
     Route::get('/admin/reports/givingnames', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@pg_names','as' => 'reports.givingnames']);
     Route::get('/admin/reports/givingnumbers', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@pg_numbers','as' => 'reports.givingnumbers']);
 });

@@ -19,6 +19,7 @@ use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
+use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Sermon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -735,6 +736,9 @@ class ReportsController extends Controller
     }
 
     private function report_header(){
+        if (!isset($this->page)){
+            $this->page=0;
+        }
         $this->page++;
         $this->pdf->AddPage('P');
         $this->pdf->SetAutoPageBreak(true, 0);
@@ -756,6 +760,52 @@ class ReportsController extends Controller
             $this->pdf->text(185,27,"page " . $this->page);
         }
         return $this->pdf;
+    }
+
+    public function pg_amounts($yr=""){
+        $yr=2024;
+        if ($yr==""){
+            $yr=date('Y');
+        }
+        $data=array();
+        $amounts=Gift::where('paymentdate','>=',$yr.'-01-01')->where('paymentdate','<=',$yr.'-12-31')->orderBy('paymentdate','ASC')->get();
+        foreach ($amounts as $amount){
+            $data[date('nF Y',strtotime($amount->paymentdate))][$amount->pgnumber][]=$amount->amount;
+        }
+        $this->title="Planned givers by amount";
+        $add=0;
+        foreach ($data as $mth=>$month){
+            ksort($month);
+            $y=42;
+            $add=0;
+            $this->pdf=$this->report_header();
+            $this->pdf->SetXY(180,20);
+            $this->pdf->cell(20,0,substr($mth,1),0,0,'R');
+            $this->pdf->text(13+$add,$y-7,"PG");
+            $this->pdf->text(40+$add,$y-7,"Amount");
+            $grand=0;
+            foreach ($month as $pg=>$gifts){
+                if ($y>280){
+                    $y=42;
+                    $add=$add+60;
+                    $this->pdf->text(13+$add,$y-7,"PG");
+                    $this->pdf->text(40+$add,$y-7,"Amount");
+                }
+                $total=0;
+                foreach ($gifts as $gift){
+                    $total=$total + floatval($gift);
+                }
+                $this->pdf->setxy(10+$add,$y);
+                $this->pdf->cell(10,0,$pg,0,0,'R');
+                $this->pdf->setxy(35+$add,$y);
+                $this->pdf->cell(20,0,number_format($total),0,0,'R');
+                $grand=$grand+$total;
+                $y=$y+5;
+            }
+            $this->pdf->setxy(180,10);
+            $this->pdf->cell(20,10,'R ' . number_format($grand),0,0,'R');
+        }
+        $this->pdf->Output('I','planned-giving-amounts');
     }
 
     public function pg_names(){

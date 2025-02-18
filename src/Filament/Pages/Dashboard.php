@@ -10,5 +10,7 @@ class Dashboard extends PagesDashboard
 
     protected static ?int $navigationSort = -11;
 
-    protected static ?string $title = 'WMC';
+    protected static ?string $navigationLabel = 'WMC';
+
+    protected static ?string $title = 'Dashboard';
 }

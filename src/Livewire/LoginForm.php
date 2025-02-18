@@ -41,7 +41,12 @@ class LoginForm extends Component
             $this->override="Enter Override PIN";
             $indiv=Individual::where('cellphone',$this->phone)->first();
             $this->individual_id=$indiv->id;
-            $this->hashed=$indiv->uid;
+            if ($indiv->uid){
+                $this->hashed=$indiv->uid;
+            } else {
+                $indiv->uid=$this->hashed;
+                $indiv->save();
+            }
             $this->pin=setting('admin.sms_master_pin');
         }
     }
@@ -85,10 +90,10 @@ class LoginForm extends Component
     public function sendsms(){
         if ($this->honeyPasses()){
             $this->feedback="";
+            $this->hashed = hash('sha256', $this->pin);
             $indiv=Individual::where('cellphone',$this->phone)->first();
             if (!$indiv){
                 $household = Household::create(['addressee'=>$this->firstname . " " . $this->surname]);
-                $this->hashed = hash('sha256', $this->pin);
                 $indiv=Individual::create([
                     'firstname'=>$this->firstname,
                     'surname'=>$this->surname,
@@ -96,8 +101,13 @@ class LoginForm extends Component
                     'uid'=>$this->hashed,
                     'household_id'=>$household->id
                 ]);
-            } else if ($indiv->uid<>''){
-                $this->hashed=$indiv->uid;
+            } else {
+                if ($indiv->uid){
+                    $this->hashed=$indiv->uid;
+                } else {
+                    $indiv->uid=$this->hashed;
+                    $indiv->save();
+                }
             }
             $this->individual_id=$indiv->id;
             $this->pin = rand(1000,9999);

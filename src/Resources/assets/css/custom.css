@@ -320,6 +320,7 @@ audio {
 
 audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
     background-color: #159CA0;
+    background-color: #d3d3d3;
 }
 
 .pagination {

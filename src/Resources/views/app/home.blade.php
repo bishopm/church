@@ -52,7 +52,7 @@
     @forelse ($content as $item)
         @if (isset($item->published_at))
             <div class="lead pt-3">
-                <a href="{{url('/blog') . '/' . date('Y',strtotime($item->published_at)) . '/' . date('m',strtotime($item->published_at)) . '/' . $item->slug}}">{{$item->title}}</a>
+                <i class="bi bi-pencil-square"></i>&nbsp;<a href="{{url('/blog') . '/' . date('Y',strtotime($item->published_at)) . '/' . date('m',strtotime($item->published_at)) . '/' . $item->slug}}">{{$item->title}}</a>
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['published_at'])->diffForHumans()}}</small> 
             @if ($item->image)
@@ -61,7 +61,7 @@
             <div>{!! nl2br($item->excerpt) !!}</div>
         @elseif (isset($item->event))
             <div class="lead pt-3">
-                Coming up: <a href="{{route('app.event',['id'=>$item->id])}}">{{$item->event}}</a>
+                <i class="bi bi-calendar-event"></i>&nbsp;Coming up: <a href="{{route('app.event',['id'=>$item->id])}}">{{$item->event}}</a>
                 <p>{{$item->description}}</p>
                 @if(!empty($item->image))
                     <a href="{{route('app.event',['id'=>$item->id])}}">
@@ -71,7 +71,7 @@
             </div>
         @elseif (isset($item->course))
             <div class="lead pt-3">
-                Coming up: <a href="{{route('app.course',['id'=>$item->id])}}">{{$item->course}}</a>
+                <i class="bi bi-mortarboard"></i>&nbsp;Coming up: <a href="{{route('app.course',['id'=>$item->id])}}">{{$item->course}}</a>
                 <p>{{$item->description}}</p>
                 @if(!empty($item->image))
                     <a href="{{route('app.course',['id'=>$item->id])}}">
@@ -82,7 +82,7 @@
         @elseif (isset($service))
             <div class="lead pt-3">
                 @if ($service->series)
-                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
+                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->sermon_title}}</a>
                 @endif
             </div>
             <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
@@ -99,7 +99,7 @@
         @elseif ($item->reading)
             @if ($item->series)
                 <div class="lead pt-3">
-                    <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->title}}</a>
+                    <i class="bi bi-mic"></i>&nbsp;<a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">{{$item->sermon_title}}</a>
                 </div>
                 <small class="text-muted">{{\Carbon\Carbon::parse($item['servicedate'])->diffForHumans()}}</small>
                 <a href="{{url('/')}}/sermons/{{date('Y',strtotime($item->series->startingdate))}}/{{$item->series->slug}}">
@@ -107,9 +107,9 @@
                 </a>
             @endif
             <div class="pt-3 text-center">
-                <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($item->reading)}}&version=GNT";">{{$item->reading}}</a><br>
+                <a title="Click to open Bible reading" target="_blank" href="http://biblegateway.com/passage/?search={{urlencode($item->reading)}}&version=GNT";">{{$item->reading}}</a>
                 @if ($item->person)
-                    <small class="text-muted">{{$item->sermon_title}} ({{$item->person->fullname}})</small>
+                    <small class="text-muted">({{$item->person->fullname}})</small>
                 @endif
                 <audio controls><source src="{{$item->audio}}" type="audio/mpeg">Your device or browser does not support the audio tag.</audio>
             </div>

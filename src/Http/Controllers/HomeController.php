@@ -234,17 +234,7 @@ class HomeController extends Controller
         }
         $data['ffdl']=$ffdl->body;
         $data['ffdl_title']=$ffdl->title;
-        $prayers=Devotional::orderBy('publicationdate','DESC')->get()->take(5);
-        foreach ($prayers as $prayer){
-            $cache=Cache::where('title',$prayer->reading)->first();
-            if (!$cache){
-                $body="Dummy text";
-            } else {
-                $body=$cache->body;
-            }
-            $prayer->body=$body;
-            $data['prayers'][] = $prayer;
-        }
+        $data['quiets']=Document::where('category','quiet-moments')->orderBy('created_at','DESC')->paginate(20);
         return view('church::app.devotionals',$data);
     }
 

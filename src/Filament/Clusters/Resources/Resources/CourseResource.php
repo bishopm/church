@@ -34,8 +34,7 @@ class CourseResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Select::make('venue_id')
                     ->label('Venue')
-                    ->relationship('venue', 'venue')
-                    ->required(),
+                    ->relationship('venue', 'venue'),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/course')
                     ->image(),

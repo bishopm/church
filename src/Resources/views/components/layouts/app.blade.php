@@ -96,6 +96,9 @@
             <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('app.groups')}}">Groups</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{route('app.sermons')}}">Sermons</a>
           </li>
           @if (count($member))

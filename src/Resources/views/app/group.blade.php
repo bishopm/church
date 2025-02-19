@@ -11,7 +11,6 @@
             @endif
         </div>
         <div class="col-lg-4">
-            <h4>Resources</h4>
         </div>
     </div>
 </x-church::layout>                

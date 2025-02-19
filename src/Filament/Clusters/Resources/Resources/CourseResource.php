@@ -38,7 +38,6 @@ class CourseResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/course')
-                    ->previewable(false)
                     ->image(),
             ]);
     }

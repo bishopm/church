@@ -44,7 +44,8 @@ class CoursesessionRelationManager extends RelationManager
                     ->suffixAction(MediaAction::make('showVideo')
                         ->icon('heroicon-m-video-camera')),
                 Forms\Components\FileUpload::make('file')
-                    ->directory('course'),
+                    ->directory('course')
+                    ->disk('google'),
                 Forms\Components\RichEditor::make('notes')
                     ->columnSpanFull()
             ]);

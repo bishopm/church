@@ -1,6 +1,6 @@
 <x-church::layouts.app pageName="Course session">
     <div>
-        <h3>{{$session->course->course}}</h3>
+        <h3>{{$session->order}}. {{$session->course->course}}</h3>
         @if ($session->video)
             <div class="ratio ratio-16x9">
                 <iframe src='{{$session->video}}' frameborder='0' allowfullscreen></iframe>

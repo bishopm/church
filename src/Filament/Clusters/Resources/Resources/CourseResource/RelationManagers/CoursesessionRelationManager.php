@@ -29,7 +29,6 @@ class CoursesessionRelationManager extends RelationManager
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('sessiondate')
                     ->label('Date and time')
-                    ->default(now())
                     ->native(true)
                     ->seconds(false)
                     ->displayFormat('Y-m-d H:i')
@@ -37,14 +36,14 @@ class CoursesessionRelationManager extends RelationManager
                 Forms\Components\TimePicker::make('endtime')
                     ->label('End time')
                     ->seconds(false),
-                Forms\Components\Checkbox::make('calendar')
-                    ->label('Add to church calendar'),
-                Forms\Components\TextInput::make('video')
-                    ->suffixAction(MediaAction::make('showVideo')
-                        ->icon('heroicon-m-video-camera')),
                 Forms\Components\FileUpload::make('file')
                     ->directory('course')
                     ->disk('google'),
+                Forms\Components\TextInput::make('video')
+                    ->suffixAction(MediaAction::make('showVideo')
+                        ->icon('heroicon-m-video-camera')),
+                Forms\Components\Checkbox::make('calendar')
+                    ->label('Add to church calendar'),
                 Forms\Components\RichEditor::make('notes')
                     ->columnSpanFull()
             ]);

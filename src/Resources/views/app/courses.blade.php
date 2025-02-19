@@ -3,7 +3,7 @@
     <ul class="list-unstyled">
         @foreach ($courses as $course)
             <li>
-                <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a>
+                <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a> <small>(Sessions: {{count($course->coursesessions)}})</small>
             </li>
         @endforeach
     </ul>

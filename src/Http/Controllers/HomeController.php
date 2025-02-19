@@ -212,7 +212,7 @@ class HomeController extends Controller
 
     public function courses(){
         $today=date('Y-m-d');
-        $data['courses']=Course::orderBy('course')->get();
+        $data['courses']=Course::with('coursesessions')->orderBy('course')->get();
         return view('church::' . $this->routeName . '.courses',$data);
     }
 

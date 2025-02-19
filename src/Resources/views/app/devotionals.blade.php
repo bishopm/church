@@ -20,7 +20,7 @@
         <div class="tab-pane fade show active" id="pills-quiet" role="tabpanel" aria-labelledby="pills-quiet-tab">
             <h4>Quiet moments</h4>
             @foreach ($quiets as $quiet)
-                <p><a href="{{url('/storage/documents/' . $quiet->filename)}}">{{$quiet->document}}</a></p>
+                <p><a href="{{url('/storage/' . $quiet->filename)}}">{{$quiet->document}}</a></p>
             @endforeach
             {{ $quiets->links() }}
         </div>        

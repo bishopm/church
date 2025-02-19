@@ -46,6 +46,7 @@ class GroupResource extends Resource
                     ->label('Group type'),                    
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\FileUpload::make('image')
+                    ->directory('groups')
                     ->image(),
                 Forms\Components\Select::make('individual_id')
                     ->label('Leader')

@@ -5,6 +5,7 @@ namespace Bishopm\Church\Filament\Clusters\Property\Resources;
 use Bishopm\Church\Filament\Clusters\Property;
 use Bishopm\Church\Filament\Clusters\Property\Resources\MaintenancetaskResource\Pages;
 use Bishopm\Church\Filament\Clusters\Property\Resources\MaintenancetaskResource\RelationManagers;
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Maintenancetask;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -34,14 +35,13 @@ class MaintenancetaskResource extends Resource
                 Forms\Components\TextInput::make('details')
                     ->required()
                     ->maxLength(199),
-                Forms\Components\TextInput::make('individual_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('completed_at')
-                    ->required(),
-                Forms\Components\TextInput::make('venue_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('individual_id')->label('Assigned to')
+                    ->relationship('individual', 'id')
+                    ->searchable(['firstname', 'surname'])
+                    ->getOptionLabelFromRecordUsing(fn (Individual $record) => "{$record->firstname} {$record->surname}"),
+                Forms\Components\DatePicker::make('completed_at'),
+                Forms\Components\Select::make('venue_id')->label('Venue')
+                    ->relationship('venue', 'venue'),
             ]);
     }
 

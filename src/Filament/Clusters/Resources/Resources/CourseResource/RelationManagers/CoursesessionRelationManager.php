@@ -33,8 +33,7 @@ class CoursesessionRelationManager extends RelationManager
                     ->native(true)
                     ->seconds(false)
                     ->displayFormat('Y-m-d H:i')
-                    ->format('Y-m-d H:i')
-                    ->required(),
+                    ->format('Y-m-d H:i'),
                 Forms\Components\TimePicker::make('endtime')
                     ->label('End time')
                     ->seconds(false),

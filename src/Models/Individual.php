@@ -26,6 +26,11 @@ class Individual extends Model
         return $this->belongsTo(Household::class);
     }
 
+    public function pastor(): HasOne
+    {
+        return $this->hasOne(Pastor::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

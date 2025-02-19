@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Mail;
 use Bishopm\Church\Mail\ChurchMail;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
+use Illuminate\Support\Facades\Auth;
 
 class IndividualResource extends Resource
 {
@@ -158,6 +159,11 @@ class IndividualResource extends Resource
                                                     $parray[$pastor->id] = $pastor->individual->firstname . " " . $pastor->individual->surname;
                                                 }
                                                 return $parray;
+                                            })
+                                            ->default(function (){
+                                                $id=Auth::user()->id;
+                                                $indiv=Individual::with('pastor')->where('user_id',$id)->first();
+                                                return $indiv->pastor->id;
                                             })
                                             ->required(),
                                         Forms\Components\TextInput::make('details')->required()->columnSpanFull()

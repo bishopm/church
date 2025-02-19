@@ -31,6 +31,7 @@ class PastorResource extends Resource
             ->schema([
                 Forms\Components\Select::make('individual_id')
                     ->relationship('individual', 'id')
+                    ->searchable(['firstname', 'surname'])
                     ->getOptionLabelFromRecordUsing(fn (Individual $record) => "{$record->firstname} {$record->surname}")
                     ->required(),
                 Forms\Components\Toggle::make('active'),

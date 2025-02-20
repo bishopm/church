@@ -3,6 +3,7 @@
     <ul class="list-unstyled">
         @foreach ($groups as $group)
             <li>
+                <p>{{date('l',strtotime("Sunday " . $group->meetingday . "days" ))}}</p>
                 <a href="{{url('/')}}/groups/{{$group->id}}">{{$group->groupname}}</a>
                 <div>{{$group->description}}</div>
             </li>

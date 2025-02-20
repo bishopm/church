@@ -13,6 +13,8 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->string('groupname', 255);
             $table->string('slug', 255);
+            $table->integer('meetingday')->nullable();
+            $table->time('meetingtime', 255)->nullable();
             $table->string('grouptype', 255)->default('service');
             $table->text('description')->nullable();
             $table->string('image', 255)->nullable();

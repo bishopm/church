@@ -8,6 +8,7 @@ use Bishopm\Church\Filament\Clusters\People;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Filament\Forms;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -44,11 +45,27 @@ class GroupResource extends Resource
                         'service' => 'Service',
                     ])
                     ->default('service')
-                    ->label('Group type'),                    
+                    ->label('Group type'),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/groups')
                     ->image(),
+                Forms\Components\Select::make('meetingday')
+                    ->options([
+                        '0' => 'Sunday',
+                        '1' => 'Monday',
+                        '2' => 'Tuesday',
+                        '3' => 'Wednesday',
+                        '4' => 'Thursday',
+                        '5' => 'Friday',
+                        '6' => 'Saturday'
+                    ])
+                    ->default(1)
+                    ->label('Meeting day'),
+                TimePicker::make('meetingtime')
+                    ->label('Meeting time')
+                    ->native(true)
+                    ->seconds(false), 
                 Forms\Components\Select::make('individual_id')
                     ->label('Leader')
                     ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))

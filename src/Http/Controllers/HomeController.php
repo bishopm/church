@@ -253,7 +253,7 @@ class HomeController extends Controller
     }
 
     public function groups(){
-        $data['groups']=Group::where('grouptype','fellowship')->orderBy('meetingday')->where('publish',1)->get();
+        $data['groups']=Group::where('grouptype','fellowship')->orderBy('meetingday')->orderBy('meetingtime')->where('publish',1)->get();
         return view('church::' . $this->routeName . '.groups',$data);
     }
 

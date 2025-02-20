@@ -196,34 +196,30 @@ class ManageRoster extends Page implements HasForms
 
     protected function changeMonth($start){
         if ($start=="prev"){
-            $this->data['firstofmonth'] = date('Y-m-d', strtotime($this->data['firstofmonth'] . " -1 month"));
+            $this->data['firstofmonth']=date('Y-m-01',strtotime($this->data['firstofmonth'] . '-1 month'));
         } else {
-            $this->data['firstofmonth'] = date('Y-m-d', strtotime($this->data['firstofmonth'] . " +1 month"));
+            $this->data['firstofmonth']=date('Y-m-01',strtotime($this->data['firstofmonth'] . '+1 month'));
         }
-        $weeks = $this->getWeeks($this->data['firstofmonth']);
-        foreach ($weeks as $n=>$week){
-            $wkvar = 'week'.$n;
-            $this->data[$wkvar]=$week;
-        }
+        $this->getWeeks();
         foreach ($this->data['rgs'] as $rg){
-            foreach ($weeks as $w=>$wk){
+            foreach ($this->data['weeks'] as $w=>$wk){
                 $vv = 'select_' . $w . "_" . $rg;
                 $this->data[$vv] = $this->getIndivs($rg,$wk);
             }
         }
+        $this->form->fill();       
     }
 
-    protected function getWeeks($firstofmonth){
-        $thismonth=date('Y-m',strtotime($firstofmonth));
-        for ($i=1;$i<=date('t',strtotime($firstofmonth));$i++){
+    protected function getWeeks(){
+        $this->data['weeks']=[];
+        $thismonth=date('Y-m',strtotime($this->data['firstofmonth']));
+        for ($i=1;$i<=date('t',strtotime($this->data['firstofmonth']));$i++){
             if (date('l',strtotime($thismonth . "-" . $i)) == $this->record->dayofweek) {
-                $weeks[]=date('Y-m-d',strtotime($thismonth . "-" . $i));
+                $this->data['weeks'][]=date('Y-m-d',strtotime($thismonth . "-" . $i));
             }
         }
-        $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
-        $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
-        $this->data['columns']=count($weeks)+1;
-        return $weeks;
+        $this->data['columns']=count($this->data['weeks'])+1;
+        ksort($this->data);
     }
 
     protected function getData(){
@@ -232,12 +228,11 @@ class ManageRoster extends Page implements HasForms
             $this->data['firstofmonth'] = date('Y-m-01');
         }
         $rostergroups = Rostergroup::with('group.individuals')->where('roster_id',$this->record->id)->get()->sortBy('group.groupname');
-        $weeks=$this->getWeeks($this->data['firstofmonth']);
-        foreach ($weeks as $ndx=>$label){
+        $this->getWeeks();
+        foreach ($this->data['weeks'] as $ndx=>$label){
             if ($ndx==0){
                 $schema[] = Placeholder::make('blank')->label('');
             }
-            $this->data['week' . $ndx] = $label;
             $schema[] = TextInput::make('week' . $ndx)->label('')->live()->placeholder($label)->readonly();
         }
         foreach ($rostergroups as $ndx=>$rg) {
@@ -247,7 +242,7 @@ class ManageRoster extends Page implements HasForms
             foreach ($rg->group->individuals as $indiv){
                 $members[$indiv->id] = $indiv->firstname . " " . $indiv->surname;
             }
-            foreach ($weeks as $wno=>$week){
+            foreach ($this->data['weeks'] as $wno=>$week){
                 $onduty=array();
                 $onduty=$this->getIndivs($rg->id,$week);
                 if ($rg->maxpeople==1){

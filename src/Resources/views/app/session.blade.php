@@ -14,8 +14,14 @@
         @endif
         @if ($session->file)
             <div>
-                <h3>PDF</h3>
+                <h3>Session handout</h3>
                 <a href="{{Storage::disk('google')->url($session->file)}}">Download</a>
+            </div>
+        @endif
+        @if ($course->leadernotes)
+            <div>
+                <h3>Leader notes</h3>
+                <a href="{{Storage::disk('google')->url($session->leadernotes)}}">Download</a>
             </div>
         @endif
     </div>

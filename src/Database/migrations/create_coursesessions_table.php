@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('video', 191)->default(null);
             $table->string('file', 191)->default(null);
             $table->integer('order')->default(null);
+            $table->string('leadernotes', 199)->nullable();
             $table->tinyInteger('calendar')->nullable()->default(null);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

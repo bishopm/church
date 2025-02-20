@@ -18,4 +18,7 @@
             </tr>
         @endforeach
     </table>
+    @if ($course->leadernotes)
+        <small><a href="{{url('/storage/' . $course->leadernotes)}}" target="_blank">Leader notes</a></small>
+    @endif
 </x-church::layout>                

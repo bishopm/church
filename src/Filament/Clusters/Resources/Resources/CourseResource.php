@@ -29,15 +29,18 @@ class CourseResource extends Resource
                 Forms\Components\TextInput::make('course')
                     ->required()
                     ->maxLength(199),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
                 Forms\Components\Select::make('venue_id')
                     ->label('Venue')
                     ->relationship('venue', 'venue'),
+                Forms\Components\Textarea::make('description')
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/course')
                     ->image(),
+                Forms\Components\FileUpload::make('leadernotes')->label('Leader notes')
+                    ->directory('course')
+                    ->disk('google')
             ]);
     }
 

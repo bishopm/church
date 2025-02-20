@@ -15,6 +15,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('image', 199);
             $table->integer('venue_id');
+            $table->string('leadernotes', 199)->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

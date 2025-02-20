@@ -39,6 +39,9 @@ class CoursesessionRelationManager extends RelationManager
                 Forms\Components\FileUpload::make('file')
                     ->directory('course')
                     ->disk('google'),
+                Forms\Components\FileUpload::make('leadernotes')->label('Leader notes')
+                    ->directory('course')
+                    ->disk('google'),
                 Forms\Components\TextInput::make('video')
                     ->suffixAction(MediaAction::make('showVideo')
                         ->icon('heroicon-m-video-camera')),

@@ -10,7 +10,6 @@ use Bishopm\Church\Models\Cache;
 use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Course;
 use Bishopm\Church\Models\Coursesession;
-use Bishopm\Church\Models\Devotional;
 use Bishopm\Church\Models\Document;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Group;
@@ -28,7 +27,6 @@ use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -70,10 +68,6 @@ class HomeController extends Controller
         $blogs=Post::where('published_at','>',$monthago)->orderBy('published_at','DESC')->get();
         foreach ($blogs as $blog){
             $data['content'][strtotime($blog->published_at)]=$blog;
-        }
-        $devs=Devotional::where('publicationdate','>',$monthago)->orderBy('publicationdate','DESC')->get();
-        foreach ($devs as $dev){
-            $data['content'][strtotime($dev->publicationdate)]=$dev;
         }
         $soon=date('Y-m-d',strtotime('+2 weeks'));
         $courses=Course::withWhereHas('coursesessions', function ($q) use($monthago,$soon) { $q->where('sessiondate','>',$monthago)->where('sessiondate','<',$soon);})->orderBy('course','ASC')->get();

@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -70,7 +71,12 @@ class GroupResource extends Resource
                     ->label('Leader'),
             ])
             ->filters([
-                //
+                SelectFilter::make('grouptype')->label('')
+                ->options([
+                    'admin' => 'Admin',
+                    'fellowship' => 'Fellowship',
+                    'service' => 'Service'
+                ])
             ])
             ->defaultSort('groupname', 'asc')
             ->actions([

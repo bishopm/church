@@ -69,6 +69,12 @@ class GroupResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('individual.fullname')
                     ->label('Leader'),
+                Tables\Columns\IconColumn::make('grouptype')->label('Type')
+                    ->icon(fn (string $state): string => match ($state) {
+                        'admin' => 'heroicon-o-chart-bar',
+                        'fellowship' => 'heroicon-o-user-group',
+                        'service' => 'heroicon-o-wrench-srewdriver',
+                    }),
             ])
             ->filters([
                 SelectFilter::make('grouptype')->label('')

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Panel;
 
 class User extends Authenticatable
 {
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function individual(): HasOne
     {
         return $this->hasOne(Individual::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
     }
 }

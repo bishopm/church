@@ -73,7 +73,7 @@ class GroupResource extends Resource
                     ->icon(fn (string $state): string => match ($state) {
                         'admin' => 'heroicon-o-chart-bar',
                         'fellowship' => 'heroicon-o-user-group',
-                        'service' => 'heroicon-o-wrench-srewdriver',
+                        'service' => 'heroicon-o-wrench-screwdriver',
                     }),
             ])
             ->filters([

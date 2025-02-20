@@ -8,7 +8,7 @@ class Property extends Cluster
 {
     protected static ?int $navigationSort = -8;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     public static function shouldRegisterNavigation(): bool
     {

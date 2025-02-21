@@ -208,7 +208,11 @@ class HomeController extends Controller
         $today=date('Y-m-d');
         $courses=Course::with('coursesessions')->orderBy('course')->get();
         foreach ($courses as $course){
-            $thisdate=$course->coursesessions[0]->sessiondate;
+            if (count($course->coursesessions)){
+                $thisdate=$course->coursesessions[0]->sessiondate;
+            } else {
+                $thisdate="";
+            }
             if ($thisdate >= date('Y-m-d')){
                 $data['courses']['upcoming'][strtotime($thisdate)][]=$course;
             } else {

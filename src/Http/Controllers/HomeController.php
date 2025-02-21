@@ -301,7 +301,7 @@ class HomeController extends Controller
 
     public function page($page){
         $data['page']=Page::where('slug',$page)->where('published',1)->firstOrFail();
-        return view('church::web.page',$data);
+        return view('church::' . $this->routeName . '.page',$data);
     }
 
     public function pastoral(){
@@ -515,6 +515,30 @@ class HomeController extends Controller
             $txt="<div style=\"background-color: rgba(0, 0, 0, .3); text-align:center; color:white; font-family:Arial;\"><br><h3>" . $sunday . "</h3><br></div>";
         }
         return $txt;
+    }
+
+    public function team($id){
+        $data['team']=Group::find($id);
+        return view('church::' . $this->routeName . '.team',$data);
+    }
+
+    public function teams() {
+        $teams=Group::where('grouptype','service')->where('publish',1)->orderBy('groupname','ASC')->get();
+        $services=setting('general.services');
+        foreach ($teams as $team){
+            $sflag=false;
+            foreach ($services as $service){
+                if (str_contains($team->groupname,$service)){
+                    $groupname=trim(str_replace($service,'',$team->groupname)," ");
+                    $data['teams'][$groupname]['services'][$service]=$team;
+                    $sflag=true;
+                }
+            }
+            if (!$sflag){
+                $data['teams'][$team->groupname]['teams']=$team;
+            }
+        }
+        return view('church::' . $this->routeName . '.teams',$data);
     }
 
 }

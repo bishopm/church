@@ -74,7 +74,6 @@
       <h2 class="text-white ms-auto pt-2"><a href="{{route('app.home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
-
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Connecting
@@ -83,6 +82,18 @@
               <a class="dropdown-item" href="{{route('app.events')}}">Coming up at {{setting('general.church_abbreviation')}}</a>          
               <a class="dropdown-item" href="{{route('app.groups')}}">Groups</a>
             </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Getting involved
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
+              <a class="dropdown-item" href="{{url('/giving')}}">Giving</a>
+              <a class="dropdown-item" href="{{route('app.projects')}}">Mission projects</a>
+              <a class="dropdown-item" href="{{route('app.teams')}}">Serve on a team</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Learning
             </a>
@@ -91,6 +102,8 @@
               <a class="dropdown-item" href="{{route('app.courses')}}">Courses</a>
               <a class="dropdown-item" href="{{route('app.devotionals')}}">Devotionals</a>
             </div>
+          </li>
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               News and info
             </a>
@@ -98,6 +111,8 @@
               <a class="dropdown-item" href="{{route('app.blog')}}">Blog</a>
               <a class="dropdown-item" href="{{route('web.home')}}">WMC website</a>
             </div>
+          </li>
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Worship
             </a>

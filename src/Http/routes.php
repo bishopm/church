@@ -104,5 +104,10 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/songs', 'songs')->name('app.songs');
         Route::get('/songs/{id}', 'song')->name('app.song');
         Route::get('/subject/{slug}', 'subject')->name('app.subject');
+        Route::get('/teams/{id}', 'team')->name('app.team');
+        Route::get('/teams', 'teams')->name('app.teams');
+        if (substr(str_replace(env('APP_URL'),'',url()->current()),1)<>"admin"){
+            Route::get('/{page}', 'page')->name('app.page');
+        }     
     });
 });

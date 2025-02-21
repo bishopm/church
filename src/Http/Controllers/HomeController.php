@@ -206,7 +206,17 @@ class HomeController extends Controller
 
     public function courses(){
         $today=date('Y-m-d');
-        $data['courses']=Course::with('coursesessions')->orderBy('course')->get();
+        $courses=Course::with('coursesessions')->orderBy('course')->get();
+        foreach ($courses as $course){
+            $thisdate=$course->coursesessions[0]->sessiondate;
+            if ($thisdate >= date('Y-m-d')){
+                $data['courses']['upcoming'][strtotime($thisdate)][]=$course;
+            } else {
+                $data['courses']['library'][$course->course]=$course;
+            }
+        }
+        ksort($data['courses']['upcoming']);
+        ksort($data['courses']['library']);
         return view('church::' . $this->routeName . '.courses',$data);
     }
 

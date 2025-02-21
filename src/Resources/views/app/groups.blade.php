@@ -1,5 +1,5 @@
 <x-church::layouts.app pageName="Groups">
-    <h1>Small groups</h1>
+    <h2 class="text-center">Groups at {{setting('general.church_abbreviation')}}</h2>
     <ul class="list-unstyled">
         @foreach ($groups as $day=>$days)
             <h4 class="bg-black text-white text-center">{{$day}}</h4>

@@ -74,40 +74,39 @@
       <h2 class="text-white ms-auto pt-2"><a href="{{route('app.home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="{{route('app.home')}}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.blog')}}">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.books')}}">Books</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.calendar')}}">Calendar</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.events')}}">Coming up at {{setting('general.church_abbreviation')}}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.courses')}}">Courses</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.devotionals')}}">Devotionals</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.groups')}}">Groups</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('app.sermons')}}">Sermons</a>
-          </li>
-          @if (count($member))
-            <li class="nav-item">
-              <a class="nav-link" href="{{route('app.songs')}}">Songs</a>
-            </li>
-          @endif
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('web.home')}}">WMC website</a>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Connecting
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">   
+              <a class="dropdown-item" href="{{route('app.events')}}">Coming up at {{setting('general.church_abbreviation')}}</a>          
+              <a class="dropdown-item" href="{{route('app.groups')}}">Groups</a>
+            </div>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              FYI
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
+              <a class="dropdown-item" href="{{route('app.blog')}}">Blog</a>
+              <a class="dropdown-item" href="{{route('web.home')}}">WMC website</a>
+            </div>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Learning
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
+              <a class="dropdown-item" href="{{route('app.books')}}">Books</a>
+              <a class="dropdown-item" href="{{route('app.courses')}}">Courses</a>
+              <a class="dropdown-item" href="{{route('app.devotionals')}}">Devotionals</a>
+            </div>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Worship
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
+              <a class="dropdown-item" href="{{route('app.sermons')}}">Sermons</a>
+              @if (count($member))
+                <a class="dropdown-item" href="{{route('app.songs')}}">Songs</a>
+              @endif
+            </div
           </li>
           <div class="dropdown-divider" style="color:grey; border:solid 1px;"></div>
           @if (count($member))
@@ -116,13 +115,14 @@
                 {{$member['firstname']}}'s menu
               </a>
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{route('app.details')}}">Personal details</a>
+                <a class="dropdown-item" href="{{route('app.details')}}">My details</a>
+                <a class="dropdown-item" href="{{route('app.calendar')}}">My diary</a>
                 <a class="dropdown-item" href="{{route('app.practices')}}">Discipleship</a>
-                @if (isset($member['pastor_id']))
-                  <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
-                @endif
                 @if ($member['directory'])
                   <a class="dropdown-item" href="{{route('app.directory')}}">Find a name</a>
+                @endif
+                @if (isset($member['pastor_id']))
+                  <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
                 @endif
               </div>
             </li>

@@ -18,7 +18,7 @@
                 <a href="{{Storage::disk('google')->url($session->file)}}">Download</a>
             </div>
         @endif
-        @if ($course->leadernotes)
+        @if ($session->leadernotes)
             <div>
                 <h3>Leader notes</h3>
                 <a href="{{Storage::disk('google')->url($session->leadernotes)}}">Download</a>

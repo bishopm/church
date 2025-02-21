@@ -396,7 +396,7 @@ class HomeController extends Controller
     }
 
     public function projects(){
-        $data['projects']=Project::orderBy('project')->paginate(10);
+        $data['projects']=Project::orderBy('project')->where('active',1)->paginate(10);
         return view('church::' . $this->routeName . '.projects',$data);
     }
 

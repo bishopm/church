@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('project', 255);
             $table->text('description');
             $table->string('image')->nullable();
+            $table->int('active')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

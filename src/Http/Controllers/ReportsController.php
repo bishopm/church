@@ -1049,8 +1049,8 @@ class ReportsController extends Controller
                     $this->pdf->Image($prayer,10,$yy-4.5,8);
                 }
                 if ($item->note){
-                    $this->pdf->text(20, $yy, $item->note);
-                    $width=$this->pdf->GetStringWidth($item->note);
+                    $this->pdf->text(20, $yy, $item->setitemable->title);
+                    $width=$this->pdf->GetStringWidth($item->setitemable->title);
                     $this->pdf->SetFont('DejaVu', '', 10);
                     if (23+$width+$this->pdf->GetStringWidth($item->extra)>200){
                         $yy=$yy+5;

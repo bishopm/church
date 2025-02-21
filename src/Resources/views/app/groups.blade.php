@@ -5,8 +5,7 @@
             <h4 class="bg-black text-white text-center">{{$day}}</h4>
             @foreach ($days as $key=>$group)
                 <li>
-                    <p><b>{{substr($group->meetingtime,0,5)}}</b></p>
-                    <a href="{{url('/')}}/groups/{{$group->id}}">{{$group->groupname}}</a>
+                    <p><a href="{{url('/')}}/groups/{{$group->id}}">{{$group->groupname}}</a> <b>{{substr($group->meetingtime,0,5)}}</b></p>
                     <div>{{$group->description}}</div>
                 </li>
             @endforeach

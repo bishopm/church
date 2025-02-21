@@ -84,19 +84,19 @@
               <a class="dropdown-item" href="{{route('app.groups')}}">Groups</a>
             </div>
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              FYI
-            </a>
-            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
-              <a class="dropdown-item" href="{{route('app.blog')}}">Blog</a>
-              <a class="dropdown-item" href="{{route('web.home')}}">WMC website</a>
-            </div>
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Learning
             </a>
             <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
               <a class="dropdown-item" href="{{route('app.books')}}">Books</a>
               <a class="dropdown-item" href="{{route('app.courses')}}">Courses</a>
               <a class="dropdown-item" href="{{route('app.devotionals')}}">Devotionals</a>
+            </div>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              News and info
+            </a>
+            <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
+              <a class="dropdown-item" href="{{route('app.blog')}}">Blog</a>
+              <a class="dropdown-item" href="{{route('web.home')}}">WMC website</a>
             </div>
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Worship

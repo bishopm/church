@@ -253,7 +253,11 @@ class HomeController extends Controller
     }
 
     public function groups(){
-        $data['groups']=Group::where('grouptype','fellowship')->orderBy('meetingday')->orderBy('meetingtime')->where('publish',1)->get();
+        $groups=Group::where('grouptype','fellowship')->orderBy('meetingday')->orderBy('meetingtime')->where('publish',1)->get();
+        foreach ($groups as $group){
+            $day=date('l',strtotime("Sunday " . $group->meetingday . "days" ));
+            $data['groups'][$day][]=$group;
+        }
         return view('church::' . $this->routeName . '.groups',$data);
     }
 

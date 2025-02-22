@@ -98,6 +98,7 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/pastoral', 'pastoral')->name('app.pastoral');
         Route::get('/pastoral/{type}/{id}', 'pastoralcase')->name('app.pastoralcase');
         Route::get('/preacher/{slug}', 'preacher')->name('app.preacher');
+        Route::get('/rosterdates', 'rosterdates')->name('app.rosterdates');
         Route::get('/sermons', 'sermons')->name('app.sermons');
         Route::get('/sermons/{year}/{slug}', 'series')->name('app.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('app.sermon');

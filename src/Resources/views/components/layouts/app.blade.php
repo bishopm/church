@@ -132,6 +132,7 @@
               <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{{route('app.details')}}">My details</a>
                 <a class="dropdown-item" href="{{route('app.calendar')}}">My diary</a>
+                <a class="dropdown-item" href="{{route('app.rosterdates')}}">My duty dates</a>
                 <a class="dropdown-item" href="{{route('app.practices')}}">Discipleship</a>
                 @if ($member['directory'])
                   <a class="dropdown-item" href="{{route('app.directory')}}">Find a name</a>

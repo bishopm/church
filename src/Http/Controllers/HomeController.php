@@ -440,6 +440,21 @@ class HomeController extends Controller
         return view('church::web.roster',$data);
     }
 
+    public function rosterdates(){
+        $data['servicegroups']=Group::where('grouptype','service')->whereHas('individuals', function ($q) {
+            $q->where('individuals.id',$this->member['id']); })->get();
+        $today=date('Y-m-d');
+        $roster=Individual::with('rosteritems.rostergroup.group')->where('id',$this->member['id'])->first();
+        $data['roster']=array();
+        foreach ($roster->rosteritems as $ri){
+            if ($ri->rosterdate>$today){
+                $data['roster'][$ri->rosterdate][]=$ri->rostergroup->group->groupname;
+            }
+        }
+        ksort($data['roster']);
+        return view('church::app.myroster',$data);
+    }
+
     public function series($year,$slug){
         $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video');})->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);

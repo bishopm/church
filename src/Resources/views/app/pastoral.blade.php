@@ -5,7 +5,7 @@
             <button class="nav-link active" id="mycases-tab" data-bs-toggle="tab" data-bs-target="#mycases" type="button" role="tab">{{$pastor->individual->firstname}}'s pastoral cases</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="othercases-tab" data-bs-toggle="tab" data-bs-target="#othercases" type="button" role="tab">All {{setting('general.church_abbreviation')}} pastoral cases</button>
+            <button class="nav-link" id="othercases-tab" data-bs-toggle="tab" data-bs-target="#othercases" type="button" role="tab">All {{setting('general.church_abbreviation')}} cases</button>
         </li>
     </ul>
     <div class="tab-content">

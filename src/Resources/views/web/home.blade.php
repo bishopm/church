@@ -71,7 +71,7 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    @if (isset($upcoming)) and ($upcoming->video))
+                    @if ((isset($upcoming)) and ($upcoming->video))
                         <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
                             <div class="ratio ratio-16x9">
                                 <iframe src='https://youtube.com/embed/{{$upcoming->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>

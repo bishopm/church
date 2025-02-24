@@ -69,6 +69,12 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));
         Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
         Config::set('filesystems.disks.google.folder','');
+        Config::set('broadcasting.pusher.driver','pusher');
+        Config::set('broadcasting.pusher.key',setting('services.pusher.key'));
+        Config::set('broadcasting.pusher.secret',setting('services.pusher.secret'));
+        Config::set('broadcasting.pusher.app_id',setting('services.pusher.app_id'));
+        Config::set('broadcasting.pusher.options.cluster',setting('services.pusher.app_cluster'));
+        Config::set('broadcasting.pusher.options.useTLS',true);
         Livewire::component('barcodescanner', BarcodeScanner::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('calendar', Calendar::class);

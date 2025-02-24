@@ -118,6 +118,10 @@ class Settings extends BaseSettings
                             TextInput::make('services.drive_refreshtoken')->label('Google Drive refresh token'),
                             TextInput::make('services.facebook_access_token')->label('Facebook access token'),
                             TextInput::make('services.facebook_page_id')->label('Facebook page ID'),
+                            TextInput::make('services.pusher_app_id')->label('Pusher App ID'),
+                            TextInput::make('services.pusher_key')->label('Pusher Key'),
+                            TextInput::make('services.pusher_secret')->label('Pusher Secret'),
+                            TextInput::make('services.pusher_app_cluster')->label('Pusher App Cluster'),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)

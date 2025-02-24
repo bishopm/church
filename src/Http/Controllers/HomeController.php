@@ -69,7 +69,7 @@ class HomeController extends Controller
         foreach ($blogs as $blog){
             $data['content'][strtotime($blog->published_at)]=$blog;
         }
-        $soon=date('Y-m-d',strtotime('+2 weeks'));
+        $soon=date('Y-m-d',strtotime('+10 days'));
         $courses=Course::withWhereHas('coursesessions', function ($q) use($monthago,$soon) { $q->where('sessiondate','>',$monthago)->where('sessiondate','<',$soon);})->orderBy('course','ASC')->get();
         foreach ($courses as $course){
             $data['content'][$course->course]=$course;

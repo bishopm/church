@@ -25,6 +25,7 @@ use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ReportMail;
+use Filament\Forms\Components\Hidden;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
@@ -212,19 +213,21 @@ class ManageRoster extends Page implements HasForms
                 $this->data[$vv] = $this->getIndivs($rg,$wk);
             }
         }
-        $this->refreshFormData();
     }
 
     protected function getWeeks($firstofmonth){
         $thismonth=date('Y-m',strtotime($firstofmonth));
-        for ($i=1;$i<=date('t',strtotime($firstofmonth));$i++){
+        for ($i=1;$i<7;$i++){
             if (date('l',strtotime($thismonth . "-" . $i)) == $this->record->dayofweek) {
                 $weeks[]=date('Y-m-d',strtotime($thismonth . "-" . $i));
             }
         }
+        for ($j=1;$j<=4;$j++){
+            $weeks[]=date('Y-m-d',strtotime($weeks[0] . ' + ' . $j . ' week'));
+        }
         $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
         $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
-        $this->data['columns']=count($weeks)+1;
+        $this->data['columns']=6;
         return $weeks;
     }
 

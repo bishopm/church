@@ -200,7 +200,7 @@ class ManageRoster extends Page implements HasForms
             $this->data['firstofmonth'] = date('Y-m-d', strtotime($this->data['firstofmonth'] . " -1 month"));
         } else {
             $this->data['firstofmonth'] = date('Y-m-d', strtotime($this->data['firstofmonth'] . " +1 month"));
-        }
+        }        
         $weeks = $this->getWeeks($this->data['firstofmonth']);
         foreach ($weeks as $n=>$week){
             $wkvar = 'week'.$n;
@@ -212,6 +212,7 @@ class ManageRoster extends Page implements HasForms
                 $this->data[$vv] = $this->getIndivs($rg,$wk);
             }
         }
+        $this->refreshFormData();
     }
 
     protected function getWeeks($firstofmonth){
@@ -227,7 +228,47 @@ class ManageRoster extends Page implements HasForms
         return $weeks;
     }
 
-    protected function getData(){
+    private static function updateIndivs($state, $rosterdate, $rostergroup){
+        $ri = Rosteritem::where('rosterdate',$rosterdate)->where('rostergroup_id',$rostergroup)->first();
+        if (isset($ri->id)){
+            DB::table('individual_rosteritem')->where('rosteritem_id',$ri->id)->delete();
+        } else {
+            $ri = Rosteritem::create([
+                'rostergroup_id' => $rostergroup,
+                'rosterdate' => $rosterdate
+            ]);
+        }
+        if (is_array($state)){
+            foreach ($state as $indiv){
+                DB::table('individual_rosteritem')->insert([
+                    'individual_id' => $indiv,
+                    'rosteritem_id' => $ri->id
+                ]);
+            }
+        } else {
+            DB::table('individual_rosteritem')->insert([
+                'individual_id' => $state,
+                'rosteritem_id' => $ri->id
+            ]);
+        }
+    }
+
+    public function getIndivs($rg, $wk){
+        $rosteritem=Rosteritem::with('individuals')->where('rosterdate',$wk)->where('rostergroup_id',$rg)->first();
+        $ridat=array();
+        if ($rosteritem){
+            if (isset($rosteritem->individuals)){
+                foreach ($rosteritem->individuals as $indiv){
+                    $ridat[]=$indiv->id;
+                }
+            }
+        }
+        return $ridat;
+    }
+
+    public function form(Form $form): Form
+    {
+        $schema = array();
         $this->subheading = $this->record->roster;
         if (!isset($this->data['firstofmonth'])){
             $this->data['firstofmonth'] = date('Y-m-01');
@@ -285,50 +326,6 @@ class ManageRoster extends Page implements HasForms
                 }
             }
         }
-        return $schema;
-    }
-
-    private static function updateIndivs($state, $rosterdate, $rostergroup){
-        $ri = Rosteritem::where('rosterdate',$rosterdate)->where('rostergroup_id',$rostergroup)->first();
-        if (isset($ri->id)){
-            DB::table('individual_rosteritem')->where('rosteritem_id',$ri->id)->delete();
-        } else {
-            $ri = Rosteritem::create([
-                'rostergroup_id' => $rostergroup,
-                'rosterdate' => $rosterdate
-            ]);
-        }
-        if (is_array($state)){
-            foreach ($state as $indiv){
-                DB::table('individual_rosteritem')->insert([
-                    'individual_id' => $indiv,
-                    'rosteritem_id' => $ri->id
-                ]);
-            }
-        } else {
-            DB::table('individual_rosteritem')->insert([
-                'individual_id' => $state,
-                'rosteritem_id' => $ri->id
-            ]);
-        }
-    }
-
-    public function getIndivs($rg, $wk){
-        $rosteritem=Rosteritem::with('individuals')->where('rosterdate',$wk)->where('rostergroup_id',$rg)->first();
-        $ridat=array();
-        if ($rosteritem){
-            if (isset($rosteritem->individuals)){
-                foreach ($rosteritem->individuals as $indiv){
-                    $ridat[]=$indiv->id;
-                }
-            }
-        }
-        return $ridat;
-    }
-
-    public function form(Form $form): Form
-    {
-        $schema = $this->getData();
         return $form
             ->schema($schema)
             ->columns($this->data['columns'])

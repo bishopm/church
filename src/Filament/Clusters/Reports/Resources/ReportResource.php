@@ -6,6 +6,7 @@ use Bishopm\Church\Filament\Clusters\Reports;
 use Bishopm\Church\Filament\Clusters\Reports\Resources\ReportResource\Pages;
 use Bishopm\Church\Models\Report;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -50,9 +51,20 @@ class ReportResource extends Resource
             ->filters([
                 //
             ])
-            ->recordUrl(fn (Report $record): string => url('/') . '/' . $record->url)
             ->actions([
-                Action::make('View')->url(fn (Report $record): string => url('/') . '/' . $record->url)->openUrlInNewTab(),
+                Action::make('View')
+                ->form([
+                    Select::make('year')
+                        ->label('Year')
+                        ->options([
+                            date('Y',strtotime('-1 year'))=>'Last year',
+                            date('Y')=>'This year',
+                        ])
+                        ->required(),
+                ])
+                ->action(function (Report $record, array $data){
+                    return redirect(url('/') . '/' . $record->url . '/' . $data['year']);
+                })->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

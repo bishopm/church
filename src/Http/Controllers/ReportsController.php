@@ -762,7 +762,6 @@ class ReportsController extends Controller
     }
 
     public function pg_amounts($yr=""){
-        $yr=2024;
         if ($yr==""){
             $yr=date('Y');
         }
@@ -770,6 +769,9 @@ class ReportsController extends Controller
         $amounts=Gift::where('paymentdate','>=',$yr.'-01-01')->where('paymentdate','<=',$yr.'-12-31')->orderBy('paymentdate','ASC')->get();
         foreach ($amounts as $amount){
             $data[date('nF Y',strtotime($amount->paymentdate))][$amount->pgnumber][]=$amount->amount;
+        }
+        if (!count($amounts)){
+            return "No data has been captured for " . $yr;
         }
         $this->title="Planned givers by amount";
         $add=0;

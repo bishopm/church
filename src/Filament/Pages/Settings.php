@@ -108,7 +108,8 @@ class Settings extends BaseSettings
                                 2 => 2,
                                 3 => 3,
                                 4 => 4,
-                                6 => 6
+                                6 => 6,
+                                12=> 12
                             ])
                             ->default(4),
                             TextInput::make('giving.administrator_email')->email(),

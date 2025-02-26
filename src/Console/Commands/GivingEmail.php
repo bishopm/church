@@ -2,6 +2,8 @@
 
 namespace Bishopm\Church\Console\Commands;
 
+use Bishopm\Church\Mail\ChurchMail;
+use Bishopm\Church\Mail\GivingMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Gift;
@@ -43,7 +45,6 @@ class GivingEmail extends Command
         $administrator=setting('giving.administrator_email');
         $emailbody=setting('giving.email_message');
         $emailending=setting('giving.email_ending');
-        dd($effdate);
         switch ($reportnums) {
             case 1:
                 $reportdates=array($repyr . "-12-31");
@@ -82,24 +83,22 @@ class GivingEmail extends Command
             $noemailgivers=Individual::where('giving', '>', 0)->where('email', '')->get();
             $msg="Planned giving emails were sent today to " . count($givers) . " planned givers.";
             if (count($noemailgivers)) {
-                $msg.="<br><br>The following people are listed as planned givers but do not have email addresses and may require a hardcopy report:<br><br>";
+                $msg.="\n\nThe following people are listed as planned givers but do not have email addresses and may require a hardcopy report:\n\n";
                 foreach ($noemailgivers as $nomail) {
-                    $msg.=$nomail->firstname . " " . $nomail->surname . "<br>";
+                    $msg.=$nomail->firstname . " " . $nomail->surname . "\n\n";
                 }
             } else {
-                $msg.="<br><br>Good news! All planned givers at present have email addresses :)";
+                $msg.="\n\nGood news! All planned givers at present have email addresses :)";
             }
-            $msg.="<br><br>Thank you!";
+            $msg.="\n\nThank you!";
             $nodat=array();
-            $nodat['title']="Planned giving emails sent";
+            $nodat['subject']="Planned giving emails sent";
             $nodat['sender']=setting('email.church_email');
+            $nodat['firstname']="Planned Giving Administrator";
             $nodat['church']=setting('general.church_name');
             $nodat['email']=$administrator;
             $nodat['body']=$msg;
-            // Mail::send('bishopm.churchsite::mail.generic', $nodat, function($message) use ($nodat) {
-            //    $message->to($nodat['email']);
-            //    $message->subject($nodat['title']);
-            // });
+            Mail::to($nodat['email'])->send(new ChurchMail($nodat));
             foreach ($givers as $giver) {
                 $data[$giver->giving]['email'][]=$giver->email;
                 if (count($data[$giver->giving]['email'])==1) {
@@ -113,7 +112,7 @@ class GivingEmail extends Command
                     $data[$giver->giving]['pgyr']=$repyr;
                     $data[$giver->giving]['church']=$nodat['church'];
                     $data[$giver->giving]['churchabbr']=setting('general.church_abbreviation');
-                    $data[$giver->giving]['website']=$nodat['website'];
+                    $data[$giver->giving]['website']='www.westvillemethodist.co.za';
                     if ($period==1) {
                         $data[$giver->giving]['scope']="month";
                     } else {
@@ -138,26 +137,21 @@ class GivingEmail extends Command
                     $pg['emailending']=str_replace("[churchname]", $pg['church'], $emailending);
                 }
                 foreach ($pg['email'] as $indiv) {
-                    // Mail::send('bishopm.churchsite::mail.giving', $pg, function($message) use ($pg,$indiv) {
-                    //    $message->to($indiv);
-                    //    $message->subject($pg['title']);
-                    // });
+                    Mail::to($indiv)->send(new GivingMail($pg));
                 }
             }
         } else {
             $warningdate=date("Y-m-d", $effdate+432000);
             if (in_array($warningdate, $reportdates)) {
-                $msg="This is a reminder that your system is configured to send out planned giving emails in 5 days time for the " . 12/$reportnums . " month period ending: " . $warningdate;
-                $msg.=".<br><br>If there are any payments for that period that have not yet been captured, you can still add them to the system and they will ";
-                $msg.="be included, provided the date of receipt falls within the period being reported.<br><br>Thank you!";
+                $msg="This is a reminder that your system is configured to send out planned giving emails in " . $lagtime . " days time for the " . 12/$reportnums . " month period ending: " . $warningdate;
+                $msg.=". If there are any payments for that period that have not yet been captured, you can still add them to the system and they will ";
+                $msg.="be included, provided the date of receipt falls within the period being reported.";
                 $warndat=array();
-                $warndat['title']="Planned giving reminder";
+                $warndat['subject']="Planned giving reminder";
                 $warndat['body']=$msg;
+                $warndat['firstname']="Planned Giving Administrator";
                 $warndat['recipient']=$administrator;
-                // Mail::send('bishopm.churchsite::mail.generic', $warndat, function($message) use ($warndat) {
-                //    $message->to($warndat['recipient']);
-                //    $message->subject($warndat['title']);
-                // });
+                Mail::to($warndat['recipient'])->send(new ChurchMail($warndat));
             } else {
                 // echo "Today is not a report date\n";
             }

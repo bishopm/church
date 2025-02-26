@@ -112,7 +112,8 @@ class Settings extends BaseSettings
                             ])
                             ->default(4),
                             TextInput::make('giving.administrator_email')->email(),
-                            RichEditor::make('giving.email_message')->columnSpanFull()                        
+                            RichEditor::make('giving.email_message')->columnSpanFull(),
+                            RichEditor::make('giving.email_ending')->columnSpanFull()
                         ]),
                     Tabs\Tab::make('Messages')
                         ->schema([

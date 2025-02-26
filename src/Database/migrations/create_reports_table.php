@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('description', 255);
             $table->string('url', 255);
             $table->string('category', 255);
+            $table->string('parameter', 199)->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

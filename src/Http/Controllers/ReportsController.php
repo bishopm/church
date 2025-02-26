@@ -384,7 +384,7 @@ class ReportsController extends Controller
         }
         $meetings=Meeting::with('venue')->where('meetingdatetime','>=',$yr . '-01-01')->where('meetingdatetime','<=',$yr . '-12-31')->orderBy('meetingdatetime','ASC')->where('calendar',1)->get();
         $events=Event::with('venue')->where('eventdate','>=',$yr . '-01-01')->where('eventdate','<=',$yr . '-12-31')->orderBy('eventdate','ASC')->where('calendar',1)->get();
-        $courses=Course::with('venue')->where('coursedate','>=',$yr . '-01-01')->where('coursedate','<=',$yr . '-12-31')->orderBy('coursedate','ASC')->where('calendar',1)->get();
+        $courses=[];//Course::with('venue')->where('coursedate','>=',$yr . '-01-01')->where('coursedate','<=',$yr . '-12-31')->orderBy('coursedate','ASC')->where('calendar',1)->get();
         $bookings=Diaryentry::with('venue')->where('calendar',1)->where('diarydatetime','>=',$yr . '-01-01')->where('diarydatetime','<=',$yr . '-12-31')->orderBy('diarydatetime','ASC')->get();
         $dates=array();
         foreach ($bookings as $booking){

@@ -34,6 +34,8 @@ class ReportResource extends Resource
                 Forms\Components\TextInput::make('category')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('parameter')
+                    ->maxLength(199),
             ]);
     }
 
@@ -47,23 +49,35 @@ class ReportResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('parameter')
+                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Action::make('View')
-                ->form([
-                    Select::make('year')
-                        ->label('Year')
-                        ->options([
-                            date('Y',strtotime('-1 year'))=>'Last year',
-                            date('Y')=>'This year',
-                        ])
-                        ->required(),
-                ])
+                ->form(function (Report $record){
+                    if ($record->parameter=="year"){
+                        return [
+                            Select::make('year')
+                                ->label('Year')
+                                ->options([
+                                    date('Y',strtotime('-1 year'))=>date('Y',strtotime('-1 year')),
+                                    date('Y')=>date('Y'),
+                                    date('Y',strtotime('+1 year'))=>date('Y',strtotime('+1 year'))
+                                ])
+                                ->default(date('Y'))
+                                ->required(),
+                        ];
+                    }
+                })
                 ->action(function (Report $record, array $data){
-                    return redirect(url('/') . '/' . $record->url . '/' . $data['year']);
+                    if (isset($data['year'])){
+                        return redirect(url('/') . '/' . $record->url . '/' . $data['year']);
+                    } else {
+                        return redirect(url('/') . '/' . $record->url);
+                    }
                 })->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
             ])

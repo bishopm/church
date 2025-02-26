@@ -11,7 +11,9 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Redirect;
 
 class EditIndividual extends EditRecord
 {
@@ -63,8 +65,13 @@ class EditIndividual extends EditRecord
                     ]);
                 }
                 $individual->delete();
+                Notification::make()
+                    ->title('Record deleted')
+                    ->body('The record has been deleted successfully..')
+                    ->success()
+                    ->send();
+                Redirect::route('filament.admin.people.resources.individuals.index');
             })
-            ->successRedirectUrl(route('filament.admin.people.resources.people.index'))
         ];
     }
 

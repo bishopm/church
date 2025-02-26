@@ -10,7 +10,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -24,7 +23,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Bishopm\Church\Filament\Widgets\RecentSongs;
 use Bishopm\Church\Filament\Widgets\MeasuresChart;
 use Bishopm\Church\Filament\Widgets\NewMembers;
-use Bishopm\Church\Filament\Widgets\StatsOverview;
 use Bishopm\Church\Filament\Widgets\TasksToDo;
 use Filament\Navigation\NavigationItem;
 
@@ -53,12 +51,11 @@ class AdminPanelProvider extends PanelProvider
                     ])
             ])
             ->widgets([
-                RecentSongs::class,
-                PastoralContact::class,
-                MeasuresChart::class,
                 NewMembers::class,
-                // StatsOverview::class,
+                MeasuresChart::class,
                 Birthdays::class,
+                PastoralContact::class,
+                RecentSongs::class,
                 TasksToDo::class
             ])
             ->sidebarCollapsibleOnDesktop()

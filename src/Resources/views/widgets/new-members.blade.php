@@ -23,7 +23,15 @@
                 @endforeach
             </table>
             <br>
-            <b><a href="{{URL::route('reports.removenames')}}">Names to be removed</a></b>
+            <b><a href="{{URL::route('reports.removenames')}}">Names to be removed</a></b><br>
+        @endif
+        @if (count($memberdata['duplicates']))
+            <br>
+            <b>Please check for potential duplicates</b><br>
+                @foreach($memberdata['duplicates'] as $duplicate)
+                    {{$duplicate->firstname}} {{$duplicate->surname}}@if (!$loop->last), @else. @endif
+                @endforeach
+            </table>
         @endif
     </x-filament::section>
 </x-filament-widgets::widget>

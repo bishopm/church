@@ -213,6 +213,7 @@ class ChurchServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             'Bishopm\Church\Console\Commands\BirthdayEmail',
+            'Bishopm\Church\Console\Commands\GivingEmail',
             'Bishopm\Church\Console\Commands\InstallChurch',
             'Bishopm\Church\Console\Commands\MaintenanceEmail',
             'Bishopm\Church\Console\Commands\MonthlyMeasures',

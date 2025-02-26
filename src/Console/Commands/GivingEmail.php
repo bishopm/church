@@ -1,12 +1,10 @@
 <?php
 
-namespace Bishopm\Churchsite\Console;
+namespace Bishopm\Church\Console\Commands;
 
 use Illuminate\Console\Command;
-use Bishopm\Churchsite\Models\Individual;
-use Bishopm\Churchsite\Models\Gift;
-use Bishopm\Churchsite\Models\Settings;
-use DB;
+use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Gift;
 use Illuminate\Support\Facades\Mail;
 
 class GivingEmail extends Command
@@ -16,7 +14,7 @@ class GivingEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'churchsite:givingemail';
+    protected $signature = 'church:givingemail';
 
     /**
      * The console command description.
@@ -34,17 +32,18 @@ class GivingEmail extends Command
     {
         $data=array();
         $today=date('Y-m-d');
-        $lagtime=intval(Settings::get('givinglagtime'));
+        $lagtime=intval(setting('giving.lag_time'));
         // echo "You have a lag setting of " . $lagtime . " days\n";
         $effdate=strtotime($today)-$lagtime*86400;
         // echo "Effdate: " . date("d M Y", $effdate) . "\n";
         $repyr=date('Y', $effdate);
         // echo "Your report year is " . $repyr . "\n";
-        $reportnums=intval(Settings::get('givingreports'));
+        $reportnums=intval(setting('giving.reports'));
         // echo "Your system will deliver " . $reportnums . " reports per year\n";
-        $administrator=Settings::get('givingadmin');
-        $emailbody=Settings::get('givingmessage');
-        $emailending=Settings::get('givingending');
+        $administrator=setting('giving.administrator_email');
+        $emailbody=setting('giving.email_message');
+        $emailending=setting('giving.email_ending');
+        dd($effdate);
         switch ($reportnums) {
             case 1:
                 $reportdates=array($repyr . "-12-31");
@@ -93,15 +92,14 @@ class GivingEmail extends Command
             $msg.="<br><br>Thank you!";
             $nodat=array();
             $nodat['title']="Planned giving emails sent";
-            $nodat['sender']=Settings::get('email');
-            $nodat['church']=Settings::get('church_name');
-            $nodat['website']=Settings::get('website');
+            $nodat['sender']=setting('email.church_email');
+            $nodat['church']=setting('general.church_name');
             $nodat['email']=$administrator;
             $nodat['body']=$msg;
-            Mail::send('bishopm.churchsite::mail.generic', $nodat, function($message) use ($nodat) {
-                $message->to($nodat['email']);
-                $message->subject($nodat['title']);
-            });
+            // Mail::send('bishopm.churchsite::mail.generic', $nodat, function($message) use ($nodat) {
+            //    $message->to($nodat['email']);
+            //    $message->subject($nodat['title']);
+            // });
             foreach ($givers as $giver) {
                 $data[$giver->giving]['email'][]=$giver->email;
                 if (count($data[$giver->giving]['email'])==1) {
@@ -114,7 +112,7 @@ class GivingEmail extends Command
                     $data[$giver->giving]['pg']=$giver->giving;
                     $data[$giver->giving]['pgyr']=$repyr;
                     $data[$giver->giving]['church']=$nodat['church'];
-                    $data[$giver->giving]['churchabbr']=Settings::get('abbreviation');
+                    $data[$giver->giving]['churchabbr']=setting('general.church_abbreviation');
                     $data[$giver->giving]['website']=$nodat['website'];
                     if ($period==1) {
                         $data[$giver->giving]['scope']="month";
@@ -140,10 +138,10 @@ class GivingEmail extends Command
                     $pg['emailending']=str_replace("[churchname]", $pg['church'], $emailending);
                 }
                 foreach ($pg['email'] as $indiv) {
-                    Mail::send('bishopm.churchsite::mail.giving', $pg, function($message) use ($pg,$indiv) {
-                        $message->to($indiv);
-                        $message->subject($pg['title']);
-                    });
+                    // Mail::send('bishopm.churchsite::mail.giving', $pg, function($message) use ($pg,$indiv) {
+                    //    $message->to($indiv);
+                    //    $message->subject($pg['title']);
+                    // });
                 }
             }
         } else {
@@ -156,10 +154,10 @@ class GivingEmail extends Command
                 $warndat['title']="Planned giving reminder";
                 $warndat['body']=$msg;
                 $warndat['recipient']=$administrator;
-                Mail::send('bishopm.churchsite::mail.generic', $warndat, function($message) use ($warndat) {
-                    $message->to($warndat['recipient']);
-                    $message->subject($warndat['title']);
-                });
+                // Mail::send('bishopm.churchsite::mail.generic', $warndat, function($message) use ($warndat) {
+                //    $message->to($warndat['recipient']);
+                //    $message->subject($warndat['title']);
+                // });
             } else {
                 // echo "Today is not a report date\n";
             }

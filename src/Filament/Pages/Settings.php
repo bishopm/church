@@ -97,8 +97,22 @@ class Settings extends BaseSettings
                             TextInput::make('email.mail_from_name')
                         ]),
                     Tabs\Tab::make('Giving')
-                        ->schema([
-                            RichEditor::make('messages.giving_email')->columnSpanFull(),
+                        ->columns(2)
+                        ->schema([                            
+                            TextInput::make('giving.lag_time')->integer()->default(5),
+                            Select::make('giving.reports')
+                            ->label('No. of reports per year')
+                            ->selectablePlaceholder(false)
+                            ->options([
+                                1 => 1,
+                                2 => 2,
+                                3 => 3,
+                                4 => 4,
+                                6 => 6
+                            ])
+                            ->default(4),
+                            TextInput::make('giving.administrator_email')->email(),
+                            RichEditor::make('giving.email_message')->columnSpanFull()                        
                         ]),
                     Tabs\Tab::make('Messages')
                         ->schema([

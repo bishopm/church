@@ -4,12 +4,8 @@ namespace Bishopm\Church\Console\Commands;
 
 use Bishopm\Church\Mail\ChurchHtmlMail;
 use Illuminate\Console\Command;
-use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Maintenancetask;
 use Bishopm\Church\Models\Group;
-use Bishopm\Church\Models\Settings;
-use DB;
-use Log;
 use Illuminate\Support\Facades\Mail;
 
 class MaintenanceEmail extends Command

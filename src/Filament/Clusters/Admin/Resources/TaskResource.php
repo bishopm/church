@@ -16,6 +16,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class TaskResource extends Resource
 {
@@ -66,7 +67,7 @@ class TaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('individual.fullname')
                     ->numeric()
                     ->sortable(),
@@ -87,16 +88,27 @@ class TaskResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                SelectFilter::make('status')->label('')
-                ->options([
-                    'todo'=>'To do',
-                    'doing'=>'Underway',
-                    'someday'=>'Some day',
-                    'done'=>'Done'
-                ]),
+                SelectFilter::make('status')->label('Status')
+                    ->options([
+                        'todo'=>'To do',
+                        'doing'=>'Underway',
+                        'someday'=>'Some day',
+                        'done'=>'Done'
+                    ]),
+                SelectFilter::make('individual_id')->label('Assigned to')
+                    ->options(function () {
+                        $indivs=Individual::whereHas('tasks')->groupBy('id')->select('id','firstname','surname')->get();
+                        foreach ($indivs as $indiv){
+                            $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
+                        }
+                        return $data;
+                    })
+                    ->default(function (){
+                        return Individual::where('user_id',Auth::user()->id)->first()->id;
+                    }),
                 Filter::make('hide_completed')
-                ->query(fn (Builder $query): Builder => $query->where('status', '<>', 'done'))
-                ->default()
+                    ->query(fn (Builder $query): Builder => $query->where('status', '<>', 'done'))
+                    ->default()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

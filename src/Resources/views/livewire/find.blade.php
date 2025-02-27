@@ -7,7 +7,7 @@
         <tr wire:key="{{time().$name['id']}}">
             <td>{{$name['firstname']}} {{$name['surname']}}</td>
             <td><a href="tel:{{$name['cellphone']}}">{{substr($name['cellphone'],0,3)}}&nbsp;{{substr($name['cellphone'],3,3)}}&nbsp;{{substr($name['cellphone'],6)}}</a></td>
-            <td>{{$name->household->address1}} {{$name->household->address2}}</td>
+            <td><a href="https://maps.google.com/?q={{$name->household->address1}} {{$name->household->address2}} {{$name->household->address3}}">{{$name->household->address1}} {{$name->household->address2}} {{$name->household->address3}}</a></td>
         </tr>
     @endforeach
     </table>

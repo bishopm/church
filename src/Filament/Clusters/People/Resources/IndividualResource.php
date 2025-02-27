@@ -217,6 +217,7 @@ class IndividualResource extends Resource
                     ]),
                     Tab::make('Admin')->schema([
                         Forms\Components\Select::make('memberstatus')
+                            ->label('Membership status')
                             ->required()
                             ->options([
                                 'member' => 'Member',
@@ -226,6 +227,14 @@ class IndividualResource extends Resource
                             ->default('member'),
                         Forms\Components\TextInput::make('giving')
                             ->password()
+                            ->revealable(function (){
+                                foreach (Auth::user()->roles as $role){
+                                    if ($role->name=="Finance"){
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            })
                             ->maxLength(255),
                         Forms\Components\Textarea::make('notes')
                             ->columnSpanFull(),

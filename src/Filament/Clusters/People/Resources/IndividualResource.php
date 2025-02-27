@@ -9,7 +9,6 @@ use Bishopm\Church\Jobs\SendEmail;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Actions;
 use Bishopm\Church\Models\Individual;
-use Bishopm\Church\Models\Household;
 use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\Pastoralnote;
 use Filament\Forms;
@@ -22,7 +21,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Facades\Mail;
 use Bishopm\Church\Mail\ChurchMail;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -113,6 +111,19 @@ class IndividualResource extends Resource
                             ->label('Office phone')
                             ->tel()
                             ->maxLength(255),
+                            Forms\Components\Placeholder::make('householdtext')
+                            ->hiddenOn('create')
+                            ->content(function (Individual $record){
+                                $household = $record->household->address1;
+                                if ($record->household->address2){
+                                    $household.= "<br>" . $record->household->address2;
+                                }
+                                if ($record->household->address3){
+                                    $household.= "<br>" . $record->household->address3;
+                                }
+                                return new HtmlString($household);
+                            })
+                            ->label(''),
                     ]),
                     Tab::make('Pastoral')->hiddenOn('create')
                         ->schema([
@@ -202,12 +213,12 @@ class IndividualResource extends Resource
                             ->content(function (Individual $record){
                                 $household = $record->household->address1;
                                 if ($record->household->address2){
-                                    $household.= ", " . $record->household->address2;
+                                    $household.= "<br>" . $record->household->address2;
                                 }
                                 if ($record->household->address3){
-                                    $household.= ", " . $record->household->address3;
+                                    $household.= "<br>" . $record->household->address3;
                                 }
-                                return $household;
+                                return new HtmlString($household);
                             })
                             ->label(''),
                         Actions::make([
@@ -236,12 +247,12 @@ class IndividualResource extends Resource
                                 return false;
                             })
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('notes')
-                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('user_id')
                             ->numeric(),
                         Forms\Components\TextInput::make('uid')
                             ->maxLength(255),
+                        Forms\Components\Textarea::make('notes')
+                            ->columnSpanFull(),
                         Forms\Components\Checkbox::make('welcome_email'),
                     ])
                 ])

@@ -97,7 +97,7 @@ class TaskResource extends Resource
                     ]),
                 SelectFilter::make('individual_id')->label('Assigned to')
                     ->options(function () {
-                        $indivs=Individual::whereHas('tasks')->groupBy('id')->select('id','firstname','surname')->get();
+                        $indivs=Individual::whereHas('tasks')->groupBy('id','firstname','surname')->select('id','firstname','surname')->get();
                         foreach ($indivs as $indiv){
                             $data[$indiv->id]=$indiv->firstname . " " . $indiv->surname;
                         }

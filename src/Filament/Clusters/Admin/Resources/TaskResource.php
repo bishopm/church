@@ -8,15 +8,18 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\RelationManage
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Task;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TaskResource extends Resource
 {
@@ -51,6 +54,7 @@ class TaskResource extends Resource
                     ->placeholder('')
                     ->required()
                     ->default('todo'),
+                SpatieTagsInput::make('tags')->label('Category')->type('tasks'),
                 Forms\Components\Select::make('visibility')
                     ->options([
                         'public'=>'Public',
@@ -81,6 +85,11 @@ class TaskResource extends Resource
                         'someday'=>'Some day',
                         'done'=>'Done'
                     ]),
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->badge()
+                    ->label('Category')
+                    ->forceSearchCaseInsensitive(true)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('visibility')
                     ->searchable(),
             ])

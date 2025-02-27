@@ -94,6 +94,7 @@ class ChurchServiceProvider extends ServiceProvider
             'song' => 'Bishopm\Church\Models\Song',
             'group' => 'Bishopm\Church\Models\Group',
             'event' => 'Bishopm\Church\Models\Event',
+            'task' => 'Bishopm\Church\Models\Task',
             'tenant' => 'Bishopm\Church\Models\Tenant',
             'household' => 'Bishopm\Church\Models\Household',
             'individual' => 'Bishopm\Church\Models\Individual',

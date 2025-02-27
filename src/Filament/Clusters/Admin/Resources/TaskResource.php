@@ -74,16 +74,13 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('duedate')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
+                Tables\Columns\SelectColumn::make('status')
+                    ->options([
+                        'todo'=>'To do',
+                        'doing'=>'Underway',
+                        'someday'=>'Some day',
+                        'done'=>'Done'
+                    ]),
                 Tables\Columns\TextColumn::make('visibility')
                     ->searchable(),
             ])

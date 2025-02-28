@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Classes\YoutubeService;
+use Bishopm\Church\Events\NewLiveUser;
 use Bishopm\Church\Mail\MessageMail;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
@@ -289,6 +290,20 @@ class HomeController extends Controller
         $data['sermon']=Service::with('person','series')->whereNotNull('audio')->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";
         return view('church::web.home',$data);
+    }
+
+    public function live(){
+        NewLiveUser::dispatch($_COOKIE['wmc-id']);
+        $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',date('Y-m-d'))->whereNotNull('video')->orderBy('servicedate','ASC')->first();
+        if ($data['service']){
+            $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
+            if ($floor == 1){
+                $data['floor'] = "1 day";
+            } else {
+                $data['floor'] = $floor . " days";
+            }
+        }
+        return view('church::app.live',$data);
     }
 
     public function login(){

@@ -24,10 +24,13 @@
     @if ($service) 
         <div class="bg-black p-2 text-white">
             <h3>Upcoming service</h3>
-                @if (($service->servicedate == date('Y-m-d')) and ($service->video))
+                @if (($service->servicedate >= date('Y-m-d')) and ($service->video))
                     <div class="ratio ratio-16x9">
                         <iframe src='https://youtube.com/embed/{{$service->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
                     </div>
+                    @if ($member['id']==1218)
+                        <div class="text-center"><a class="btn-dark btn btn-default" href="{{route('app.live')}}">Click here to join our online live service</a></div>
+                    @endif
                 @else
                     <div>Live stream starts in {{ $floor }} ({{date('j M Y',strtotime($service->servicedate))}} {{$service->servicetime}})
                 @endif

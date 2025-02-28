@@ -32,6 +32,7 @@ class CheckinEmail extends Command
     {
         Log::info('Preparing Check in email on ' . date('Y-m-d H:i'));
         $sixweeks=date('Y-m-d',strtotime('-6 weeks'));
+        Log::info($sixweeks);
         $data=array();
         $data['never']=array();
         $missings=Individual::with(['attendances'=> function($q) use ($sixweeks) { $q->where('attendancedate','<',$sixweeks)->orderBy('attendancedate');}])->orderBy('surname','ASC')->get();
@@ -50,7 +51,6 @@ class CheckinEmail extends Command
         foreach ($data['attended'] as $attended){
             $message.=$attended->firstname . " " . $attended->surname . ". Cellphone: " . $attended->cellphone . " (Last seen: " . $attended->lastseen . ")<br>";
         }
-        Log::info($message);
         // Send to followup group
         $setting=intval(setting('automation.followup_group'));
         $churchname=setting('general.church_name');

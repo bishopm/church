@@ -7,6 +7,7 @@ use Bishopm\Church\Mail\GivingMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Gift;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class GivingEmail extends Command
@@ -32,6 +33,7 @@ class GivingEmail extends Command
      */
     public function handle()
     {
+        Log::info('Preparing giving emails on ' . date('Y-m-d H:i'));
         $data=array();
         $today=date('Y-m-d');
         $lagtime=intval(setting('giving.lag_time'));
@@ -156,5 +158,6 @@ class GivingEmail extends Command
                 // echo "Today is not a report date\n";
             }
         }
+        Log::info('Giving emails sent on ' . date('Y-m-d H:i'));
     }
 }

@@ -7,6 +7,7 @@ use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Statistic;
 use Bishopm\Church\Models\Group;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MonthlyMeasures extends Command
 {
@@ -31,6 +32,7 @@ class MonthlyMeasures extends Command
      */
     public function handle()
     {
+        Log::info('Preparing measures run on ' . date('Y-m-d H:i'));
         $reportmonth=date('Y-m',strtotime('-1 month'));
         $fquery=Group::with('individuals')->where('grouptype','fellowship')->get();
         $farray=array();
@@ -86,5 +88,6 @@ class MonthlyMeasures extends Command
             'category' => 'worship',
             'measurement' => $worship
         ]);
+        Log::info('Measures run completed on ' . date('Y-m-d H:i'));
     }
 }

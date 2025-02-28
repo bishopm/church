@@ -8,6 +8,7 @@ use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class BirthdayEmail extends Command
@@ -40,6 +41,7 @@ class BirthdayEmail extends Command
      */
     public function handle()
     {
+        Log::info('Preparing Birthday email on ' . date('Y-m-d H:i'));
         $todaynum=date('w');
         $thisyr=date("Y");
         $mon=strval(date('m-d', strtotime("next Monday")));
@@ -93,5 +95,6 @@ class BirthdayEmail extends Command
             $data['email']=$recip->email;
             Mail::to($data['email'])->send(new ChurchHtmlMail($data));
         }
+        Log::info('Birthday email sent on ' . date('Y-m-d H:i'));
     }
 }

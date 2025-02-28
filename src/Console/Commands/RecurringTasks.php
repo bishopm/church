@@ -5,6 +5,7 @@ namespace Bishopm\Church\Console\Commands;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Recurringtask;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RecurringTasks extends Command
 {
@@ -45,5 +46,6 @@ class RecurringTasks extends Command
             ]);
         }
         DB::table('tasks')->where('status', 'done')->delete();
+        Log::info('Task clean up completed on ' . date('Y-m-d H:i'));
     }
 }

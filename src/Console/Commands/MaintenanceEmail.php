@@ -6,6 +6,7 @@ use Bishopm\Church\Mail\ChurchHtmlMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Maintenancetask;
 use Bishopm\Church\Models\Group;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class MaintenanceEmail extends Command
@@ -31,6 +32,7 @@ class MaintenanceEmail extends Command
      */
     public function handle()
     {
+        Log::info('Preparing maintenance email on ' . date('Y-m-d H:i'));
         $lastweek = date('Y-m-d',strtotime('7 days ago'));
         $donetasks = Maintenancetask::with('individual','venue')->where('completed_at','>',$lastweek)->orderBy('created_at','ASC')->get();
         $tasks = Maintenancetask::with('individual','venue')->orderBy('created_at','ASC')->whereNull('completed_at')->get();
@@ -71,5 +73,6 @@ class MaintenanceEmail extends Command
             $data['email']=$recip->email;
             Mail::to($data['email'])->send(new ChurchHtmlMail($data));
         }
+        Log::info('Maintenance email sent on ' . date('Y-m-d H:i'));
     }
 }

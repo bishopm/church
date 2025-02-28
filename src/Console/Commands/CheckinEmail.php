@@ -6,6 +6,7 @@ use Bishopm\Church\Mail\ChurchHtmlMail;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CheckinEmail extends Command
@@ -29,11 +30,11 @@ class CheckinEmail extends Command
      */
     public function handle()
     {
+        Log::info('Preparing Check in email on ' . date('Y-m-d H:i'));
         $sixweeks=date('Y-m-d',strtotime('-6 weeks'));
         $data=array();
         $data['never']=array();
-        //$missings=Individual::without('attendances')->orWhereHas('attendances', function($q) use ($sixweeks) { $q->where('attendancedate','<',$sixweeks)->orderBy('attendancedate');})->orderBy('surname','ASC')->get();
-        $missings=Individual::without('attendances')->get();
+        $missings=Individual::with(['attendances'=> function($q) use ($sixweeks) { $q->where('attendancedate','<',$sixweeks)->orderBy('attendancedate');}])->orderBy('surname','ASC')->get();
         foreach ($missings as $missing){
             if (count($missing->attendances)>0){
                 $data['attended'][]=$missing;
@@ -65,5 +66,6 @@ class CheckinEmail extends Command
             $data['email']=$recip->email;
             Mail::to($data['email'])->send(new ChurchHtmlMail($data));
         }
+        Log::info('Check in email sent on ' . date('Y-m-d H:i'));
     }
 }

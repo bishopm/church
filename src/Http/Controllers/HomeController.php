@@ -61,7 +61,7 @@ class HomeController extends Controller
         $today=date('Y-m-d');
         $data['content']=array();
         $monthago=date('Y-m-d',strtotime('-31 days'));      
-        $sermons=Service::where('servicedate','>',$monthago)->where('servicedate','<',$today)->whereNotNull('audio')->where('published',1)->where('livestream',1)->orderBy('servicedate','DESC')->get();
+        $sermons=Service::where('servicedate','>',$monthago)->where('servicedate','<',$today)->whereNotNull('audio')->orderBy('servicedate','DESC')->get();
         foreach ($sermons as $sermon){
             $data['content'][strtotime($sermon->servicedate)]=$sermon;
         }
@@ -78,7 +78,7 @@ class HomeController extends Controller
         foreach ($events as $event){
             $data['content'][strtotime($event->eventdate)]=$event;
         }
-        $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->where('livestream','1')->orderBy('servicedate','ASC')->first();
+        $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',$today)->whereNotNull('video')->orderBy('servicedate','ASC')->first();
         if ($data['service']){
             $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
             if ($floor == 1){
@@ -285,8 +285,8 @@ class HomeController extends Controller
             $data['notification']="Thank you! We will reply to you by email";
         }
         $data['blogs']=Post::with('person')->where('published',1)->orderBy('published_at','DESC')->take(3)->get();
-        $data['upcoming']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->where('livestream','1')->whereNotNull('video')->orderBy('servicedate','ASC')->first();
-        $data['sermon']=Service::with('person','series')->where('published',1)->whereNotNull('audio')->orderBy('servicedate','DESC')->first();
+        $data['upcoming']=Service::withWhereHas('setitems', function($q) { $q->where('setitemable_type','song'); })->where('servicedate','>=',$today)->whereNotNull('video')->orderBy('servicedate','ASC')->first();
+        $data['sermon']=Service::with('person','series')->whereNotNull('audio')->orderBy('servicedate','DESC')->first();
         $data['pageName'] = "Home";
         return view('church::web.home',$data);
     }
@@ -456,18 +456,18 @@ class HomeController extends Controller
     }
 
     public function series($year,$slug){
-        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video');})->where('slug',$slug)->first();
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->whereNotNull('audio')->whereNotNull('video');})->where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.series',$data);
     }
     
     public function sermons() {
-        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video');})->orderBy('startingdate','DESC')->paginate(10);
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->whereNotNull('audio')->whereNotNull('video');})->orderBy('startingdate','DESC')->paginate(10);
         return view('church::' . $this->routeName . '.sermons',$data);
     }
 
     public function sermon($year,$slug, $id){
-        $data['sermon']=Service::with('person')->where('published','=',1)->where('livestream',1)->whereNotNull('audio')->whereNotNull('video')->where('id',$id)->first();
-        $data['series']=Series::withWhereHas('services', function ($q) { $q->where('livestream',1)->where('published','=',1)->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
+        $data['sermon']=Service::with('person')->whereNotNull('audio')->whereNotNull('video')->where('id',$id)->first();
+        $data['series']=Series::withWhereHas('services', function ($q) { $q->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
         return view('church::' . $this->routeName . '.sermon',$data);
     }
 

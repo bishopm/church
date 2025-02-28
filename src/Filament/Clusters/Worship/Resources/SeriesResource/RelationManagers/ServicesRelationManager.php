@@ -27,12 +27,10 @@ class ServicesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('livestream', 1))
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('sermon_title'),
                 Tables\Columns\TextColumn::make('servicetime')->label('Service'),
-                Tables\Columns\IconColumn::make('published')->label('Published')->boolean(),
             ])
             ->filters([
                 //

@@ -31,9 +31,4 @@ class Service extends Model
     {
         return $this->hasMany(Setitem::class);
     }
-
-    public function scopePublishedsermon($query)
-    {
-        return $query->where('published', '1');
-    }
 }

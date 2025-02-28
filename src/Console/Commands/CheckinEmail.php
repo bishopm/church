@@ -32,7 +32,6 @@ class CheckinEmail extends Command
     {
         Log::info('Preparing Check in email on ' . date('Y-m-d H:i'));
         $sixweeks=date('Y-m-d',strtotime('-6 weeks'));
-        Log::info($sixweeks);
         $data=array();
         $data['never']=array();
         $missings=Individual::with(['attendances'=> function($q) use ($sixweeks) { $q->where('attendancedate','<',$sixweeks)->orderBy('attendancedate');}])->orderBy('surname','ASC')->get();

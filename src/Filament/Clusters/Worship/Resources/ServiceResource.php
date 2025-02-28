@@ -77,9 +77,6 @@ class ServiceResource extends Resource
                             })
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (Set $set, Get $get, $state){
-                                if ($state==setting('worship.live_streamed_service')){
-                                    $set('livestream',true);
-                                }
                                 $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $state . "/" . substr($get('servicedate'),0,10);
                                 $response=Http::get($url);
                                 $fullname=$response->body();
@@ -332,9 +329,7 @@ class ServiceResource extends Resource
                                 ->icon('heroicon-m-musical-note')
                                 ->media(fn (Get $get) => $get('audio'))
                         ),
-                        SpatieTagsInput::make('tags'),
-                        Forms\Components\Toggle::make('livestream')->label('Service will be live-streamed'),
-                        Forms\Components\Toggle::make('published')        
+                        SpatieTagsInput::make('tags')
                     ])
                 ])
             ]);

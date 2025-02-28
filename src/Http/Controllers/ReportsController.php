@@ -970,7 +970,7 @@ class ReportsController extends Controller
         $this->title="Preaching series plan";
         $this->subtitle=date('j M Y',strtotime($start)) . " - " . date('j M Y',strtotime($end));
         $this->pdf=$this->report_header();
-        $services = Service::with('series','person')->where('livestream',1)->where('servicedate','>=',$start)->where('servicedate','<=',$end)->orderBy('servicedate','ASC')->get();
+        $services = Service::with('series','person')->whereNotNull('video')->where('servicedate','>=',$start)->where('servicedate','<=',$end)->orderBy('servicedate','ASC')->get();
         $yy=35;
         $this->pdf->SetFont('DejaVu', 'B', 11);
         $this->pdf->text(10,$yy,"Date");

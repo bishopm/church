@@ -199,11 +199,7 @@ class Settings extends BaseSettings
                         ->columns(2)
                         ->schema([
                             KeyValue::make('worship.order_of_service')->columnSpanFull(),
-                            TagsInput::make('worship.set_items'), 
-                            Select::make('worship.live_streamed_service')
-                                ->options(function () {
-                                    return array_combine(setting('general.services'),setting('general.services'));
-                                })
+                            TagsInput::make('worship.set_items')
                         ]),
                 ]),
         ];

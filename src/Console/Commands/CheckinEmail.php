@@ -50,7 +50,7 @@ class CheckinEmail extends Command
         foreach ($data['attended'] as $attended){
             $message.=$attended->firstname . " " . $attended->surname . ". Cellphone: " . $attended->cellphone . " (Last seen: " . $attended->lastseen . ")<br>";
         }
-
+        dd($message);
         // Send to followup group
         $setting=intval(setting('automation.followup_group'));
         $churchname=setting('general.church_name');

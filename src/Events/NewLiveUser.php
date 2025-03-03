@@ -32,7 +32,7 @@ class NewLiveUser implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('westville-methodist'),
+            new Channel('church-messages'),
         ];
     }
 }

@@ -11,6 +11,7 @@
                 @endif
             </div>
             <div class="py-2">
+                <h3>{{setting('general.church_abbreviation')}} Live</h3>
                 <ul style="display: flex; justify-content: center;" class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="pills-chat-tab" data-bs-toggle="pill" data-bs-target="#pills-chat" type="button" role="tab" aria-controls="pills-chat" aria-selected="false">
@@ -25,7 +26,7 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="pills-chat" role="tabpanel" aria-labelledby="pills-chat-tab">
-                        <textarea class="form-control" rows="12"></textarea>
+                        @livewire('live')
                     </div>        
                     <div class="tab-pane fade show" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
                         <div class="card p-3">
@@ -47,7 +48,7 @@
     @endif
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
-        Pusher.logToConsole = false;
+        Pusher.logToConsole = true;
         var pusher = new Pusher("{{setting('services.pusher_key')}}", {
         cluster: "{{setting('services.pusher_app_cluster')}}"
         });

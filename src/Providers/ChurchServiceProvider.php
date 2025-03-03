@@ -8,6 +8,7 @@ use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\Calendar;
 use Bishopm\Church\Livewire\Find;
+use Bishopm\Church\Livewire\Live;
 use Bishopm\Church\Livewire\LoginForm;
 use Bishopm\Church\Livewire\PastoralNote;
 use Bishopm\Church\Models\Individual;
@@ -79,6 +80,7 @@ class ChurchServiceProvider extends ServiceProvider
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('calendar', Calendar::class);
         Livewire::component('find', Find::class);
+        Livewire::component('live', Live::class);
         Livewire::component('login', LoginForm::class);
         Livewire::component('pastoralnote', PastoralNote::class);
         if ($this->app->runningInConsole()) {

@@ -10,6 +10,13 @@ class Live extends Component
 
     public array $messages;
 
+    protected $listeners  = ['updateMessages'];
+ 
+    public function updateMessages($data)
+    {
+        $this->messages[]=$data['message'];
+    }
+
     public function render()
     {
         return view('church::livewire.live');

@@ -55,7 +55,7 @@
 
         var channel = pusher.subscribe('church-messages');
         channel.bind('Bishopm\\Church\\Events\\NewLiveUser', function(data) {
-            console.log(data['message']);
+            Livewire.dispatchTo('live','updateMessages', {data});
         })
     </script>
 </x-church::layouts.app>

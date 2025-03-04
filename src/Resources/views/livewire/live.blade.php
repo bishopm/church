@@ -1,5 +1,10 @@
-<div>
+<ul class="list-unstyled">
     @foreach ($messages as $message)    
-        <p><small>{{$message}}</small></p>
+        <li>
+            <b>{{$message['author']}}</b>
+            <small>{{$message['message']}}
+                <i>{{ \Carbon\Carbon::parse($message['time'])->diffForHumans() }}</i>
+            </small>
+        </li>
     @endforeach
-</div>
+</ul>

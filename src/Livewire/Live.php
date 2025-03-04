@@ -14,7 +14,10 @@ class Live extends Component
  
     public function updateMessages($data)
     {
-        $this->messages[]=$data['message'];
+        $message['message']=$data['message'];
+        $message['author']="WMC";
+        $message['time']=now();
+        $this->messages[]=$message;
     }
 
     public function render()

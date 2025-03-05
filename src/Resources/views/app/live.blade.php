@@ -11,38 +11,11 @@
                 @endif
             </div>
             <div class="py-2">
-                <h3>{{setting('general.church_abbreviation')}} Live</h3>
-                <ul style="display: flex; justify-content: center;" class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-chat-tab" data-bs-toggle="pill" data-bs-target="#pills-chat" type="button" role="tab" aria-controls="pills-chat" aria-selected="false">
-                            <i class="bi bi-chat-dots"> </i>Chat box
-                        </button>
-                    </li>                
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="false">
-                            <i class="bi bi-people"> </i>Service details
-                        </button>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="pills-chat" role="tabpanel" aria-labelledby="pills-chat-tab">
-                        @livewire('live')
-                    </div>        
-                    <div class="tab-pane fade show" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
-                        <div class="card p-3">
-                            <h5>Reading: <small><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a></small></h5>
-                            <h5>Preacher: <small>{{$service->person->fullname}}</small></h5>
-                            <h5>Songs</h5>
-                            <ul class="list-unstyled">
-                                @forelse ($service->setitems as $song)
-                                    <li><a href="{{url('/')}}/songs/{{$song->setitemable_id}}">{{$song->setitemable->title}}</a></li>
-                                @empty
-                                    No songs have been added yet
-                                @endforelse
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="text-center">{{setting('general.church_abbreviation')}} Live</h3>
+                @livewire('live', [
+                    'id' => $member['id'],
+                    'service'=> $service
+                ])
             </div>
         </div>
     @endif
@@ -54,8 +27,8 @@
         });
 
         var channel = pusher.subscribe('church-messages');
-        channel.bind('Bishopm\\Church\\Events\\NewLiveUser', function(data) {
-            Livewire.dispatchTo('live','updateMessages', {data});
+        channel.bind('Bishopm\\Church\\Events\\NewLiveMessage', function() {
+            Livewire.dispatchTo('live','updateMessages');
         })
     </script>
 </x-church::layouts.app>

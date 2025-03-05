@@ -83,4 +83,9 @@ class Individual extends Model
         return $this->morphToMany(Pastor::class,'pastorable')->withPivot('active','details','prayerlist','prayernote');
     }
 
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }    
+
 }

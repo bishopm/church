@@ -3,7 +3,7 @@
 namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Classes\YoutubeService;
-use Bishopm\Church\Events\NewLiveUser;
+use Bishopm\Church\Events\NewLiveMessage;
 use Bishopm\Church\Mail\MessageMail;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
@@ -293,8 +293,10 @@ class HomeController extends Controller
     }
 
     public function live(){
-        NewLiveUser::dispatch($_COOKIE['wmc-id']);
+        NewLiveMessage::dispatch($_COOKIE['wmc-id']);
         $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',date('Y-m-d'))->whereNotNull('video')->orderBy('servicedate','ASC')->first();
+        $now=date('Y-m-d H:i:s', strtotime('-50 minutes'));
+        $data['members']=Individual::where('online','>=',$now)->get();
         if ($data['service']){
             $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
             if ($floor == 1){

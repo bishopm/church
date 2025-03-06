@@ -26,29 +26,35 @@
             <h3>Upcoming service</h3>
                 @if (($service->servicedate >= date('Y-m-d')) and ($service->video))
                     <div class="ratio ratio-16x9">
-                        <iframe src='https://youtube.com/embed/{{$service->video}}?autoplay=1' frameborder='0' allowfullscreen></iframe>
+                        <iframe src='https://youtube.com/embed/{{$service->video}}?autoplay=1' frameborder='0'></iframe>
                     </div>
-                    @if ($member['id']==1218)
-                        <div class="text-center"><a class="btn-dark btn btn-default" href="{{route('app.live')}}">Click here to join our online live service</a></div>
-                    @endif
+                    <div>
+                        @if ($service)
+                            <div class="bg-black p-2 text-white">
+                                <div class="py-2" style="max-height: 400px; overflow: auto; overflow-x: hidden;">
+                                    @livewire('live', [
+                                        'id' => $member['id'],
+                                        'service'=> $service
+                                    ])
+                                </div>
+                            </div>
+                        @endif
+                        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+                        <script>
+                            Pusher.logToConsole = true;
+                            var pusher = new Pusher("{{setting('services.pusher_key')}}", {
+                            cluster: "{{setting('services.pusher_app_cluster')}}"
+                            });
+
+                            var channel = pusher.subscribe('church-messages');
+                            channel.bind('Bishopm\\Church\\Events\\NewLiveMessage', function() {
+                                Livewire.dispatchTo('live','updateMessages');
+                            })
+                        </script>
+                    </div>
                 @else
                     <div>Live stream starts in {{ $floor }} ({{date('j M Y',strtotime($service->servicedate))}} {{$service->servicetime}})
                 @endif
-            </div>
-            <div class="py-2">
-                <h5>Reading: <small><a href="http://biblegateway.com/passage/?search={{urlencode($service->reading)}}&version=GNT">{{$service->reading}}</a></small></h5>
-                <h5>Preacher: <small>{{$service->person->fullname}}</small></h5>
-                @if ($service->series)
-                    <h5>Series: <small><a href="{{url('/')}}/sermons/{{date('Y',strtotime($service->series->startingdate))}}/{{$service->series->slug}}">{{$service->series->series}}</a></small></h5>
-                @endif
-                <h5>Songs</h5>
-                <ul class="list-unstyled">
-                    @forelse ($service->setitems as $song)
-                        <li><a href="{{url('/')}}/songs/{{$song->setitemable_id}}">{{$song->setitemable->title}}</a></li>
-                    @empty
-                        No songs have been added yet
-                    @endforelse
-                </ul>
             </div>
         </div>
     @endif
@@ -108,6 +114,14 @@
         No items have been published in the last 40 days.
     @endforelse
     <script>
+        function toggleLive() {
+            var x = document.getElementById("liveframe");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
         function refresh() {
             console.log('refreshing');
             setCookie("wmc-version", "{{setting('general.app_version')}}", 365);

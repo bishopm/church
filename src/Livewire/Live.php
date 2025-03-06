@@ -3,7 +3,6 @@
 namespace Bishopm\Church\Livewire;
 
 use Bishopm\Church\Events\NewLiveMessage;
-use Bishopm\Church\Events\NewUserMessage;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Message;
 use Livewire\Component;
@@ -14,13 +13,24 @@ class Live extends Component
     public array $messages;
     public array $members;
     public $service;
-    public string $usermessage;
-    public int $id;
+    public string $usermessage, $status;
+    public int $id, $frameheight;
 
     protected $listeners  = ['updateMessages'];
 
     public function mount($id){
         $this->id = $id;
+        $this->status = "mounted";
+        $this->frameheight=200;
+    }
+
+    public function login() {
+        NewLiveMessage::dispatch($this->id);
+        $this->status = "online";
+    }
+
+    public function logout() {
+        $this->status = "mounted";
     }
 
     public function updateMessages()

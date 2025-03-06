@@ -293,7 +293,6 @@ class HomeController extends Controller
     }
 
     public function live(){
-        NewLiveMessage::dispatch($_COOKIE['wmc-id']);
         $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',date('Y-m-d'))->whereNotNull('video')->orderBy('servicedate','ASC')->first();
         $now=date('Y-m-d H:i:s', strtotime('-50 minutes'));
         $data['members']=Individual::where('online','>=',$now)->get();

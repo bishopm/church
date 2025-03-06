@@ -292,21 +292,6 @@ class HomeController extends Controller
         return view('church::web.home',$data);
     }
 
-    public function live(){
-        $data['service']=Service::with('person')->withWhereHas('setitems', function($q) { $q->where('setitemable_type','song')->orderBy('sortorder'); })->where('servicedate','>=',date('Y-m-d'))->whereNotNull('video')->orderBy('servicedate','ASC')->first();
-        $now=date('Y-m-d H:i:s', strtotime('-50 minutes'));
-        $data['members']=Individual::where('online','>=',$now)->get();
-        if ($data['service']){
-            $floor = floor((strtotime($data['service']->servicedate) - time())/3600/24);
-            if ($floor == 1){
-                $data['floor'] = "1 day";
-            } else {
-                $data['floor'] = $floor . " days";
-            }
-        }
-        return view('church::app.live',$data);
-    }
-
     public function login(){
         return view('church::app.login');
     }

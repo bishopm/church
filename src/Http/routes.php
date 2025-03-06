@@ -89,7 +89,6 @@ Route::domain('app.' . $url)->group(function() {
         Route::get('/find', 'find')->name('app.directory');
         Route::get('/groups', 'groups')->name('app.groups');
         Route::get('/groups/{id}', 'group')->name('app.group');
-        Route::get('/live', 'live')->name('app.live');
         Route::get('/login', 'login')->name('app.login');
         Route::get('/offline', 'offline')->name('app.offline');
         Route::get('/practices', 'practices')->name('app.practices');

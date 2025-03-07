@@ -199,7 +199,10 @@ class Settings extends BaseSettings
                         ->columns(2)
                         ->schema([
                             KeyValue::make('worship.order_of_service')->columnSpanFull(),
-                            TagsInput::make('worship.set_items')
+                            TagsInput::make('worship.set_items'),
+                            Select::make('worship.online_service_group')->label('Online service group')
+                                ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
+                                ->searchable(),
                         ]),
                 ]),
         ];

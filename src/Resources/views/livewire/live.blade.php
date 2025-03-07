@@ -1,6 +1,6 @@
 <div>
     @if ($status == "mounted")
-        @if ($member['id']==1218)
+        @if (($member['id']==1218) or ($member['id']==1219))
             <button class="form-control form-control-sm text-center bg-danger text-white mb-2" wire:click="login">Click to join our live service</button>
         @endif
         <div class="card p-3">
@@ -26,12 +26,12 @@
             </li>                
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-congregation-tab" data-bs-toggle="pill" data-bs-target="#pills-congregation" type="button" role="tab" aria-controls="pills-congregation" aria-selected="false">
-                    <i class="bi bi-people"> </i>Who's here? @if (count($members)) <span class="badge bg-dark ml-1 px-1">{{count($members)}}</span> @endif
+                    <i class="bi bi-people"> </i>Online @if (count($members))<span class="badge bg-dark ml-1 px-1">{{count($members)}}</span> @endif
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="false">
-                    <i class="bi bi-mic"> </i>Service details
+                    <i class="bi bi-mic"> </i>Service
                 </button>
             </li>
         </ul>
@@ -71,7 +71,7 @@
                         <button class="form-control text-center bg-dark text-white mb-2" wire:click="logout">Logout</button>
                     </div>
                 @else
-                    Setting up chat box ...
+                    <div class="text-center"><small>Logging you in ...</small></div>
                 @endif
             </div>
             <div class="tab-pane fade show" id="pills-congregation" role="tabpanel" aria-labelledby="pills-congregation-tab">

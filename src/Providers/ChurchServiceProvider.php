@@ -163,6 +163,7 @@ class ChurchServiceProvider extends ServiceProvider
             $schedule->command('church:checkinemail')->weeklyOn(intval(setting('automation.followup_day')), '7:15');
             $schedule->command('church:monthlymeasures')->monthlyOn(1, '5:30');
             $schedule->command('church:givingemail')->dailyAt('9:00');
+            $schedule->command('church:livemessages')->dailyAt('21:30');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
         });
     }
@@ -220,6 +221,7 @@ class ChurchServiceProvider extends ServiceProvider
             'Bishopm\Church\Console\Commands\CheckinEmail',
             'Bishopm\Church\Console\Commands\GivingEmail',
             'Bishopm\Church\Console\Commands\InstallChurch',
+            'Bishopm\Church\Console\Commands\LiveMessages',
             'Bishopm\Church\Console\Commands\MaintenanceEmail',
             'Bishopm\Church\Console\Commands\MonthlyMeasures',
             'Bishopm\Church\Console\Commands\RecurringTasks'

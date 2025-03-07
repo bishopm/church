@@ -60,7 +60,6 @@ class GroupResource extends Resource
                         '5' => 'Friday',
                         '6' => 'Saturday'
                     ])
-                    ->default(1)
                     ->label('Meeting day'),
                 TimePicker::make('meetingtime')
                     ->label('Meeting time')

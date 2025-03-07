@@ -39,18 +39,6 @@
                                 </div>
                             </div>
                         @endif
-                        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-                        <script>
-                            Pusher.logToConsole = true;
-                            var pusher = new Pusher("{{setting('services.pusher_key')}}", {
-                            cluster: "{{setting('services.pusher_app_cluster')}}"
-                            });
-
-                            var channel = pusher.subscribe('church-messages');
-                            channel.bind('Bishopm\\Church\\Events\\NewLiveMessage', function() {
-                                Livewire.dispatchTo('live','updateMessages');
-                            })
-                        </script>
                     </div>
                 @else
                     <div>Live stream starts in {{ $floor }} ({{date('j M Y',strtotime($service->servicedate))}} {{$service->servicetime}})

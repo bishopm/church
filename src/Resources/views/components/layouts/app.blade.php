@@ -171,6 +171,17 @@
   </div>
   <script src="/public/church/js/bootstrap-bundle.min.js"></script>
   <script src="/public/church/js/custom.js"></script>
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
+      var pusher = new Pusher("{{setting('services.pusher_key')}}", {
+      cluster: "{{setting('services.pusher_app_cluster')}}"
+      });
+
+      var channel = pusher.subscribe('church-messages');
+      channel.bind('Bishopm\\Church\\Events\\NewLiveMessage', function() {
+          Livewire.dispatchTo('live','updateMessages');
+      })
+  </script>
 </body>
 
 </html>

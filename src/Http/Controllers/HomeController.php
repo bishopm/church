@@ -468,7 +468,9 @@ class HomeController extends Controller
 
     public function sermon($year,$slug, $id){
         $data['sermon']=Service::with('person')->whereNotNull('audio')->whereNotNull('video')->where('id',$id)->first();
-        $data['series']=Series::withWhereHas('services', function ($q) { $q->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
+        if (isset($data['sermon']->series_id)){
+            $data['series']=Series::withWhereHas('services', function ($q) { $q->whereNotNull('audio')->whereNotNull('video')->orderByDesc('servicedate');})->where('id',$data['sermon']->series_id)->first();
+        }
         return view('church::' . $this->routeName . '.sermon',$data);
     }
 

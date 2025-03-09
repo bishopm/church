@@ -55,7 +55,7 @@ class LiveMessages extends Command
                 $data['sender']=$churchemail;
                 $data['body']=$body . "</table>";
                 $data['email']=$recip->email;
-                Mail::to($data['email'])->send(new ChurchHtmlMail($data));
+                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
                 Log::info('Cleaning up live service messages as at: ' . date('Y-m-d H:i'));
                 Message::truncate();
             }

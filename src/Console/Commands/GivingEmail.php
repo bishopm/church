@@ -100,7 +100,7 @@ class GivingEmail extends Command
             $nodat['church']=setting('general.church_name');
             $nodat['email']=$administrator;
             $nodat['body']=$msg;
-            Mail::to($nodat['email'])->send(new ChurchMail($nodat));
+            Mail::to($nodat['email'])->queue(new ChurchMail($nodat));
             foreach ($givers as $giver) {
                 $data[$giver->giving]['email'][]=$giver->email;
                 if (count($data[$giver->giving]['email'])==1) {
@@ -139,7 +139,7 @@ class GivingEmail extends Command
                     $pg['emailending']=str_replace("[churchname]", $pg['church'], $emailending);
                 }
                 foreach ($pg['email'] as $indiv) {
-                    Mail::to($indiv)->send(new GivingMail($pg));
+                    Mail::to($indiv)->queue(new GivingMail($pg));
                 }
             }
         } else {
@@ -153,7 +153,7 @@ class GivingEmail extends Command
                 $warndat['body']=$msg;
                 $warndat['firstname']="Planned Giving Administrator";
                 $warndat['recipient']=$administrator;
-                Mail::to($warndat['recipient'])->send(new ChurchMail($warndat));
+                Mail::to($warndat['recipient'])->queue(new ChurchMail($warndat));
             } else {
                 // echo "Today is not a report date\n";
             }

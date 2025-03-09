@@ -190,7 +190,7 @@ class ManageRoster extends Page implements HasForms
             $data['firstname'] = $person->firstname;
             $data['attachment'] = storage_path('public/attachments/WMCrosters.pdf');
             $emailcount++;
-            Mail::to($person->email)->send(new ReportMail($data));
+            Mail::to($person->email)->queue(new ReportMail($data));
             Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();
         }
         return "Emails sent: " . $emailcount;

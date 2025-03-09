@@ -275,7 +275,7 @@ class ChurchVenuesWidget extends CalendarWidget
         Notification::make()
             ->title('Duration of this event cannot be changed!')
             ->danger()
-            ->send()
+            ->queue()
         ;
 
         return false;

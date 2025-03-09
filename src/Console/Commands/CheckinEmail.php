@@ -63,7 +63,7 @@ class CheckinEmail extends Command
             $data['sender']=$churchemail;
             $data['body']=$message;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->send(new ChurchHtmlMail($data));
+            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
         }
         Log::info('Check in email sent on ' . date('Y-m-d H:i'));
     }

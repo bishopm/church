@@ -71,7 +71,7 @@ class MaintenanceEmail extends Command
             $data['url']="https://westvillemethodist.co.za";
             $data['body']=$message;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->send(new ChurchHtmlMail($data));
+            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
         }
         Log::info('Maintenance email sent on ' . date('Y-m-d H:i'));
     }

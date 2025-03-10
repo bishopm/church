@@ -173,6 +173,7 @@
   <script src="/public/church/js/custom.js"></script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
   <script>
+      Pusher.logToConsole = true;
       var pusher = new Pusher("{{setting('services.pusher_key')}}", {
       cluster: "{{setting('services.pusher_app_cluster')}}"
       });

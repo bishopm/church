@@ -160,7 +160,7 @@ class ChurchServiceProvider extends ServiceProvider
             $schedule->command('queue:work')->withoutOverlapping();
             $schedule->command('church:birthdayemail')->weeklyOn(intval(setting('automation.birthday_day')), '6:30');
             $schedule->command('church:maintenanceemail')->weeklyOn(intval(setting('automation.maintenance_day')), '6:00');
-            $schedule->command('church:checkinemail')->weeklyOn(intval(setting('automation.followup_day')), '7:15');
+            $schedule->command('church:checkinemail')->weeklyOn(intval(setting('automation.followup_day')), '8:30');
             $schedule->command('church:monthlymeasures')->monthlyOn(1, '5:30');
             $schedule->command('church:givingemail')->dailyAt('9:00');
             $schedule->command('church:livemessages')->dailyAt('21:30');

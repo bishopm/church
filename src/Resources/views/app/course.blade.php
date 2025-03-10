@@ -19,6 +19,6 @@
         @endforeach
     </table>
     @if ($course->leadernotes)
-        <small><a href="{{url('/storage/' . $course->leadernotes)}}" target="_blank">Leader notes</a></small>
+        <small><a href="{{Storage::disk('google')->url($course->leadernotes)}}" target="_blank">Leader notes</a></small>
     @endif
 </x-church::layout>                

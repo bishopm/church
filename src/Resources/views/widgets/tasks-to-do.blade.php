@@ -1,5 +1,4 @@
 <x-filament-widgets::widget>
-    <x-filament::section>
         <div x-data="{ tab: 'tab1' }">
             <x-filament::tabs label="Content tabs">
                 <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''">
@@ -14,7 +13,10 @@
                 <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''">
                     Done <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$dcount}}</span>
                 </x-filament::tabs.item>
-                {{ $this->addAction }}
+                <x-filament::tabs.item @click="tab = 'tab5'" :alpine-active="'tab === \'tab5\''">
+                    Projects <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$pcount}}</span>
+                </x-filament::tabs.item>
+                <div class="mt-1">{{ $this->addAction }}</div>
                 <x-filament-actions::modals />
             </x-filament::tabs>
             <div>
@@ -54,7 +56,12 @@
                         <div>No completed tasks </div>
                     @endforelse
                 </div>
+                <div x-show="tab === 'tab5'" class="mt-3">
+                    <h4>Projects with outstanding tasks</h4>
+                    @foreach ($projects as $project=>$tasks)
+                        <a href="{{route('filament.admin.admin.resources.tasks.index')}}?tableSearch={{$project}}">{{ucfirst($project)}}</a> <span class="text-white rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{count($tasks)}}</span>
+                    @endforeach
+                </div>
             </div>
         </div>
-    </x-filament::section>
 </x-filament-widgets::widget>

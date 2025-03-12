@@ -15,6 +15,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Enums\ActionSize;
+use Illuminate\Support\Facades\DB;
 
 class TasksToDo extends Widget implements HasForms, HasActions
 {
@@ -23,8 +25,8 @@ class TasksToDo extends Widget implements HasForms, HasActions
 
     protected static string $view = 'church::widgets.tasks-to-do';
 
-    public array $tasks, $doings, $somedays, $dones;
-    public $tcount,$ucount,$scount,$dcount;
+    public array $tasks, $doings, $somedays, $dones, $projects;
+    public $tcount,$ucount,$scount,$dcount, $pcount;
     public $individual_id;
 
     function mount() {
@@ -57,12 +59,24 @@ class TasksToDo extends Widget implements HasForms, HasActions
         $this->dones=Task::where('individual_id',$this->individual_id)->where('status','done')->orderBy('duedate','asc')->get()->toArray();
         $this->dcount=count($this->dones);
         $this->dones = array_slice($this->dones, 0, 5, true);
+        $tags=DB::table('tags')->where('type','tasks')->orderBy('name','ASC')->get()->toArray();
+        foreach ($tags as $tag){
+            $alltags[]=json_decode($tag->name)->en;
+        }
+        $projecttasks=Task::withAnyTags($alltags,'tasks')->with('tags')->where('status','todo')->orderBy('duedate','asc')->get();
+        foreach ($projecttasks as $ptask){
+            $this->projects[$ptask->tags[0]->name][]=$ptask;
+        }
+        $this->pcount=count($this->projects);
     }
 
     public function addAction(): Action {
 
         return Action::make('add')
-            ->label('Add a task')
+            ->tooltip('Add a task')
+            ->icon('heroicon-s-plus-circle')
+            ->size(ActionSize::Large)
+            ->iconButton()
             ->form([
                 TextInput::make('description')->required(),
                 Select::make('individual_id')

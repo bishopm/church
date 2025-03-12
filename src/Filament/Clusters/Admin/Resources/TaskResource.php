@@ -54,7 +54,7 @@ class TaskResource extends Resource
                     ->placeholder('')
                     ->required()
                     ->default('todo'),
-                SpatieTagsInput::make('tags')->label('Category')->type('tasks'),
+                SpatieTagsInput::make('tags')->label('Project')->type('tasks'),
                 Forms\Components\Select::make('visibility')
                     ->options([
                         'public'=>'Public',
@@ -87,7 +87,7 @@ class TaskResource extends Resource
                     ]),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()
-                    ->label('Category')
+                    ->label('Project')
                     ->forceSearchCaseInsensitive(true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('visibility')

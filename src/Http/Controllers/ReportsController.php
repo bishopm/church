@@ -1436,6 +1436,12 @@ class ReportsController extends Controller
                         $msg.=" (" . $booking->details . ")";
                     }
                     $this->pdf->multicell(25,4,$msg,0,'C');
+                } elseif (($booking->diarisable_id) and (isset($booking->diarisable->course))){
+                    $msg=$booking->diarisable->course;
+                    if ($booking->details){
+                        $msg.=" (" . $booking->details . ")";
+                    }
+                    $this->pdf->multicell(25,4,$msg,0,'C');
                 }
                 $this->pdf->SetFont('Arial', 'B', 12);
             }

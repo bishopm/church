@@ -38,9 +38,9 @@ class TaskResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull()
+                    ->required(),
                 Forms\Components\Select::make('individual_id')
                     ->label('Assigned to')
                     ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))
@@ -56,8 +56,7 @@ class TaskResource extends Resource
                     ->placeholder('')
                     ->required()
                     ->default('todo'),
-                Forms\Components\Textarea::make('statusnote')->label('Status note (optional, appears in meeting minutes)')
-                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('statusnote')->label('Status note (optional, appears in meeting minutes)'),
                 SpatieTagsInput::make('tags')->label('Project')->type('tasks'),
                 Forms\Components\Select::make('visibility')
                     ->options([

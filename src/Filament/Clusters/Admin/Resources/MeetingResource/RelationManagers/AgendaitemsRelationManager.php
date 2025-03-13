@@ -1,6 +1,6 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\RelationManagers;
+namespace Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\RelationManagers;
 
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;

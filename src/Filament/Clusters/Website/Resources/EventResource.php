@@ -1,10 +1,10 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources;
+namespace Bishopm\Church\Filament\Clusters\Website\Resources;
 
-use Bishopm\Church\Filament\Clusters\Property;
-use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\Pages;
-use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\RelationManagers;
+use Bishopm\Church\Filament\Clusters\Website;
+use Bishopm\Church\Filament\Clusters\Website\Resources\EventResource\Pages;
+use Bishopm\Church\Filament\Clusters\Website\Resources\EventResource\RelationManagers;
 use Bishopm\Church\Models\Event;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,9 +20,9 @@ class EventResource extends Resource
     
     protected static ?string $model = Event::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $cluster = Property::class;
+    protected static ?string $cluster = Website::class;
 
     public static function form(Form $form): Form
     {

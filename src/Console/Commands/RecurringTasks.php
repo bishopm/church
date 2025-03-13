@@ -4,6 +4,7 @@ namespace Bishopm\Church\Console\Commands;
 
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Recurringtask;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -45,7 +46,8 @@ class RecurringTasks extends Command
                 'updated_at' => $fulldate
             ]);
         }
-        DB::table('tasks')->where('status', 'done')->delete();
+        DB::table('tasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
+        DB::table('tasks')->where('status', 'done')->whereNull('statusnote')->delete();
         Log::info('Task clean up completed on ' . date('Y-m-d H:i'));
     }
 }

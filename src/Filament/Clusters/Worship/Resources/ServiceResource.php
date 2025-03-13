@@ -75,7 +75,7 @@ class ServiceResource extends Resource
                                 }
                                 return $sarray;
                             })
-                            ->live(onBlur: true)
+                            ->live()
                             ->afterStateUpdated(function (Set $set, Get $get, $state){
                                 $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $state . "/" . substr($get('servicedate'),0,10);
                                 $response=Http::get($url);

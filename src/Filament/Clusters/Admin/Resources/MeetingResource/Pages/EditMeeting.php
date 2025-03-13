@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource;
+use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingResource;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;

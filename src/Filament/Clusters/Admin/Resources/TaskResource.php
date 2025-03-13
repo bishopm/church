@@ -10,6 +10,7 @@ use Bishopm\Church\Models\Task;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieTagsColumn;
@@ -20,16 +21,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Livewire\Livewire;
 
 class TaskResource extends Resource
 {
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $model = Task::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
 
     protected static ?string $cluster = Admin::class;
-
-    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
 
@@ -54,6 +56,8 @@ class TaskResource extends Resource
                     ->placeholder('')
                     ->required()
                     ->default('todo'),
+                Forms\Components\Textarea::make('statusnote')->label('Status note (optional, appears in meeting minutes)')
+                    ->columnSpanFull(),
                 SpatieTagsInput::make('tags')->label('Project')->type('tasks'),
                 Forms\Components\Select::make('visibility')
                     ->options([

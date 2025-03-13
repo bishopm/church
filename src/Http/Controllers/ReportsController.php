@@ -33,6 +33,7 @@ class ReportsController extends Controller
         $this->pdf = new tFPDF();
         $this->pdf->AddFont('DejaVu','','DejaVuSans.ttf',true);
         $this->pdf->AddFont('DejaVu', 'B', 'DejaVuSans-Bold.ttf', true);
+        $this->pdf->AddFont('DejaVu', 'I', 'DejaVuSans-Oblique.ttf', true);
         $this->pdf->AddFont('DejaVuCond','','DejaVuSansCondensed.ttf',true);
         $this->pdf->AddFont('DejaVuCond', 'B', 'DejaVuSansCondensed-Bold.ttf', true);
         $this->title="";
@@ -641,7 +642,7 @@ class ReportsController extends Controller
     }
 
     public function minutes($id, $email="") {
-        $meeting=Meeting::with('group','agendaitems.tasks.individual')->where('id',$id)->first();
+        $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.tasks' => fn($q) => $q->withTrashed()])->where('id',$id)->first();
         if (isset($meeting->group)){
             $this->title = $meeting->group->groupname  . " minutes";
         } else {
@@ -698,13 +699,22 @@ class ReportsController extends Controller
                         $this->pdf->cell(0,0,date('j M',strtotime($task->duedate)));
                     }
                     $this->pdf->setxy(168,$y-1);
-                    $this->pdf->cell(0,0,$task->individual->firstname . " " . $task->individual->surname);
+                    if ($task->individual_id){
+                        $indiv=Individual::find($task->individual_id);
+                        $this->pdf->cell(0,0,$indiv->firstname . " " . $indiv->surname);
+                    }
                     $this->pdf->SetFont('DejaVu', '', 11);
                     $this->pdf->text(10,$y,$count . "." . $sub);
                     $this->pdf->setxy(19,$y-3.5);
                     $this->pdf->MultiCell(135,4.5,$task->description);
-                    $sub++;
                     $y=$this->pdf->GetY()+3;
+                    if ($task->statusnote){
+                        $this->pdf->setxy(19,$y-2.5);
+                        $this->pdf->SetFont('DejaVu', 'I', 11);
+                        $this->pdf->MultiCell(135,4.5,'[' . $task->statusnote . ']');
+                        $y=$this->pdf->GetY()+3;
+                    }
+                    $sub++;
                 }
                 $count++;
                 $y=$y+3;

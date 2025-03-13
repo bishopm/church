@@ -1,8 +1,8 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources\EventResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Website\Resources\EventResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Property\Resources\EventResource;
+use Bishopm\Church\Filament\Clusters\Website\Resources\EventResource;
 use Bishopm\Church\Models\Diaryentry;
 use Filament\Resources\Pages\CreateRecord;
 use Spatie\GoogleCalendar\Event;

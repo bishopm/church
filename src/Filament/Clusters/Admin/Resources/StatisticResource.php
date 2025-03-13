@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StatisticResource extends Resource
-{
-    protected static ?int $navigationSort = 0;
+{    
+    protected static ?int $navigationSort = 3;
     
     protected static ?string $model = Statistic::class;
 

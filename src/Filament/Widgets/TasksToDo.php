@@ -140,6 +140,9 @@ class TasksToDo extends Widget implements HasForms, HasActions
     public function done($id){
         $updatetask=Task::find($id);
         $updatetask->status="done";
+        if ($updatetask->agendaitem_id){
+            $updatetask->statusnote="Completed on " . date('Y-m-d');
+        }
         $updatetask->save();
         $this->getTasks();
     }

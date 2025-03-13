@@ -1,14 +1,14 @@
 <?php
 
-namespace Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource\Pages;
+namespace Bishopm\Church\Filament\Clusters\Website\Resources\EventResource\Pages;
 
-use Bishopm\Church\Filament\Clusters\Property\Resources\MeetingResource;
+use Bishopm\Church\Filament\Clusters\Website\Resources\EventResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListMeetings extends ListRecords
+class ListEvents extends ListRecords
 {
-    protected static string $resource = MeetingResource::class;
+    protected static string $resource = EventResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -641,6 +641,11 @@ class ReportsController extends Controller
         exit;
     }
 
+    public function meetings($id){
+        $data['meeting']=Group::with('meetings')->where('id',$id)->first();
+        return view('church::web.meetings',$data);
+    }
+
     public function minutes($id, $email="") {
         $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.tasks' => fn($q) => $q->withTrashed()])->where('id',$id)->first();
         if (isset($meeting->group)){

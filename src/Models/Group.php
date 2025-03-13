@@ -29,6 +29,11 @@ class Group extends Model
         return $this->morphMany(Diaryentry::class,'diarisable');
     }
 
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
     public function rostergroups(): HasMany
     {
         return $this->hasMany(Rostergroup::class);

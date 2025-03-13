@@ -2,8 +2,8 @@
 
 use Bishopm\Church\Http\Middleware\CheckLogin;
 use Bishopm\Church\Http\Middleware\GivingRoute;
+use Bishopm\Church\Http\Middleware\ReportsRoute;
 use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
 
 $url=substr(env('APP_URL'),3+strpos(env('APP_URL'),':'));
 
@@ -11,20 +11,25 @@ $url=substr(env('APP_URL'),3+strpos(env('APP_URL'),':'));
 //    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
 //});
 
-// Admin routes
-Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
-Route::get('/admin/reports/barcodes/{newonly?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@barcodes','as' => 'reports.barcodes']);
+// Closed reports routes
+Route::middleware(['web',ReportsRoute::class])->group(function () {
+    Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
+    Route::get('/admin/reports/barcodes/{newonly?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@barcodes','as' => 'reports.barcodes']);
+    Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);
+    Route::get('/admin/reports/removenames', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@removenames','as' => 'reports.removenames']);
+    Route::get('/admin/reports/venue/{id}/{reportdate}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@venue','as' => 'reports.venue']);
+});
+
+// Open reports
 Route::get('/admin/reports/calendar/{yr?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@calendar','as' => 'reports.calendar']);
-Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);
 Route::get('/admin/reports/meeting/a4/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@a4meeting','as' => 'reports.a4meeting']);
 Route::get('/admin/reports/meeting/a5/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@a5meeting','as' => 'reports.a5meeting']);
+Route::get('/admin/reports/meetings/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@meetings','as' => 'reports.meetings']);
 Route::get('/admin/reports/minutes/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@minutes','as' => 'reports.minutes']);
-Route::get('/admin/reports/removenames', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@removenames','as' => 'reports.removenames']);
 Route::get('/admin/reports/roster/{id}/{year}/{month}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@roster','as' => 'reports.roster']);
 Route::get('/admin/reports/seriesplan/{start?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@seriesplan','as' => 'reports.seriesplan']);
 Route::get('/admin/reports/service/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@service','as' => 'reports.service']);
-Route::get('/admin/reports/song/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@song','as' => 'reports.song']);
-Route::get('/admin/reports/venue/{id}/{reportdate}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@venue','as' => 'reports.venue']);
+Route::get('/admin/reports/song/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@song','as' => 'reports.song']);    
 
 // Giving routes
 Route::middleware(['web',GivingRoute::class])->group(function () {

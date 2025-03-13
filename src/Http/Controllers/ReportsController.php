@@ -701,7 +701,12 @@ class ReportsController extends Controller
                     $this->pdf->setxy(168,$y-1);
                     if ($task->individual_id){
                         $indiv=Individual::find($task->individual_id);
+                        if ($task->statusnote){
+                            $this->pdf->SetFont('DejaVu', '', 9);
+                            $this->pdf->SetTextColor(125,125,125);
+                        } 
                         $this->pdf->cell(0,0,$indiv->firstname . " " . $indiv->surname);
+                        $this->pdf->SetTextColor(0,0,0);
                     }
                     $this->pdf->SetFont('DejaVu', '', 11);
                     $this->pdf->text(10,$y,$count . "." . $sub);

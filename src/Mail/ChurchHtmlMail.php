@@ -28,7 +28,10 @@ class ChurchHtmlMail extends Mailable
     {
         return new Envelope(
             subject: $this->data['subject'],
-            from: new Address(setting('email.mail_from_address'),setting('email.mail_from_name'))
+            from: new Address(setting('email.mail_from_address'),setting('email.mail_from_name')),
+            replyTo: [
+                new Address(setting('email.church_email'),setting('general.church_name')),
+            ],
         );
     }
 

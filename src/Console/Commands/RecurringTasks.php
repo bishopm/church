@@ -2,11 +2,14 @@
 
 namespace Bishopm\Church\Console\Commands;
 
+use Bishopm\Church\Mail\ChurchHtmlMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Recurringtask;
+use Bishopm\Church\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class RecurringTasks extends Command
 {
@@ -31,6 +34,7 @@ class RecurringTasks extends Command
      */
     public function handle()
     {
+        /*
         $today=date('Y-m-d');
         $fulldate=date('Y-m-d H:i:s');
         // Weekly tasks
@@ -48,6 +52,33 @@ class RecurringTasks extends Command
         }
         DB::table('tasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
         DB::table('tasks')->where('status', 'done')->whereNull('statusnote')->delete();
-        Log::info('Task clean up completed on ' . date('Y-m-d H:i'));
+        Log::info('Task clean up completed on ' . date('Y-m-d H:i'));*/
+
+        // Send task reminders
+        if (setting('automation.tasks_day') == date('w')){
+            $tasks=Task::withWhereHas('individual')->where('status','todo')->get();
+            foreach ($tasks as $task){
+                if (!isset($data[$task->individual_id])){
+                    $data[$task->individual_id]['indiv']=$task->individual;
+                }
+                $data[$task->individual_id]['tasks'][]=['description'=>$task->description,'duedate'=>$task->duedate];
+            }
+            foreach ($data as $indiv){
+                $msg = "Here's your weekly friendly action reminder from " . setting('general.church_abbreviation') . " :) Please let us know if any of these need to be changed, reassigned, updated or marked complete:<br>";
+                foreach ($indiv['tasks'] as $task){
+                    $msg.="<br>" . $task['description'];
+                    if ($task['duedate']){
+                        $msg.=" (Due: " . $task['duedate'] . ")";
+                    }
+                }
+                $data=array();
+                $data['firstname']=$indiv['indiv']->firstname;
+                $data['subject']=setting('general.church_abbreviation') . " weekly task reminder";
+                $data['sender']=setting('email.church_email');
+                $data['body']=$msg;
+                $data['email']=$indiv['indiv']->email;
+                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+            }
+        }
     }
 }

@@ -34,7 +34,6 @@ class RecurringTasks extends Command
      */
     public function handle()
     {
-        /*
         $today=date('Y-m-d');
         $fulldate=date('Y-m-d H:i:s');
         // Weekly tasks
@@ -52,7 +51,7 @@ class RecurringTasks extends Command
         }
         DB::table('tasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
         DB::table('tasks')->where('status', 'done')->whereNull('statusnote')->delete();
-        Log::info('Task clean up completed on ' . date('Y-m-d H:i'));*/
+        Log::info('Task clean up completed on ' . date('Y-m-d H:i'));
 
         // Send task reminders
         if (setting('automation.tasks_day') == date('w')){

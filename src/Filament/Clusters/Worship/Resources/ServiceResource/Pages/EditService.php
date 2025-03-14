@@ -59,7 +59,7 @@ class EditService extends EditRecord
                     $email=$this->indiv->email;
                     $fname=" " . $this->indiv->firstname . "!";
                 } else {
-                    $email=setting('general.church_email');
+                    $email=setting('email.church_email');
                     $fname="!";
                 }
                 $subject = 'New service: ' . $this->record->servicetime . " " . $this->record->servicedate;

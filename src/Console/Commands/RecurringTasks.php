@@ -63,7 +63,7 @@ class RecurringTasks extends Command
                 $data[$task->individual_id]['tasks'][]=['description'=>$task->description,'duedate'=>$task->duedate];
             }
             foreach ($data as $indiv){
-                $msg = "Here's your weekly friendly action reminder from " . setting('general.church_abbreviation') . " :) Please let us know if any of these need to be changed, reassigned, updated or marked complete:<br>";
+                $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br>";
                 foreach ($indiv['tasks'] as $task){
                     $msg.="<br>" . $task['description'];
                     if ($task['duedate']){
@@ -72,7 +72,7 @@ class RecurringTasks extends Command
                 }
                 $data=array();
                 $data['firstname']=$indiv['indiv']->firstname;
-                $data['subject']=setting('general.church_abbreviation') . " weekly task reminder";
+                $data['subject']=setting('general.church_abbreviation') . " weekly reminder";
                 $data['sender']=setting('email.church_email');
                 $data['body']=$msg;
                 $data['email']=$indiv['indiv']->email;

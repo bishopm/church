@@ -642,7 +642,7 @@ class ReportsController extends Controller
     }
 
     public function meetings($id){
-        $data['meeting']=Group::with('meetings')->where('id',$id)->first();
+        $data['group']=Group::with(['meetings' => function ($q) { $q->orderBy('meetingdatetime', 'desc'); }])->where('id',$id)->first();
         return view('church::web.meetings',$data);
     }
 
@@ -657,7 +657,7 @@ class ReportsController extends Controller
         $page=0;
         $this->subtitle='Meeting held on ' .  date('j F Y',strtotime($meeting->meetingdatetime)) . " (" . $meeting->venue->venue . ")";
         $this->pdf=$this->report_header();
-        if (isset($meeting->group)){   
+        if ((isset($meeting->group)) and (isset($meeting->attendance))){   
             $y=33;
             $attendees=Individual::whereIn('id',$meeting->attendance)->orderBy('firstname')->get();
             $present = "Present: ";
@@ -701,7 +701,13 @@ class ReportsController extends Controller
                     $this->pdf->setxy(155,$y-1);
                     $this->pdf->SetFont('DejaVu', 'B', 9);
                     if ($task->duedate){
+                        if ($task->statusnote){
+                            $this->pdf->SetFont('DejaVu', '', 9);
+                            $this->pdf->SetTextColor(125,125,125);
+                        } 
                         $this->pdf->cell(0,0,date('j M',strtotime($task->duedate)));
+                        $this->pdf->SetTextColor(0,0,0);
+                        $this->pdf->SetFont('DejaVu', 'B', 9);
                     }
                     $this->pdf->setxy(168,$y-1);
                     if ($task->individual_id){

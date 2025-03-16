@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('groupname', 255);
             $table->string('slug', 255);
             $table->integer('meetingday')->nullable();
-            $table->time('meetingtime', 255)->nullable();
+            $table->time('meetingtime')->nullable();
             $table->string('grouptype', 255)->default('service');
             $table->text('description')->nullable();
             $table->string('image', 255)->nullable();

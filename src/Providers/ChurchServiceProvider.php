@@ -41,17 +41,30 @@ class ChurchServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
-        Config::set('app.name',setting('general.church_abbreviation'));
+        if (Schema::hasTable('settings')) {
+            Config::set('app.name',setting('general.church_abbreviation'));
+            Config::set('google-calendar.calendar_id',setting('email.church_email'));
+            Config::set('mail.default',setting('email.mailer'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.host',setting('email.mail_host'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.port',setting('email.mail_port'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.username',setting('email.mail_username'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.password',setting('email.mail_password'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.encryption',setting('email.mail_encryption'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.from_address',setting('email.mail_from_address'));
+            Config::set('mail.mailers.' . setting('email.mailer') . '.from_name',setting('email.mail_from_name'));    
+            Config::set('filesystems.disks.google.driver','google');
+            Config::set('filesystems.disks.google.clientId',setting('services.drive_clientid'));
+            Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));
+            Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
+            Config::set('broadcasting.pusher.driver','pusher');
+            Config::set('broadcasting.pusher.key',setting('services.pusher.key'));
+            Config::set('broadcasting.pusher.secret',setting('services.pusher.secret'));
+            Config::set('broadcasting.pusher.app_id',setting('services.pusher.app_id'));
+            Config::set('broadcasting.pusher.options.cluster',setting('services.pusher.app_cluster'));
+            Config::set('broadcasting.pusher.options.useTLS',true);
+
+        }
         Config::set('auth.providers.users.model','Bishopm\Church\Models\User');
-        Config::set('google-calendar.calendar_id',setting('email.church_email'));
-        Config::set('mail.default',setting('email.mailer'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.host',setting('email.mail_host'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.port',setting('email.mail_port'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.username',setting('email.mail_username'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.password',setting('email.mail_password'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.encryption',setting('email.mail_encryption'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.from_address',setting('email.mail_from_address'));
-        Config::set('mail.mailers.' . setting('email.mailer') . '.from_name',setting('email.mail_from_name'));
         Config::set('filament-spatie-roles-permissions.clusters.permissions',\Bishopm\Church\Filament\Clusters\Settings::class);
         Config::set('filament-spatie-roles-permissions.clusters.roles',\Bishopm\Church\Filament\Clusters\Settings::class);
         Config::set('filament-spatie-roles-permissions.scope_to_tenant',false);
@@ -65,17 +78,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.model_directories',[base_path('vendor/bishopm/church/src/Models')]);
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
-        Config::set('filesystems.disks.google.driver','google');
-        Config::set('filesystems.disks.google.clientId',setting('services.drive_clientid'));
-        Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));
-        Config::set('filesystems.disks.google.refreshToken',setting('services.drive_refreshtoken'));
         Config::set('filesystems.disks.google.folder','');
-        Config::set('broadcasting.pusher.driver','pusher');
-        Config::set('broadcasting.pusher.key',setting('services.pusher.key'));
-        Config::set('broadcasting.pusher.secret',setting('services.pusher.secret'));
-        Config::set('broadcasting.pusher.app_id',setting('services.pusher.app_id'));
-        Config::set('broadcasting.pusher.options.cluster',setting('services.pusher.app_cluster'));
-        Config::set('broadcasting.pusher.options.useTLS',true);
         Livewire::component('barcodescanner', BarcodeScanner::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('calendar', Calendar::class);

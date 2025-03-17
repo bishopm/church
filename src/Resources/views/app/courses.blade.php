@@ -15,13 +15,15 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
             <ul class="list-unstyled">
-                @foreach ($courses['upcoming'] as $key=>$day)
+                @forelse ($courses['upcoming'] as $key=>$day)
                     @foreach ($day as $course)
                         <li>
                             {{date('j M',$key)}} <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a> <small>(Sessions: {{count($course->coursesessions)}})</small>
                         </li>
                     @endforeach
-                @endforeach
+                @empty
+                    There are no new courses coming up (although there may be courses running at the moment - visit our year calendar to confirm
+                @endforelse
             </ul>
         </div>        
         <div class="tab-pane fade" id="pills-library" role="tabpanel" aria-labelledby="pills-library-tab">

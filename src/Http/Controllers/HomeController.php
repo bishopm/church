@@ -208,6 +208,9 @@ class HomeController extends Controller
     public function courses(){
         $today=date('Y-m-d');
         $courses=Course::with('coursesessions')->orderBy('course')->get();
+        $data['courses']=array();
+        $data['courses']['upcoming']=array();
+        $data['courses']['library']=array();
         foreach ($courses as $course){
             if (count($course->coursesessions)){
                 $thisdate=$course->coursesessions[0]->sessiondate;

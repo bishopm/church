@@ -9,9 +9,12 @@ use Bishopm\Church\Models\Individual;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Spatie\Honeypot\Http\Livewire\Concerns\HoneypotData;
+use Spatie\Honeypot\Http\Livewire\Concerns\UsesSpamProtection;
 
 class LoginForm extends Component
 {
+    use UsesSpamProtection;
 
     #[Validate('digits:10', message: 'Not a valid cellphone number')]
     public $phone = '';
@@ -27,6 +30,12 @@ class LoginForm extends Component
     public $individual_id;
     public $override=0;
     public $master;
+    public HoneypotData $extraFields;
+
+    public function mount()
+    {
+        $this->extraFields = new HoneypotData();
+    }
 
     protected $rules = [
         'phone' => 'required|digits:10',
@@ -87,40 +96,39 @@ class LoginForm extends Component
     }
 
     public function sendsms(){
-        if ($this->honeyPasses()){
-            $this->feedback="";
-            $this->hashed = hash('sha256', $this->pin);
-            $indiv=Individual::where('cellphone',$this->phone)->first();
-            if (!$indiv){
-                $household = Household::create(['addressee'=>$this->firstname . " " . $this->surname]);
-                $indiv=Individual::create([
-                    'firstname'=>$this->firstname,
-                    'surname'=>$this->surname,
-                    'cellphone'=>$this->phone,
-                    'uid'=>$this->hashed,
-                    'household_id'=>$household->id
-                ]);
+        $this->protectAgainstSpam(); // if is spam, will abort the request
+        $this->feedback="";
+        $this->hashed = hash('sha256', $this->pin);
+        $indiv=Individual::where('cellphone',$this->phone)->first();
+        if (!$indiv){
+            $household = Household::create(['addressee'=>$this->firstname . " " . $this->surname]);
+            $indiv=Individual::create([
+                'firstname'=>$this->firstname,
+                'surname'=>$this->surname,
+                'cellphone'=>$this->phone,
+                'uid'=>$this->hashed,
+                'household_id'=>$household->id
+            ]);
+        } else {
+            if ($indiv->uid){
+                $this->hashed=$indiv->uid;
             } else {
-                if ($indiv->uid){
-                    $this->hashed=$indiv->uid;
-                } else {
-                    $indiv->uid=$this->hashed;
-                    $indiv->save();
-                }
+                $indiv->uid=$this->hashed;
+                $indiv->save();
             }
-            $this->individual_id=$indiv->id;
-            $this->pin = rand(1000,9999);
-            $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
-            $credits = $smss->get_credits();
-            if ($credits >0 ){
-                $newno="+27" . substr($this->phone, 1);
-                $body="Hi " . $indiv->firstname . ". Your 4 digit PIN number for the " . setting('general.church_abbreviation') . " app is " . $this->pin . "  ";
-                $messages[]=array('to' => $newno, 'body' => $body);
-                $smss->send_message($messages);
-                $this->feedback="Your SMS is on it's way!";
-            } else {
-                $this->feedback="Sorry! There was a problem sending you an SMS. Please contact the office for help.";
-            }
+        }
+        $this->individual_id=$indiv->id;
+        $this->pin = rand(1000,9999);
+        $smss = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+        $credits = $smss->get_credits();
+        if ($credits >0 ){
+            $newno="+27" . substr($this->phone, 1);
+            $body="Hi " . $indiv->firstname . ". Your 4 digit PIN number for the " . setting('general.church_abbreviation') . " app is " . $this->pin . "  ";
+            $messages[]=array('to' => $newno, 'body' => $body);
+            $smss->send_message($messages);
+            $this->feedback="Your SMS is on it's way!";
+        } else {
+            $this->feedback="Sorry! There was a problem sending you an SMS. Please contact the office for help.";
         }
     }
 

@@ -6,7 +6,7 @@
                 <p><input wire:model="master" id="master" name="master" class="form-control my-2" placeholder="Master PIN"/></p>
             @endif
             @csrf
-            <x-honey />
+            <x-honeypot livewire-model="extraFields" />
             <label class="form-label">Please enter your cellphone number</label>
             <input wire:model.live.debounce.20ms="phone" id="phone" name="phone" class="form-control my-2" placeholder="Cellphone number" />
             @error('phone') 

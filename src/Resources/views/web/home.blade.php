@@ -288,7 +288,7 @@
                         <textarea class="form-control" name="message" placeholder="Message" rows="8" required></textarea>
                         <div class="input-group my-2">
                             <input name="user" type="email" class="form-control" placeholder="Email address" required>&nbsp;
-                            <x-honey/>
+                            @honeypot
                             <button class="btn btn-dark bi bi-send"></button>
                         </div>
                     </form>

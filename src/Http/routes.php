@@ -4,6 +4,7 @@ use Bishopm\Church\Http\Middleware\CheckLogin;
 use Bishopm\Church\Http\Middleware\GivingRoute;
 use Bishopm\Church\Http\Middleware\ReportsRoute;
 use Illuminate\Support\Facades\Route;
+use Spatie\Honeypot\ProtectAgainstSpam;
 
 //Livewire::setUpdateRoute(function ($handle) {
 //    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
@@ -83,7 +84,7 @@ Route::middleware(['web',GivingRoute::class])->group(function () {
 // Website routes
 Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('web.home');
-    Route::post('/', 'home')->middleware(['honey'])->name('web.home');
+    Route::post('/', 'home')->middleware(ProtectAgainstSpam::class)->name('web.home');
     Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('web.blogpost');
     Route::get('/blog', 'blog')->name('web.blog');
     Route::get('/blog/{slug}', 'blogger')->name('web.blogger');

@@ -60,6 +60,7 @@ class TasksToDo extends Widget implements HasForms, HasActions
         $this->dcount=count($this->dones);
         $this->dones = array_slice($this->dones, 0, 5, true);
         $tags=DB::table('tags')->where('type','tasks')->orderBy('name','ASC')->get()->toArray();
+        $alltags=array();
         foreach ($tags as $tag){
             $alltags[]=json_decode($tag->name)->en;
         }

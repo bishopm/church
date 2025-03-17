@@ -12,7 +12,7 @@
     "homepage": "https://github.com/bishopm/church",
     "keywords": ["Laravel", "Church"],
     "require": {
-        "illuminate/support": "~11",
+        "illuminate/support": "~12",
 	    "livewire/livewire": "~3",
     	"filament/filament": "^3.2.133",
         "guava/calendar": "~1",

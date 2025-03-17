@@ -9,11 +9,9 @@ use Bishopm\Church\Models\Individual;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
-use Lukeraymonddowning\Honey\Traits\WithHoney;
 
 class LoginForm extends Component
 {
-    use WithHoney;
 
     #[Validate('digits:10', message: 'Not a valid cellphone number')]
     public $phone = '';

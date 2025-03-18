@@ -39,8 +39,8 @@ class ReportsController extends Controller
         $this->title="";
         $this->subtitle="";
         $this->page=0;
-        $this->logo=url('/') . "/public/church/images/blacklogo.png";
-        $this->widelogo=url('/') . "/public/church/images/bwidelogo.png";
+        $this->logo=url('/') . "/church/images/blacklogo.png";
+        $this->widelogo=url('/') . "/church/images/bwidelogo.png";
     }
 
     public function a4meeting ($recordId){
@@ -374,9 +374,8 @@ class ReportsController extends Controller
         } else {
             $this->pdf->text(10,10,"No new members have been added to the system since last Sunday");
         }
-        $filename=base_path() . "/storage/barcodes/barcodes.pdf";
-        $this->pdf->Output($filename,'F');
-        return Redirect::to('/storage/barcodes/barcodes.pdf');
+        $this->pdf->Output('I',"Name tag");
+        exit;
     }
 
     public function calendar($yr=""){
@@ -980,7 +979,7 @@ class ReportsController extends Controller
             }
         }
         if ($output){
-            $this->pdf->Output('F', storage_path('app/public/attachments/WMCrosters.pdf'));
+            $this->pdf->Output('F', storage_path('app/attachments/WMCrosters.pdf'));
             return;
         } else {
             $this->pdf->Output();
@@ -1031,8 +1030,8 @@ class ReportsController extends Controller
         $this->pdf->SetTitle($this->title . " - " . $set->servicetime);
         $this->pdf->SetAutoPageBreak(true, 0);
         $this->pdf->SetFont('DejaVu', 'B', 18);
-        $song=url('/') . "/public/church/images/song.png";
-        $prayer=url('/') . "/public/church/images/prayer.png";
+        $song=url('/') . "/church/images/song.png";
+        $prayer=url('/') . "/church/images/prayer.png";
         $this->pdf->Image($this->widelogo,123,8,77,30);
         $this->pdf->rect(19,10,53,7.5,'F');
         $this->pdf->SetTextColor(255,255,255);
@@ -1281,7 +1280,7 @@ class ReportsController extends Controller
                             $this->pdf->SetFont('Courier', 'B', 14);
                             if ($cd > 0){
                                 $this->pdf->SetFont('Courier', 'B', 20);
-                                $circle=url('/') . "/public/church/images/circle.png";
+                                $circle=url('/') . "/church/images/circle.png";
                                 $this->pdf->Image($circle,$x+0.5,$y+2.5+3*$cd,2,2);
                                 $this->pdf->SetFont('Courier', 'B', 14);
                             }

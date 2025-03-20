@@ -8,6 +8,7 @@ use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\RelationM
 use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\RelationManagers\DiaryentriesRelationManager;
 use Bishopm\Church\Models\Tenant;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,6 +37,12 @@ class TenantResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('contact')
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('image')
+                    ->image(),
+                Forms\Components\Textarea::make('description'),
+                SpatieTagsInput::make('tags')->type('tenants'),
+                Forms\Components\Toggle::make('active'),
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
             ]);
     }
 

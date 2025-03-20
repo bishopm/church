@@ -63,7 +63,7 @@ class IndividualResource extends Resource
                                 'Mr' => 'Mr',
                                 'Mrs' => 'Mrs',
                                 'Ms' => 'Ms',
-                            ])                    ->inline(),
+                            ])->inline(),
                         Forms\Components\Radio::make('sex')
                             ->options([
                                 'female' => 'Female',

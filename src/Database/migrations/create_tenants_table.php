@@ -13,6 +13,9 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->string('tenant');
             $table->string('contact')->nullable();
+            $table->text('description')->nullable();
+            $table->tinyinteger('active')->nullable();
+            $table->tinyinteger('publish')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

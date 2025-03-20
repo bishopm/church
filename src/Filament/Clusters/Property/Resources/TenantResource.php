@@ -10,11 +10,11 @@ use Bishopm\Church\Models\Tenant;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class TenantResource extends Resource
 {
@@ -33,6 +33,8 @@ class TenantResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('tenant')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('contact')
@@ -41,8 +43,10 @@ class TenantResource extends Resource
                     ->image(),
                 Forms\Components\Textarea::make('description'),
                 SpatieTagsInput::make('tags')->type('tenants'),
+                Forms\Components\TextInput::make('slug')
+                    ->required(),
                 Forms\Components\Toggle::make('active'),
-                Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);
     }
 

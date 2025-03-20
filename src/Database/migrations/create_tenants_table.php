@@ -12,6 +12,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->string('tenant');
+            $table->string('slug');
             $table->string('contact')->nullable();
             $table->text('description')->nullable();
             $table->tinyinteger('active')->nullable();

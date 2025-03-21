@@ -6,10 +6,13 @@ use Bishopm\Church\Filament\Clusters\Website;
 use Bishopm\Church\Filament\Clusters\Website\Resources\ProjectResource\Pages;
 use Bishopm\Church\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class ProjectResource extends Resource
 {
@@ -29,12 +32,19 @@ class ProjectResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('project')
                     ->required()
-                    ->maxLength(255),
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                    ->maxLength(199),
+                Forms\Components\TextInput::make('slug')
+                    ->required(),
                 Forms\Components\RichEditor::make('description')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
                     ->image(),
+                SpatieTagsInput::make('tags')->type('projects'),
+                Forms\Components\Toggle::make('active'),
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);
     }
 

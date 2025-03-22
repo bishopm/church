@@ -7,9 +7,11 @@ use Bishopm\Church\Filament\Clusters\Property\Resources\VenueResource\Pages;
 use Bishopm\Church\Models\Venue;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class VenueResource extends Resource
 {
@@ -27,7 +29,15 @@ class VenueResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('venue')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('image')
+                    ->image(),
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\TextInput::make('slug')
+                    ->required(),                
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
                 Forms\Components\Toggle::make('resource')
                     ->hiddenOn('view')
                     ->label('Show in resources view')

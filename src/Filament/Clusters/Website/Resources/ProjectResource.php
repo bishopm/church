@@ -58,6 +58,10 @@ class ProjectResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->badge()
+                    ->forceSearchCaseInsensitive(true)
+                    ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),
             ])
             ->filters([

@@ -93,18 +93,18 @@ class ChurchServiceProvider extends ServiceProvider
         Relation::morphMap([
             'book' => 'Bishopm\Church\Models\Book',
             'course' => 'Bishopm\Church\Models\Course',
+            'event' => 'Bishopm\Church\Models\Event',
+            'group' => 'Bishopm\Church\Models\Group',
+            'household' => 'Bishopm\Church\Models\Household',
+            'individual' => 'Bishopm\Church\Models\Individual',
+            'pastoralcase' => 'Bishopm\Church\Models\Pastoralcase',
+            'post' => 'Bishopm\Church\Models\Post',
             'prayer' => 'Bishopm\Church\Models\Prayer',
             'project' => 'Bishopm\Church\Models\Project',
             'sermon' => 'Bishopm\Church\Models\Service',
-            'post' => 'Bishopm\Church\Models\Post',
             'song' => 'Bishopm\Church\Models\Song',
-            'group' => 'Bishopm\Church\Models\Group',
-            'event' => 'Bishopm\Church\Models\Event',
             'task' => 'Bishopm\Church\Models\Task',
-            'tenant' => 'Bishopm\Church\Models\Tenant',
-            'household' => 'Bishopm\Church\Models\Household',
-            'individual' => 'Bishopm\Church\Models\Individual',
-            'pastoralcase' => 'Bishopm\Church\Models\Pastoralcase'
+            'tenant' => 'Bishopm\Church\Models\Tenant'
         ]);
         Gate::policy(Role::class, \Bishopm\Church\Filament\Policies\RolePolicy::class);
         Gate::policy(Permission::class, \Bishopm\Church\Filament\Policies\PermissionPolicy::class);

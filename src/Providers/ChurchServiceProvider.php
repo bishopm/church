@@ -94,6 +94,7 @@ class ChurchServiceProvider extends ServiceProvider
             'book' => 'Bishopm\Church\Models\Book',
             'course' => 'Bishopm\Church\Models\Course',
             'prayer' => 'Bishopm\Church\Models\Prayer',
+            'project' => 'Bishopm\Church\Models\Project',
             'sermon' => 'Bishopm\Church\Models\Service',
             'post' => 'Bishopm\Church\Models\Post',
             'song' => 'Bishopm\Church\Models\Song',

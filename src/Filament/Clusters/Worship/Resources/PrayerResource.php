@@ -50,8 +50,9 @@ class PrayerResource extends Resource
                         $lyrics=str_replace("\t", '', $lyrics);
                         return new HtmlString($lyrics);
                     }),
-                    Forms\Components\TagsInput::make('tags')
-                    ->type('prayer'),
+                    Forms\Components\Select::make('tags')
+                        ->relationship('tags','name')
+                        ->multiple(),
             ]);
     }
 

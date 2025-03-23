@@ -22,6 +22,11 @@ trait Taggable
         return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', 'like', $tag); })->get();
     }
 
+    public function scopeWithTagType($query, $tag, $type){
+        // Need a join to taggables with type referenced
+        return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', 'like', $tag); })->get();
+    }
+
     public function hasAnyTag(...$tags): bool
     {
         foreach (Arr::flatten($tags) as $tag) {

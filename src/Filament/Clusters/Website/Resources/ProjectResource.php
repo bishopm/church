@@ -41,7 +41,9 @@ class ProjectResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
                     ->image(),
-                Forms\Components\TagsInput::make('tags')->type('projects'),
+                Forms\Components\Select::make('tags')
+                    ->relationship('tags','name')
+                    ->multiple(),
                 Forms\Components\Toggle::make('active'),
                 Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);

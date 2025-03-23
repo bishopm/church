@@ -64,7 +64,9 @@ class SongResource extends Resource
                             ->required()
                             ->label('First line')
                             ->maxLength(255),
-                        Forms\Components\TagsInput::make('tags'),
+                        Forms\Components\Select::make('tags')
+                            ->relationship('tags','name')
+                            ->multiple(),
                         Placeholder::make('Services')
                             ->key('servicePlaceholder')
                             ->label(function (Song $record = null): string {

@@ -8,7 +8,6 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\RelationManage
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Task;
 use Filament\Forms;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -56,7 +55,9 @@ class TaskResource extends Resource
                     ->required()
                     ->default('todo'),
                 Forms\Components\Textarea::make('statusnote')->label('Status note (optional, appears in meeting minutes)'),
-                TagsInput::make('tags')->label('Project')->type('tasks'),
+                Forms\Components\Select::make('tags')->label('Project')
+                    ->relationship('tags','name')
+                    ->multiple(),
                 Forms\Components\Select::make('visibility')
                     ->options([
                         'public'=>'Public',

@@ -8,7 +8,6 @@ use Bishopm\Church\Filament\Clusters\Resources\Resources\BookResource\RelationMa
 use Bishopm\Church\Models\Book;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -65,7 +64,9 @@ class BookResource extends Resource
                     ->maxLength(199),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                TagsInput::make('tags'),
+                Forms\Components\Select::make('tags')
+                    ->relationship('tags','name')
+                    ->multiple(),
                 Forms\Components\Repeater::make('authors')
                     ->required()
                     ->schema([

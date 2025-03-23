@@ -328,7 +328,9 @@ class ServiceResource extends Resource
                                 ->icon('heroicon-m-musical-note')
                                 ->media(fn (Get $get) => $get('audio'))
                         ),
-                        Forms\Components\TagsInput::make('tags')
+                        Forms\Components\Select::make('tags')
+                            ->relationship('tags','name')
+                            ->multiple(),
                     ])
                 ])
             ]);

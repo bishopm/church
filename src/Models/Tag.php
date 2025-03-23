@@ -3,12 +3,9 @@
 namespace Bishopm\Church\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Bishopm\Church\Traits\Taggable;
 
-class Project extends Model
+class Tag extends Model
 {
-    use Taggable;
-
-    public $table = 'projects';
+    public $table = 'tags';
     protected $guarded = ['id'];
 }

@@ -2,14 +2,14 @@
 
 namespace Bishopm\Church\Models;
 
+use Bishopm\Church\Traits\Taggable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Spatie\Tags\HasTags;
 
 class Song extends Model
 {
-    use HasTags;
+    use Taggable;
 
     public $table = 'songs';
     protected $guarded = ['id'];

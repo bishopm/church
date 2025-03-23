@@ -2,15 +2,14 @@
 
 namespace Bishopm\Church\Models;
 
+use Bishopm\Church\Traits\Taggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Spatie\Tags\HasTags;
-use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
 
 class Book extends Model
 {
-    use HasTags;
+    use Taggable;
 
     public $table = 'books';
     protected $guarded = ['id'];

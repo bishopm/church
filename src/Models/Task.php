@@ -2,14 +2,14 @@
 
 namespace Bishopm\Church\Models;
 
+use Bishopm\Church\Traits\Taggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Tags\HasTags;
 
 class Task extends Model
 {
-    use HasTags;
+    use Taggable;
     use SoftDeletes;
 
     public $table = 'tasks';

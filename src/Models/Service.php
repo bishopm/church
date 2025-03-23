@@ -2,16 +2,15 @@
 
 namespace Bishopm\Church\Models;
 
+use Bishopm\Church\Traits\Taggable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Spatie\Tags\HasTags;
 
 class Service extends Model
 {
-    use HasTags;
+    use Taggable;
 
     public $table = 'services';
     protected $guarded = ['id'];

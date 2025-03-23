@@ -5,7 +5,6 @@ namespace Bishopm\Church\Filament\Clusters\Property\Resources;
 use Bishopm\Church\Filament\Clusters\Property;
 use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\Pages;
 use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\RelationManagers;
-use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\RelationManagers\DiaryentriesRelationManager;
 use Bishopm\Church\Models\Tenant;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;

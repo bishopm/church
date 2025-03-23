@@ -10,7 +10,6 @@ use Bishopm\Church\Models\Song;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
@@ -65,7 +64,7 @@ class SongResource extends Resource
                             ->required()
                             ->label('First line')
                             ->maxLength(255),
-                        SpatieTagsInput::make('tags'),
+                        Forms\Components\TagsInput::make('tags'),
                         Placeholder::make('Services')
                             ->key('servicePlaceholder')
                             ->label(function (Song $record = null): string {

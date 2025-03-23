@@ -7,7 +7,7 @@ use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\Pages;
 use Bishopm\Church\Filament\Clusters\Property\Resources\TenantResource\RelationManagers;
 use Bishopm\Church\Models\Tenant;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieTagsInput;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -41,7 +41,7 @@ class TenantResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->image(),
                 Forms\Components\Textarea::make('description'),
-                SpatieTagsInput::make('tags')->type('tenants'),
+                TagsInput::make('tags'),
                 Forms\Components\TextInput::make('slug')
                     ->required(),
                 Forms\Components\Toggle::make('active'),

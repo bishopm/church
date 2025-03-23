@@ -8,12 +8,11 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\RelationManage
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Task;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieTagsInput;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -57,7 +56,7 @@ class TaskResource extends Resource
                     ->required()
                     ->default('todo'),
                 Forms\Components\Textarea::make('statusnote')->label('Status note (optional, appears in meeting minutes)'),
-                SpatieTagsInput::make('tags')->label('Project')->type('tasks'),
+                TagsInput::make('tags')->label('Project')->type('tasks'),
                 Forms\Components\Select::make('visibility')
                     ->options([
                         'public'=>'Public',

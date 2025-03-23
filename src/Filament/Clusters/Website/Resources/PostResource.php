@@ -7,7 +7,6 @@ use Bishopm\Church\Filament\Clusters\Website\Resources\PostResource\Pages;
 use Bishopm\Church\Filament\Clusters\Website\Resources\PostResource\RelationManagers;
 use Bishopm\Church\Models\Post;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
@@ -67,7 +66,7 @@ class PostResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\Toggle::make('active'),
                             ]),
-                        SpatieTagsInput::make('tags'),
+                        Forms\Components\TagsInput::make('tags'),
                         Forms\Components\Select::make('user_id')
                             ->relationship('user')
                             ->required()

@@ -6,7 +6,6 @@ use Bishopm\Church\Filament\Clusters\Website;
 use Bishopm\Church\Filament\Clusters\Website\Resources\ProjectResource\Pages;
 use Bishopm\Church\Models\Project;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -42,7 +41,7 @@ class ProjectResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
                     ->image(),
-                SpatieTagsInput::make('tags')->type('projects'),
+                Forms\Components\TagsInput::make('tags')->type('projects'),
                 Forms\Components\Toggle::make('active'),
                 Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);

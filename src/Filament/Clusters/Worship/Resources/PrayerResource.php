@@ -6,12 +6,10 @@ use Bishopm\Church\Filament\Clusters\Worship;
 use Bishopm\Church\Filament\Clusters\Worship\Resources\PrayerResource\Pages;
 use Bishopm\Church\Models\Prayer;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 
@@ -52,7 +50,7 @@ class PrayerResource extends Resource
                         $lyrics=str_replace("\t", '', $lyrics);
                         return new HtmlString($lyrics);
                     }),
-                SpatieTagsInput::make('tags')
+                    Forms\Components\TagsInput::make('tags')
                     ->type('prayer'),
             ]);
     }

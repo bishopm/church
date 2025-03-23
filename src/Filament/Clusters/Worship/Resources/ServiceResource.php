@@ -12,7 +12,6 @@ use Bishopm\Church\Models\Setitem;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\SpatieTagsInput;
 use Hugomyb\FilamentMediaAction\Forms\Components\Actions\MediaAction;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
@@ -329,7 +328,7 @@ class ServiceResource extends Resource
                                 ->icon('heroicon-m-musical-note')
                                 ->media(fn (Get $get) => $get('audio'))
                         ),
-                        SpatieTagsInput::make('tags')
+                        Forms\Components\TagsInput::make('tags')
                     ])
                 ])
             ]);

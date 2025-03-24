@@ -59,14 +59,9 @@ class TasksToDo extends Widget implements HasForms, HasActions
         $this->dones=Task::where('individual_id',$this->individual_id)->where('status','done')->orderBy('duedate','asc')->get()->toArray();
         $this->dcount=count($this->dones);
         $this->dones = array_slice($this->dones, 0, 5, true);
-        $tags=DB::table('tags')->where('type','tasks')->orderBy('name','ASC')->get()->toArray();
-        $alltags=array();
-        foreach ($tags as $tag){
-            $alltags[]=$tag->name;
-        }
-        $projecttasks=Task::with('tags')->where('status','todo')->orderBy('duedate','asc')->get();
+        $projecttasks=Task::withTagType('task')->where('status','todo')->orderBy('duedate','asc')->get();
         foreach ($projecttasks as $ptask){
-            //$this->projects[$ptask->tags[0]->name][]=$ptask;
+            $this->projects[$ptask->tags[0]->name][]=$ptask;
         }
         $this->pcount=count($this->projects);
     }

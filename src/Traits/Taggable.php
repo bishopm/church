@@ -5,12 +5,13 @@ namespace Bishopm\Church\Traits;
 use Bishopm\Church\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait Taggable
 {
-    public function tags()
+    public function tags(): MorphToMany
     {
-        return $this->morphToMany(Tag::class, 'taggable');
+        return $this->morphToMany(Tag::class, 'taggable')->withPivot('taggable_type');
     }
 
     public function hasTag($tag): bool
@@ -19,23 +20,18 @@ trait Taggable
     }
 
     public function scopeWithTag($query, $tag){
-        return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', 'like', $tag); })->get();
+        return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', '=', $tag); });
     }
 
-    public function scopeWithTagType($query, $tag, $type){
-        // Need a join to taggables with type referenced
-        return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', 'like', $tag); })->get();
-    }
-
-    public function hasAnyTag(...$tags): bool
-    {
-        foreach (Arr::flatten($tags) as $tag) {
-            if ($this->hasTag($tag)) {
-                return true;
-            }
+    public function scopeWithTags($query, $tags){
+        foreach ($tags as $tag){
+            $alltags[]=$tag->name;
         }
+        return $query->withWhereHas('tags', function ($q) use ($alltags) { $q->whereIn('name', $alltags); });
+    }
 
-        return false;
+    public function scopeWithTagType($query, $type){
+        return $query->withWhereHas('tags', function ($q) use($type) { $q->where('taggable_type','=',$type);});
     }
 
     public function addTag(...$tag): void

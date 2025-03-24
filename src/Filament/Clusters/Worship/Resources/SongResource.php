@@ -66,7 +66,23 @@ class SongResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Select::make('tags')
                             ->relationship('tags','name')
-                            ->multiple(),
+                            ->multiple()
+                            ->createOptionForm([
+                                Forms\Components\Grid::make()
+                                    ->columns(2)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                            ->required(),
+                                        Forms\Components\TextInput::make('type')
+                                            ->default('song')
+                                            ->readonly()
+                                            ->required(),
+                                        Forms\Components\TextInput::make('slug')
+                                            ->required(),
+                                    ])
+                            ]),
                         Placeholder::make('Services')
                             ->key('servicePlaceholder')
                             ->label(function (Song $record = null): string {

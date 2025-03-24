@@ -36,7 +36,7 @@ use Illuminate\Http\Request as FormRequest;
 use Illuminate\Support\Facades\Mail;
 use Spatie\GoogleCalendar\Event;
 use Bishopm\Church\Models\Event as ChurchEvent;
-use Spatie\Tags\Tag;
+use Bishopm\Church\Models\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
 class HomeController extends Controller
@@ -94,7 +94,7 @@ class HomeController extends Controller
 
     public function blogpost($yr,$mth,$slug){
         $data['post']=Post::where(DB::raw('substr(published_at, 1, 4)'), '=',$yr)->where(DB::raw('substr(published_at, 6, 2)'), $mth)->where('slug',$slug)->first();
-        $relatedBlogs=Post::withAnyTags($data['post']->tags)->where('slug','<>',$slug)->where('published',1)->orderBy('published_at','DESC')->get();
+        $relatedBlogs=Post::withTags($data['post']->tags)->where('id','<>',$data['post']->id)->where('published',1)->orderBy('published_at','DESC')->get();
         $related=array();
         foreach ($relatedBlogs as $blog){
             $dum=array();
@@ -510,10 +510,10 @@ class HomeController extends Controller
     }
 
     public function subject($slug){
-        $data['tag']=Tag::findFromString($slug);
-        $data['posts']=Post::withAnyTags($data['tag']->name)->where('published',1)->get();
-        $data['sermons']=Service::withAnyTags($data['tag']->name)->where('published',1)->get();
-        $data['books']=Book::withAnyTags($data['tag']->name)->get();
+        $data['tag']=Tag::unslug($slug);
+        $data['posts']=Post::withTag($data['tag'])->where('published',1)->get();
+        $data['sermons']=Service::withTag($data['tag'])->where('published',1)->get();
+        $data['books']=Book::withTag($data['tag'])->get();
         return view('church::' . $this->routeName . '.tag',$data);
     }
 

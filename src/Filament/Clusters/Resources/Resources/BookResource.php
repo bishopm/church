@@ -66,7 +66,23 @@ class BookResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Select::make('tags')
                     ->relationship('tags','name')
-                    ->multiple(),
+                    ->multiple()
+                    ->createOptionForm([
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                    ->required(),
+                                Forms\Components\TextInput::make('type')
+                                    ->default('book')
+                                    ->readonly()
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                    ]),
                 Forms\Components\Repeater::make('authors')
                     ->required()
                     ->schema([

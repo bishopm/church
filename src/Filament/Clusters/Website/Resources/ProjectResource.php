@@ -43,7 +43,23 @@ class ProjectResource extends Resource
                     ->image(),
                 Forms\Components\Select::make('tags')
                     ->relationship('tags','name')
-                    ->multiple(),
+                    ->multiple()
+                    ->createOptionForm([
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                    ->required(),
+                                Forms\Components\TextInput::make('type')
+                                    ->default('project')
+                                    ->readonly()
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                    ]),
                 Forms\Components\Toggle::make('active'),
                 Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);

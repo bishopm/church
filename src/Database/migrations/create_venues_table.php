@@ -12,6 +12,8 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->string('venue', 255);
+            $table->string('slug', 199);
+            $table->tinyinteger('publish');
             $table->integer('resource');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

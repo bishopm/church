@@ -24,6 +24,7 @@ trait Taggable
     }
 
     public function scopeWithTags($query, $tags){
+        $alltags=[];
         foreach ($tags as $tag){
             $alltags[]=$tag->name;
         }

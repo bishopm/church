@@ -33,6 +33,7 @@ class VenueResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
+                    ->directory('images/venue')
                     ->image(),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\TextInput::make('slug')

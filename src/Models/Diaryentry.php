@@ -42,6 +42,11 @@ class Diaryentry extends Model implements Eventable
                 if (isset($this->diarisable->course)){
                     $this->details=$this->diarisable->course;
                 }    
+            } elseif ($this->diarisable_type=="project"){
+                $colour="orange";
+                if (isset($this->diarisable->project)){
+                    $this->details=$this->diarisable->project;
+                }    
             }
         } else {
             if ($this->diarisable_type=="tenant"){
@@ -65,6 +70,11 @@ class Diaryentry extends Model implements Eventable
                 $colour="green";
                 if (isset($this->diarisable->course)){
                     $this->details=$this->diarisable->course . " (" . $this->details . ")";
+                }
+            } elseif ($this->diarisable_type=="project"){
+                $colour="orange";
+                if (isset($this->diarisable->project)){
+                    $this->details=$this->diarisable->project . " (" . $this->details . ")";
                 }
             }
         }

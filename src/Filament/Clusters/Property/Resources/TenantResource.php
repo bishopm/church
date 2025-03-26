@@ -38,6 +38,7 @@ class TenantResource extends Resource
                 Forms\Components\TextInput::make('contact')
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
+                    ->directory('images/tenant')
                     ->image(),
                 Forms\Components\RichEditor::make('description'),
                 Forms\Components\Select::make('tags')

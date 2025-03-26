@@ -7,6 +7,7 @@ use Guava\Calendar\Widgets\CalendarWidget;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Event;
 use Bishopm\Church\Models\Group as GroupModel;
+use Bishopm\Church\Models\Project;
 use Bishopm\Church\Models\Tenant;
 use Bishopm\Church\Models\Venue;
 use Carbon\Carbon;
@@ -179,6 +180,8 @@ class ChurchCalendarWidget extends CalendarWidget
                                 return Event::orderBy('event')->get()->pluck('event', 'id');
                             } elseif ($get('diarisable_type')=="course") {
                                 return Course::orderBy('course')->get()->pluck('course', 'id');
+                            } elseif ($get('diarisable_type')=="project") {
+                                return Project::orderBy('project')->get()->pluck('project', 'id');
                             } else {
                                 return Tenant::orderBy('tenant')->get()->pluck('tenant', 'id');
                             };
@@ -191,7 +194,8 @@ class ChurchCalendarWidget extends CalendarWidget
                             'tenant' => 'External group',
                             'course' => setting('general.church_abbreviation') . ' course',
                             'event' => setting('general.church_abbreviation') . ' event',
-                            'group' => setting('general.church_abbreviation') . ' group'
+                            'group' => setting('general.church_abbreviation') . ' group',
+                            'project' => 'Mission project'
                         ])
                         ->selectablePlaceholder(false)
                         ->default('tenant')

@@ -9,6 +9,7 @@ use Bishopm\Church\Models\Event;
 use Bishopm\Church\Models\Group as GroupModel;
 use Bishopm\Church\Models\Tenant;
 use Bishopm\Church\Models\Venue;
+use Bishopm\Church\Models\Project;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -155,6 +156,8 @@ class ChurchVenuesWidget extends CalendarWidget
                                 return Course::orderBy('course')->get()->pluck('event', 'id');
                             } elseif ($get('diarisable_type')=="event") {
                                 return Event::orderBy('event')->get()->pluck('event', 'id');
+                            } elseif ($get('diarisable_type')=="project") {
+                                return Project::orderBy('project')->get()->pluck('project', 'id');
                             } else {
                                 return Tenant::orderBy('tenant')->get()->pluck('tenant', 'id');
                             };
@@ -167,7 +170,8 @@ class ChurchVenuesWidget extends CalendarWidget
                             'tenant' => 'External group',
                             'course' => setting('general.church_abbreviation') . ' course',
                             'event' => setting('general.church_abbreviation') . ' event',
-                            'group' => setting('general.church_abbreviation') . ' group'
+                            'group' => setting('general.church_abbreviation') . ' group',
+                            'project' => 'Mission project'
                         ])
                         ->selectablePlaceholder(false)
                         ->default('tenant')

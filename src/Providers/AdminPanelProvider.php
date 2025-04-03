@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Teal
             ])
-            ->brandLogo(asset('church/images/blacklogo.png'))
+            ->brandLogo(asset('church/images/logo.png'))
             ->brandLogoHeight('3rem')
             ->favicon(asset('church/images/icons/favicon.png'))
             ->discoverResources(in: base_path('vendor/bishopm/church/src/Filament/Resources'), for: 'Bishopm\\Church\\Filament\\Resources')

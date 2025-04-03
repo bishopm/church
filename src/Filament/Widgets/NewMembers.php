@@ -13,7 +13,7 @@ class NewMembers extends Widget
     public ?array $memberdata;
 
     function mount() {
-        $this->memberdata['individuals']=Individual::orderBy('created_at','DESC')->take(5)->get();
+        $this->memberdata['individuals']=Individual::where('welcome_email',0)->orderBy('created_at','DESC')->take(5)->get();
         $this->memberdata['duplicates']=DB::table('individuals')->select('firstname','surname', DB::raw('COUNT(*) as `count`'))->groupBy('firstname', 'surname')->having('count', '>', 1)->get()->take(15);
         $this->memberdata['whatsapp']=setting('messages.welcome_whatsapp');
     }

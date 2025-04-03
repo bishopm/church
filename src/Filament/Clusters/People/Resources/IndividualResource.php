@@ -76,7 +76,9 @@ class IndividualResource extends Resource
                                 ->url(
                                     fn (Individual $record) => route('reports.barcodes',['newonly' => $record->id]),
                                 )
-                        ])
+                                ]),
+                        Forms\Components\Placeholder::make('lastseen')->hiddenLabel()
+                                ->content(fn (Individual $record) => "Last service attended: " . $record->lastseen)
                     ]),
                     Tab::make('Contact')->schema([
                         Forms\Components\TextInput::make('email')

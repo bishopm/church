@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class ServiceResource extends Resource
 {
@@ -329,7 +330,7 @@ class ServiceResource extends Resource
                                 ->media(fn (Get $get) => $get('audio'))
                         ),
                         Forms\Components\Select::make('tags')
-                            ->relationship('tags','name')
+                            ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','service'))
                             ->multiple()
                             ->createOptionForm([
                                 Forms\Components\Grid::make()

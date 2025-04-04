@@ -58,7 +58,7 @@ class TaskResource extends Resource
                 Forms\Components\Textarea::make('statusnote')
                     ->label('Status note (optional, appears in meeting minutes)'),
                 Forms\Components\Select::make('tags')->label('Project')
-                    ->relationship('tags','name')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','task'))
                     ->multiple()
                     ->createOptionForm([
                         Forms\Components\Grid::make()

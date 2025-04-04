@@ -67,7 +67,7 @@ class PostResource extends Resource
                                 Forms\Components\Toggle::make('active'),
                             ]),
                         Forms\Components\Select::make('tags')
-                            ->relationship('tags','name')
+                            ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','post'))
                             ->multiple()
                             ->createOptionForm([
                                 Forms\Components\Grid::make()

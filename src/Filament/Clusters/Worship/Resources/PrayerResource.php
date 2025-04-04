@@ -11,7 +11,9 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class PrayerResource extends Resource
 {
@@ -51,7 +53,7 @@ class PrayerResource extends Resource
                         return new HtmlString($lyrics);
                     }),
                     Forms\Components\Select::make('tags')
-                        ->relationship('tags','name')
+                        ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','liturgy'))
                         ->multiple()
                         ->createOptionForm([
                             Forms\Components\Grid::make()

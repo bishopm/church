@@ -8,11 +8,12 @@ use Bishopm\Church\Filament\Clusters\Resources\Resources\CourseResource\Relation
 use Bishopm\Church\Models\Course;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CourseResource extends Resource
 {
@@ -40,7 +41,26 @@ class CourseResource extends Resource
                     ->image(),
                 Forms\Components\FileUpload::make('leadernotes')->label('Leader notes')
                     ->directory('course')
-                    ->disk('google')
+                    ->disk('google'),
+                Forms\Components\Select::make('tags')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','course'))
+                    ->multiple()
+                    ->createOptionForm([
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                    ->required(),
+                                Forms\Components\TextInput::make('type')
+                                    ->default('course')
+                                    ->readonly()
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                    ]),
             ]);
     }
 
@@ -50,6 +70,10 @@ class CourseResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('course')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('tags.name')->label('Subject')
+                    ->badge()
+                    ->forceSearchCaseInsensitive(true)
+                    ->searchable()
             ])
             ->defaultSort('course','DESC')
             ->filters([

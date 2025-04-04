@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
@@ -65,7 +66,7 @@ class SongResource extends Resource
                             ->label('First line')
                             ->maxLength(255),
                         Forms\Components\Select::make('tags')
-                            ->relationship('tags','name')
+                            ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','song'))
                             ->multiple()
                             ->createOptionForm([
                                 Forms\Components\Grid::make()

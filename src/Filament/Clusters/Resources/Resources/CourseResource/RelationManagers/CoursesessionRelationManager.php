@@ -58,8 +58,7 @@ class CoursesessionRelationManager extends RelationManager
             ->recordTitleAttribute('session')
             ->columns([
                 Tables\Columns\TextColumn::make('order')->label('Week'),
-                Tables\Columns\TextColumn::make('session'),
-                Tables\Columns\TextColumn::make('sessiondate')->label('Date and time'),
+                Tables\Columns\TextColumn::make('session')
             ])
             ->filters([
                 //

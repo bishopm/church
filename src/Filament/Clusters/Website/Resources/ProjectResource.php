@@ -11,6 +11,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProjectResource extends Resource
@@ -42,7 +43,7 @@ class ProjectResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->image(),
                 Forms\Components\Select::make('tags')
-                    ->relationship('tags','name')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','project'))
                     ->multiple()
                     ->createOptionForm([
                         Forms\Components\Grid::make()

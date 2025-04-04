@@ -12,6 +12,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class TenantResource extends Resource
@@ -42,7 +43,7 @@ class TenantResource extends Resource
                     ->image(),
                 Forms\Components\RichEditor::make('description'),
                 Forms\Components\Select::make('tags')
-                    ->relationship('tags','name')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','tenant'))
                     ->multiple()
                     ->createOptionForm([
                         Forms\Components\Grid::make()

@@ -11,7 +11,7 @@ trait Taggable
 {
     public function tags(): MorphToMany
     {
-        return $this->morphToMany(Tag::class, 'taggable')->withPivot('taggable_type');
+        return $this->morphToMany(Tag::class, 'taggable')->withPivot('taggable_type')->orderBy('name');
     }
 
     public function hasTag($tag): bool

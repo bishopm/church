@@ -6,13 +6,14 @@ use Bishopm\Church\Filament\Clusters\Resources;
 use Bishopm\Church\Filament\Clusters\Resources\Resources\BookResource\Pages;
 use Bishopm\Church\Filament\Clusters\Resources\Resources\BookResource\RelationManagers;
 use Bishopm\Church\Models\Book;
-use Filament\Forms\Components\Actions\Action;
+use Illuminate\Support\Str;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Http;
 
 class BookResource extends Resource
@@ -65,7 +66,7 @@ class BookResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\Select::make('tags')
-                    ->relationship('tags','name')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','book'))
                     ->multiple()
                     ->createOptionForm([
                         Forms\Components\Grid::make()

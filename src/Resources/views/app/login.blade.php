@@ -1,4 +1,4 @@
-<x-church::layouts.app pageName="Phone verification">
+<x-church::layouts.app pageName="Install the WMC app">
     <div class="mb-4 row">
         <div class="col-md-6">
             @livewire('login')

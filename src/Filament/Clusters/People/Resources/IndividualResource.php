@@ -78,7 +78,8 @@ class IndividualResource extends Resource
                                 )
                                 ]),
                         Forms\Components\Placeholder::make('lastseen')->hiddenLabel()
-                                ->content(fn (Individual $record) => "Last service attended: " . $record->lastseen)
+                            ->hidden(fn (string $operation) => $operation === 'create')
+                            ->content(fn (Individual $record) => "Last service attended: " . $record->lastseen)
                     ]),
                     Tab::make('Contact')->schema([
                         Forms\Components\TextInput::make('email')

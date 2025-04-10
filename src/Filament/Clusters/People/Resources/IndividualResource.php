@@ -23,7 +23,9 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
 use Bishopm\Church\Mail\ChurchMail;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Section;
 use Illuminate\Support\Facades\Auth;
 
 class IndividualResource extends Resource
@@ -114,19 +116,39 @@ class IndividualResource extends Resource
                             ->label('Office phone')
                             ->tel()
                             ->maxLength(255),
-                            Forms\Components\Placeholder::make('householdtext')
-                            ->hiddenOn('create')
-                            ->content(function (Individual $record){
-                                $household = $record->household->address1;
-                                if ($record->household->address2){
-                                    $household.= "<br>" . $record->household->address2;
-                                }
-                                if ($record->household->address3){
-                                    $household.= "<br>" . $record->household->address3;
-                                }
-                                return new HtmlString($household);
-                            })
-                            ->label(''),
+                        Forms\Components\Select::make('household_id')
+                            ->label('Household')
+                            ->required()    
+                            ->relationship(name: 'household', titleAttribute: 'addressee')
+                            ->searchable()
+                            ->createOptionModalHeading('Add a new household')
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('addressee')
+                                    ->required(),
+                                Forms\Components\TextInput::make('address1')->label('Address 1'),
+                                Forms\Components\TextInput::make('address2')->label('Address 2'),
+                                Forms\Components\TextInput::make('address3')->label('Address 3'),
+                                Forms\Components\TextInput::make('homephone')->label('Home phone'),
+                                Forms\Components\TextInput::make('sortsurname')->required()->label('Family surname for sorting purposes'),
+                            ]),
+                        Section::make('')
+                            ->description('Changing details below will affect all members of this household')
+                            ->relationship('household')
+                            ->schema([
+                                Group::make()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('addressee')->required(),
+                                        Forms\Components\TextInput::make('address1')->label('Address'),
+                                        Forms\Components\TextInput::make('address2')->hiddenlabel(true),
+                                        Forms\Components\TextInput::make('address3')->hiddenlabel(true)
+                                    ]),
+                                Group::make()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('homephone')->label('Home phone'),
+                                        Forms\Components\TextInput::make('sortsurname')->label('Household sort surname'),
+                                    ])
+                            ])
+                            ->columns(2),
                     ]),
                     Tab::make('Pastoral')->hiddenOn('create')
                         ->schema([
@@ -193,41 +215,6 @@ class IndividualResource extends Resource
                                 ]);
                             })
                         ])
-                    ]),
-                    Tab::make('Household')
-                    ->schema([
-                        Forms\Components\Select::make('household_id')
-                            ->label('Household')
-                            ->required()    
-                            ->relationship(name: 'household', titleAttribute: 'addressee')
-                            ->searchable()
-                            ->createOptionModalHeading('Add a new household')
-                            ->createOptionForm([
-                                Forms\Components\TextInput::make('addressee')
-                                    ->required(),
-                                Forms\Components\TextInput::make('address1')->label('Address 1'),
-                                Forms\Components\TextInput::make('address2')->label('Address 2'),
-                                Forms\Components\TextInput::make('address3')->label('Address 3'),
-                                Forms\Components\TextInput::make('homephone')->label('Home phone'),
-                                Forms\Components\TextInput::make('sortsurname')->required()->label('Family surname for sorting purposes'),
-                            ]),
-                        Forms\Components\Placeholder::make('householdtext')
-                            ->hiddenOn('create')
-                            ->content(function (Individual $record){
-                                $household = $record->household->address1;
-                                if ($record->household->address2){
-                                    $household.= "<br>" . $record->household->address2;
-                                }
-                                if ($record->household->address3){
-                                    $household.= "<br>" . $record->household->address3;
-                                }
-                                return new HtmlString($household);
-                            })
-                            ->label(''),
-                        Actions::make([
-                            Action::make('Edit household')
-                                ->url(fn (Individual $record): string => route('filament.admin.people.resources.households.edit', ['record' => $record->household_id])),
-                        ])->hiddenOn('create')
                     ]),
                     Tab::make('Admin')->schema([
                         Forms\Components\Select::make('memberstatus')

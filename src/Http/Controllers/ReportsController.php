@@ -1027,7 +1027,7 @@ class ReportsController extends Controller
         }
         $this->pdf->AddPage('P');
         $this->title=date("j F Y",strtotime($set->servicedate));
-        $this->pdf->SetTitle($this->title . " - " . $set->servicetime);
+        $this->pdf->SetTitle($this->title . " - " . $stime);
         $this->pdf->SetAutoPageBreak(true, 0);
         $this->pdf->SetFont('DejaVu', 'B', 18);
         $song=url('/') . "/church/images/song.png";

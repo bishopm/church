@@ -213,6 +213,7 @@ class Settings extends BaseSettings
                             Select::make('worship.online_service_group')->label('Online service group')
                                 ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
                                 ->searchable(),
+                            TagsInput::make('worship.custom_service_times'),
                         ]),
                 ]),
         ];

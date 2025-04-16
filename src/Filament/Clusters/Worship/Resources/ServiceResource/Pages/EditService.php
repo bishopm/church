@@ -33,9 +33,7 @@ class EditService extends EditRecord
                     $existingservices=Service::where('servicedate',$this->record->servicedate)->get();
                     foreach($existingservices as $es){
                         $searchndx=array_search($es->servicetime,$services);
-                        if ($searchndx===false){
-                            pass;
-                        } else {
+                        if ($searchndx===true){
                             unset($services[$searchndx]);
                         }
                     }

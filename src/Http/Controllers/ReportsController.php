@@ -4,7 +4,6 @@ namespace Bishopm\Church\Http\Controllers;
 
 use Bishopm\Church\Http\Controllers\Controller;
 use Bishopm\Church\Models\Chord;
-use Bishopm\Church\Models\Course;
 use Bishopm\Church\Models\Diaryentry;
 use Bishopm\Church\Models\Event;
 use Bishopm\Church\Models\Group;
@@ -22,7 +21,6 @@ use Bishopm\Church\Classes\tFPDF;
 use Bishopm\Church\Models\Gift;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
 use stdClass;
 
 class ReportsController extends Controller

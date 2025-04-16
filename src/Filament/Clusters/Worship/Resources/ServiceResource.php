@@ -58,9 +58,15 @@ class ServiceResource extends Resource
                         Forms\Components\Select::make('servicetime')
                             ->required()
                             ->label('Service time')
-                            ->options(function (Get $get) use ($isCreate) {
+                            ->options(function (Get $get, Set $set, $state) use ($isCreate) {
                                 $sd=substr($get('servicedate'),0,10);
                                 $servicetimes = setting('general.services');
+                                if (!in_array($state,$servicetimes)){
+                                    $set('add_extra_service_times',1);
+                                }
+                                if ($get('add_extra_service_times')){
+                                    $servicetimes=array_merge($servicetimes, setting('worship.custom_service_times'));
+                                }
                                 if ($isCreate){
                                     $services = Service::where('servicedate',$sd)->get();
                                     foreach ($services as $service) {
@@ -73,6 +79,7 @@ class ServiceResource extends Resource
                                 foreach ($servicetimes as $st){
                                     $sarray[$st]=$st;
                                 }
+                                asort($sarray);
                                 return $sarray;
                             })
                             ->live()
@@ -106,6 +113,7 @@ class ServiceResource extends Resource
                                     return $service->series_id;
                                 }
                             }),
+                        Forms\Components\Checkbox::make('add_extra_service_times')->live(),
                         Forms\Components\Repeater::make('setitems')
                             ->live()
                             ->hiddenOn('create')

@@ -34,27 +34,11 @@
                 </ul>
             </div>        
             <div class="tab-pane fade" id="pills-library" role="tabpanel" aria-labelledby="pills-library-tab">
-                <ul class="list-unstyled">
-                    @foreach ($courses['library'] as $course)
-                        <li>
-                            <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a> <small>(Sessions: {{count($course->coursesessions)}})</small>
-                        </li>
-                    @endforeach
-                </ul>
+                @livewire('courses')
             </div>
         @else 
             <div class="tab-pane fade show active" id="pills-library" role="tabpanel" aria-labelledby="pills-library-tab">
-                <ul class="list-unstyled">
-                    @foreach ($courses['library'] as $course)
-                        <li>
-                            <a href="{{url('/')}}/courses/{{$course->id}}">{{$course->course}}</a> 
-                            <small>(Sessions: {{count($course->coursesessions)}})</small>
-                            @foreach ($course->tags as $tag)
-                                <span class="badge badge-sm bg-secondary py-1 px-1">{{$tag->name}}</span>
-                            @endforeach
-                        </li>
-                    @endforeach
-                </ul>
+                @livewire('courses')
             </div>
         @endif
 

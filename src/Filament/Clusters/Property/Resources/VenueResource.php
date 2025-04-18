@@ -41,7 +41,8 @@ class VenueResource extends Resource
                 Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
                 Forms\Components\Toggle::make('resource')
                     ->hiddenOn('view')
-                    ->label('Show in resources view')
+                    ->label('Show in resources view'),
+                Forms\Components\ColorPicker::make('colour')
             ]);
     }
 
@@ -52,14 +53,7 @@ class VenueResource extends Resource
                 Tables\Columns\TextColumn::make('venue')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\ColorColumn::make('colour')
             ])
             ->defaultSort('venue','ASC')
             ->filters([

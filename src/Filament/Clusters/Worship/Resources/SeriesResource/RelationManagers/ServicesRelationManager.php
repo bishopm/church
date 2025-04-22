@@ -29,9 +29,11 @@ class ServicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
+                Tables\Columns\TextColumn::make('servicedate')->label('Service date'),
                 Tables\Columns\TextColumn::make('sermon_title'),
-                Tables\Columns\TextColumn::make('servicetime')->label('Service'),
+                Tables\Columns\TextColumn::make('servicetime')->label('Service time'),
             ])
+            ->defaultSort('servicedate','DESC')
             ->filters([
                 //
             ])

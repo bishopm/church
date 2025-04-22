@@ -20,10 +20,10 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Bishopm\Church\Filament\Widgets\RecentSongs;
 use Bishopm\Church\Filament\Widgets\MeasuresChart;
 use Bishopm\Church\Filament\Widgets\NewMembers;
 use Bishopm\Church\Filament\Widgets\TasksToDo;
+use Bishopm\Church\Filament\Widgets\UpcomingServices;
 use Filament\Navigation\NavigationItem;
 
 class AdminPanelProvider extends PanelProvider
@@ -58,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 MeasuresChart::class,
                 Birthdays::class,
                 PastoralContact::class,
-                RecentSongs::class,
+                //UpcomingServices::class,
                 TasksToDo::class
             ])
             ->sidebarCollapsibleOnDesktop()

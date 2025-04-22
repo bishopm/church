@@ -161,6 +161,9 @@ class Settings extends BaseSettings
                             TextInput::make('services.pusher_key')->label('Pusher Key'),
                             TextInput::make('services.pusher_secret')->label('Pusher Secret'),
                             TextInput::make('services.pusher_app_cluster')->label('Pusher App Cluster'),
+                            TextInput::make('services.methodist_database'),
+                            TextInput::make('services.methodist_username'),
+                            TextInput::make('services.methodist_password')->password(),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)

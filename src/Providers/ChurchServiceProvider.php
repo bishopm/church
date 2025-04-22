@@ -44,6 +44,11 @@ class ChurchServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
         if (Schema::hasTable('settings')) {
+            Config::set('database.connections.methodist.database',setting('services.methodist_database'));
+            Config::set('database.connections.methodist.username',setting('services.methodist_username'));
+            Config::set('database.connections.methodist.password',setting('services.methodist_password'));
+            Config::set('database.connections.methodist.driver','mysql');
+            Config::set('database.connections.methodist.host',env('DB_HOST'));
             Config::set('app.name',setting('general.church_abbreviation'));
             Config::set('google-calendar.calendar_id',setting('email.church_email'));
             Config::set('mail.default',setting('email.mailer'));

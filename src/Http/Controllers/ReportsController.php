@@ -535,7 +535,7 @@ class ReportsController extends Controller
             ->where('rosters.id',$id)
             ->orderBy('groupname')
             ->get();
-        if ((isset($rostermodel->includepreacher)) and ($rostermodel->includepreacher==1)){
+        if ((isset($rostermodel->sundayservice)) and ($rostermodel->sundayservice==1)){
             $preachergroup=new stdClass();
             $preachergroup->groupname="Preacher";
             $preachergroup->id=0;

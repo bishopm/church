@@ -5,7 +5,6 @@ namespace Bishopm\Church\Filament\Clusters\People\Resources;
 use Bishopm\Church\Filament\Clusters\People;
 use Bishopm\Church\Filament\Clusters\People\Resources\RosterResource\Pages;
 use Bishopm\Church\Filament\Clusters\People\Resources\RosterResource\RelationManagers;
-use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Roster;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -14,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RosterResource extends Resource
 {
@@ -50,7 +48,7 @@ class RosterResource extends Resource
                 Forms\Components\TextInput::make('message')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('includepreacher')->label('Show preacher on roster')
+                Forms\Components\Toggle::make('sundayservice')->label('Sunday service roster?')
                     ->hidden(fn (Get $get): bool => !($get('dayofweek') == "Sunday")),
             ]);
     }

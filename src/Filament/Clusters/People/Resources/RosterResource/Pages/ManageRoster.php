@@ -25,9 +25,8 @@ use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ReportMail;
-use Filament\Forms\Components\Hidden;
+use Bishopm\Church\Models\Midweek;
 use Illuminate\Support\Facades\Mail;
-use Livewire\Livewire;
 
 class ManageRoster extends Page implements HasForms
 {
@@ -41,13 +40,16 @@ class ManageRoster extends Page implements HasForms
 
     public ?array $data;
 
+    public $rostermonth;
+
     public $count;
 
     public $credits, $smss;
 
-    public function mount(int | string $record): void
+    public function mount(int | string $record, $rostermonth): void
     {
         $this->record = $this->resolveRecord($record);
+        $this->rostermonth = $rostermonth;
         $this->form->fill();
     }
 
@@ -67,11 +69,17 @@ class ManageRoster extends Page implements HasForms
             Action::make('prev')
                 ->action(fn () => self::changeMonth('prev'))
                 ->icon('heroicon-m-backward')
-                ->iconButton(),
+                ->iconButton()
+                ->url(function (Roster $record){
+                    return route('filament.admin.people.resources.rosters.manage', [$record, date('Y-m-d',strtotime($this->rostermonth . ' - 1 month'))]);
+                }),
             Action::make('next')
                 ->action(fn () => self::changeMonth('next'))
                 ->icon('heroicon-m-forward')
-                ->iconButton(),
+                ->iconButton()
+                ->url(function (Roster $record){
+                    return route('filament.admin.people.resources.rosters.manage', [$record, date('Y-m-d',strtotime($this->rostermonth . ' + 1 month'))]);
+                }),
             Action::make('emails')->label('Email ' . $rosterlabel . ' rosters')
                 ->requiresConfirmation()
                 ->action(fn () => self::sendRosterEmails($firstdate)),
@@ -196,7 +204,7 @@ class ManageRoster extends Page implements HasForms
         return "Emails sent: " . $emailcount;
     }
 
-    protected function changeMonth($start){
+    /*protected function changeMonth($start){
         if ($start=="prev"){
             $this->data['firstofmonth'] = date('Y-m-d', strtotime($this->data['firstofmonth'] . " -1 month"));
         } else {
@@ -213,22 +221,32 @@ class ManageRoster extends Page implements HasForms
                 $this->data[$vv] = $this->getIndivs($rg,$wk);
             }
         }
-    }
+    }*/
 
     protected function getWeeks($firstofmonth){
+
         $thismonth=date('Y-m',strtotime($firstofmonth));
+        $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
+        $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
+        $midweeks=Midweek::where('servicedate','>=',$firstofmonth)->where('servicedate','<',date('Y-m-d',strtotime($firstofmonth . ' + 1 month')))->get();
         for ($i=1;$i<7;$i++){
             if (date('l',strtotime($thismonth . "-" . $i)) == $this->record->dayofweek) {
                 $weeks[]=date('Y-m-d',strtotime($thismonth . "-" . $i));
             }
         }
         for ($j=1;$j<=4;$j++){
-            $weeks[]=date('Y-m-d',strtotime($weeks[0] . ' + ' . $j . ' week'));
+            if ($thismonth==date('Y-m',strtotime($weeks[0] . ' + ' . $j . ' week'))){
+                $weeks[]=date('Y-m-d',strtotime($weeks[0] . ' + ' . $j . ' week'));
+            }
         }
-        $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
-        $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
-        $this->data['columns']=6;
-        return $weeks;
+        if (count($midweeks)){
+            foreach ($midweeks as $mw){
+                $weeks[]=$mw->servicedate;
+            }
+        }
+        asort($weeks);
+        $this->data['columns']=1+count($weeks);
+        return array_values($weeks);
     }
 
     private static function updateIndivs($state, $rosterdate, $rostergroup){
@@ -272,17 +290,21 @@ class ManageRoster extends Page implements HasForms
     public function form(Form $form): Form
     {
         $schema = array();
-        $this->subheading = $this->record->roster;
         if (!isset($this->data['firstofmonth'])){
-            $this->data['firstofmonth'] = date('Y-m-01');
+            $this->data['firstofmonth'] = date('Y-m-01',strtotime($this->rostermonth));
         }
+        $this->subheading = $this->record->roster;
         $rostergroups = Rostergroup::with('group.individuals')->where('roster_id',$this->record->id)->get()->sortBy('group.groupname');
         $weeks=$this->getWeeks($this->data['firstofmonth']);
+        $rosterday=Roster::find($this->record->id)->dayofweek;
         foreach ($weeks as $ndx=>$label){
             if ($ndx==0){
                 $schema[] = Placeholder::make('blank')->label('');
             }
             $this->data['week' . $ndx] = $label;
+            if (date('l',strtotime($label))<>$rosterday){
+                $label.= " (" . date('D',strtotime($label)) . ")";
+            }
             $schema[] = TextInput::make('week' . $ndx)->label('')
                             ->live()
                             ->default($label)

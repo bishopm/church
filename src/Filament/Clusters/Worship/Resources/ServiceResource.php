@@ -112,7 +112,7 @@ class ServiceResource extends Resource
                             }),
                         Forms\Components\Checkbox::make('add_extra_service_times')->label('Use non-standard service time')
                             ->live()
-                            ->afterStateHydrated(function ($component, Service $record) {
+                            ->afterStateHydrated(function ($component, $record) {
                                 if (is_null($record)){
                                     $component->state(false);
                                 } else {

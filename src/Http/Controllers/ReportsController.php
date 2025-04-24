@@ -19,6 +19,7 @@ use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
 use Bishopm\Church\Models\Gift;
+use Bishopm\Church\Models\Midweek;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use stdClass;
@@ -506,6 +507,34 @@ class ReportsController extends Controller
         }
     }
 
+    private function getRosterWeeks($roster,$firstday){
+        $weeks[]=$firstday;
+        $ym=date('Y-m',strtotime($firstday));
+        $nm=date('Y-m',strtotime($firstday . ' + 1 month'));
+        for ($i=1;$i<5;$i++){
+            if ($ym== date('Y-m',strtotime($firstday . ' + ' . $i * 7 . ' days'))){
+                $weeks[]=date('Y-m-d',strtotime($firstday . ' + ' . $i * 7 . ' days'));
+            }
+        }
+        $mws=array();
+        $sunday = Roster::find($roster)->sundayservice;
+        if ($sunday==1){
+            $midweeks=Midweek::where('servicedate','>=',$ym.'-01')->where('servicedate','<=',$nm.'-01')->get();
+            foreach ($midweeks as $mw){
+                if (date('l',strtotime($mw->servicedate))<>date('l',strtotime($firstday))){
+                    $weeks[]=$mw->servicedate;
+                    $mws[$mw->servicedate]=$mw->midweek;
+                }
+            }
+            asort($weeks);
+        }
+        $dum=[
+            'columns' => array_values($weeks),
+            'midweeks' => $mws
+        ];
+        return $dum;
+    }
+
     private function getRosterData($today,$id) {
         $firstday=date('l',strtotime($today.'-01'));
         $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -522,13 +551,9 @@ class ReportsController extends Controller
         }
         $firstdate=$today . '-0' . $dday;
         $data = array();
-        $data['columns'][]=date('j M Y',strtotime($firstdate));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+1 week'));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+2 week'));
-        $data['columns'][]=date('j M Y',strtotime($firstdate . '+3 week'));
-        if (date('m',strtotime($firstdate . '+4 week')) == date('m',strtotime($today))){
-            $data['columns'][]=date('j M Y',strtotime($firstdate . '+4 week'));
-        }
+        $rosterweeks=$this->getRosterWeeks($id,$firstdate);
+        $data['columns']=$rosterweeks['columns'];
+        $data['midweeks']=$rosterweeks['midweeks'];
         $groups = DB::table('rosters')->join('rostergroups', 'rosters.id', '=', 'rostergroups.roster_id')
             ->join('groups', 'rostergroups.group_id', '=', 'groups.id')
             ->select('groupname','groups.id','rostergroups.extrainfo')
@@ -923,7 +948,9 @@ class ReportsController extends Controller
             $this->pdf->text(40, 20, $this->title);
             $xx = 66;
             $this->pdf->SetFont('DejaVu', 'B', 12);
-            if (count($data['columns'])==5){
+            if (count($data['columns'])==6){
+                $add=-5;
+            } elseif (count($data['columns'])==5){
                 $add=0;
             } else {
                 $add=10;
@@ -931,9 +958,18 @@ class ReportsController extends Controller
             $this->pdf->rect(10,26,280,11,'F');
             $this->pdf->SetTextColor(255,255,255);
             foreach ($data['columns'] as $week) {
-                $xx=$xx+$add;
-                $this->pdf->text($xx,33,$week);
-                $xx=$xx+44;
+                if (isset($data['midweeks'][$week])){
+                    $xx=$xx+$add;
+                    $this->pdf->text($xx,31,$week);
+                    $this->pdf->SetFont('DejaVu', '', 10);
+                    $this->pdf->text($xx,35,$data['midweeks'][$week]);
+                    $this->pdf->SetFont('DejaVu', 'B', 12);
+                    $xx=$xx+44;
+                } else {
+                    $xx=$xx+$add;
+                    $this->pdf->text($xx,33,$week);
+                    $xx=$xx+44;
+                }
             }
             $this->pdf->SetTextColor(0,0,0);
             $yy = 42;

@@ -66,9 +66,9 @@ class RosterResource extends Resource
             ->filters([
                 //
             ])
-            ->recordUrl(fn (Roster $record): string => route('filament.admin.people.resources.rosters.manage', $record))
+            ->recordUrl(fn (Roster $record): string => route('filament.admin.people.resources.rosters.manage', [$record, date('Y-m-d')]))
             ->actions([
-                Action::make('Manage')->url(fn (Roster $record): string => route('filament.admin.people.resources.rosters.manage', $record)),
+                Action::make('Manage')->url(fn (Roster $record): string => route('filament.admin.people.resources.rosters.manage', [$record, date('Y-m-d')])),
                 Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
@@ -90,8 +90,8 @@ class RosterResource extends Resource
         return [
             'index' => Pages\ListRosters::route('/'),
             'create' => Pages\CreateRoster::route('/create'),
-            'manage' => Pages\ManageRoster::route('/{record}'),
             'edit' => Pages\EditRoster::route('/{record}/edit'),
+            'manage' => Pages\ManageRoster::route('/{record}/{rostermonth}'),
         ];
     }
 }

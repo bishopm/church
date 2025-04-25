@@ -37,6 +37,7 @@ class EventResource extends Resource
                 Forms\Components\DateTimePicker::make('eventdate')
                     ->label('Date and time')
                     ->native(true)
+                    ->seconds(false)
                     ->displayFormat('Y-m-d H:i')
                     ->format('Y-m-d H:i')
                     ->required(),

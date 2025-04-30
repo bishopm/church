@@ -290,6 +290,7 @@ class ManageRoster extends Page implements HasForms
     public function form(Form $form): Form
     {
         $schema = array();
+        $roster=Roster::find($this->record->id);
         if (!isset($this->data['firstofmonth'])){
             $this->data['firstofmonth'] = date('Y-m-01',strtotime($this->rostermonth));
         }
@@ -315,7 +316,13 @@ class ManageRoster extends Page implements HasForms
             $schema[] = Placeholder::make($rg->group->groupname)->content($rg->group->groupname)->label('');
             $members=[];
             foreach ($rg->group->individuals as $indiv){
-                $members[$indiv->id] = $indiv->firstname . " " . $indiv->surname;
+                if ($roster->sundayservice){
+                    if (($indiv->pivot->categories) and (in_array($roster->sundayservice,json_decode($indiv->pivot->categories)))){
+                        $members[$indiv->id] = $indiv->firstname . " " . $indiv->surname;        
+                    }
+                } else {
+                    $members[$indiv->id] = $indiv->firstname . " " . $indiv->surname;
+                }
             }
             foreach ($weeks as $wno=>$week){
                 $onduty=array();

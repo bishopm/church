@@ -632,36 +632,57 @@ class ReportsController extends Controller
         $this->pdf->SetFont('DejaVu', 'B', 18);
         $this->pdf->text(15, 16, setting('general.church_name'));
         $this->pdf->SetFont('DejaVu', '', 16);
-        $this->pdf->text(15, 23, $group->groupname);
+        if ($group->individual){
+            $this->pdf->text(15, 23, $group->groupname . " (" . $group->individual->firstname . " " . $group->individual->surname . ")");
+        } else {
+            $this->pdf->text(15, 23, $group->groupname);
+        }
         $this->pdf->SetTitle($group->groupname);
         $this->pdf->SetFont('DejaVu', '', 12);
-        $this->pdf->text(173, 23, date('Y-m-d'));
+        $this->pdf->text(170, 23, date('Y-m-d'));
         $this->pdf->line(15, 26, 195, 26);
-        $yy=35;
+        $yy=32;
         $indivs = array();
         foreach ($group->individuals as $indiv) {
             $cc=$indiv->cellphone;
-            $indivs[$indiv->surname . ', ' . $indiv->firstname] = substr($cc,0,3) . " " . substr($cc,3,3) . " " . substr($cc,6,4);
-        }
-        ksort($indivs);
-        foreach ($indivs as $kk=>$ii) {
-            if ($yy>285){
-                $yy=35;
-                $this->pdf->AddPage('P');
-                $this->pdf->SetFont('DejaVu', 'B', 18);
-                $this->pdf->text(15, 16, setting('general.church_name'));
-                $this->pdf->SetFont('DejaVu', '', 16);
-                $this->pdf->text(15, 23, $group->groupname);
-                $this->pdf->SetTitle($group->groupname);
-                $this->pdf->SetFont('DejaVu', '', 12);
-                $this->pdf->text(173, 23, date('Y-m-d'));
-                $this->pdf->line(15, 26, 195, 26);
+            if ($indiv->pivot->categories){
+                foreach (json_decode($indiv->pivot->categories) as $cat){
+                    $indivs[$cat][]=$indiv;
+                }
+            } else {
+                $indivs['other'][]=$indiv;
             }
-            $this->pdf->SetFont('DejaVu', 'B', 12);
-            $this->pdf->text(15, $yy, $kk);
-            $this->pdf->SetFont('DejaVu', '', 12);
-            $this->pdf->text(169, $yy, $ii);
-            $yy=$yy+6;
+        }
+        foreach ($indivs as $k=>$category){
+            if (is_array($indivs[$k])){
+                ksort($indivs[$k]);
+            }
+        }
+        foreach ($indivs as $cc=>$cats){
+            if ($cc <>"other"){
+                $yy=$yy+2;
+                $this->pdf->SetFont('DejaVu', 'B', 12);
+                $this->pdf->text(15, $yy, $cc);
+                $this->pdf->SetFont('DejaVu', '', 12);
+                $yy=$yy+6;
+            }
+            foreach ($cats as $kk=>$ii) {
+                if ($yy>285){
+                    $yy=35;
+                    $this->pdf->AddPage('P');
+                    $this->pdf->SetFont('DejaVu', 'B', 18);
+                    $this->pdf->text(15, 16, setting('general.church_name'));
+                    $this->pdf->SetFont('DejaVu', '', 16);
+                    $this->pdf->text(15, 23, $group->groupname);
+                    $this->pdf->SetTitle($group->groupname);
+                    $this->pdf->SetFont('DejaVu', '', 12);
+                    $this->pdf->text(170, 23, date('Y-m-d'));
+                    $this->pdf->line(15, 26, 195, 26);
+                }
+                $this->pdf->text(15, $yy, $ii->firstname . " " . $ii->surname);
+                $this->pdf->text(169, $yy, $ii->cellphone);
+                $yy=$yy+6;
+            }
         }
         $this->pdf->Output();
         exit;

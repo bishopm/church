@@ -48,7 +48,12 @@ class Individual extends Model
 
     public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(Group::class,'group_individual')->withPivot('categories');
+    }
+
+    public function groupmember(): BelongsTo
+    {
+        return $this->belongsTo(Groupmember::class);
     }
 
     public function rosteritems(): BelongsToMany

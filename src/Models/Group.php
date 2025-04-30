@@ -19,9 +19,14 @@ class Group extends Model
         return $this->belongsTo(Individual::class);
     }
 
+    public function groupmembers(): HasMany
+    {
+        return $this->hasMany(Groupmember::class);
+    }
+
     public function individuals(): BelongsToMany
     {
-        return $this->belongsToMany(Individual::class);
+        return $this->belongsToMany(Individual::class,'group_individual')->withPivot('categories');
     }
 
     public function diaryentries(): MorphMany

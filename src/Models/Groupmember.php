@@ -9,6 +9,9 @@ class Groupmember extends Model
 {
     public $table = 'group_individual';
     protected $guarded = ['id'];
+    protected $casts = [
+        'categories' => 'json'
+    ];
 
     public function individual(): BelongsTo
     {
@@ -17,7 +20,7 @@ class Groupmember extends Model
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Group::class);
+        return $this->BelongsTo(Group::class);
     }
 
 }

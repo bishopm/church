@@ -13,6 +13,7 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->integer('group_id');
             $table->integer('individual_id');
+            $table->json('categories')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();

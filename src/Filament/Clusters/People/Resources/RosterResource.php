@@ -48,8 +48,9 @@ class RosterResource extends Resource
                 Forms\Components\TextInput::make('message')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('sundayservice')->label('Sunday service roster?')
-                    ->hidden(fn (Get $get): bool => !($get('dayofweek') == "Sunday")),
+                Forms\Components\Select::make('sundayservice')->label('Sunday service')
+                    ->hidden(fn (Get $get): bool => !($get('dayofweek') == "Sunday"))
+                    ->options(fn () => array_combine(setting('general.services'),setting('general.services'))),
             ]);
     }
 

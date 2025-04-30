@@ -26,6 +26,7 @@ use Filament\Notifications\Notification;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ReportMail;
 use Bishopm\Church\Models\Midweek;
+use Filament\Actions\ActionGroup;
 use Illuminate\Support\Facades\Mail;
 
 class ManageRoster extends Page implements HasForms
@@ -60,10 +61,14 @@ class ManageRoster extends Page implements HasForms
             $monthadd="+1 month";
             $rosterlabel = date('M') . ' and ' . date('M',strtotime($monthadd));
             $firstdate = date('Y-m-01');
+            $nextrosterlabel = date('M', strtotime('+2 months')) . ' and ' . date('M',strtotime('+3 months'));
+            $nextfirstdate = date('Y-m-01',strtotime('+2 months'));
         } else {
             $monthadd="-1 month";
             $rosterlabel = date('M',strtotime($monthadd)) . ' and ' . date('M');
             $firstdate = date('Y-m-01',strtotime('-1 month'));
+            $nextrosterlabel = date('M',strtotime('+1 month')) . ' and ' . date('M',strtotime('+2 months'));
+            $nextfirstdate = date('Y-m-01',strtotime('+1 month'));
         }
         return [
             Action::make('prev')
@@ -80,9 +85,18 @@ class ManageRoster extends Page implements HasForms
                 ->url(function (Roster $record){
                     return route('filament.admin.people.resources.rosters.manage', [$record, date('Y-m-d',strtotime($this->rostermonth . ' + 1 month'))]);
                 }),
-            Action::make('emails')->label('Email ' . $rosterlabel . ' rosters')
-                ->requiresConfirmation()
-                ->action(fn () => self::sendRosterEmails($firstdate)),
+            ActionGroup::make([
+                Action::make('emails')->label('Email ' . $rosterlabel . ' rosters')
+                    ->requiresConfirmation()
+                    ->action(fn () => self::sendRosterEmails($firstdate)),
+                Action::make('nextemails')->label('Email ' . $nextrosterlabel . ' rosters')
+                    ->requiresConfirmation()
+                    ->action(fn () => self::sendRosterEmails($nextfirstdate))
+                ])
+                ->label('Email roster')
+                ->icon('heroicon-m-envelope')
+                ->color('primary')
+                ->button(),
             Action::make('Preview messages')->label('Preview messages (' . date('j M',strtotime('next ' . $this->record->dayofweek)) . ')')
                 ->modalHeading($this->record->roster . ": Preview messages")
                 ->form($schema)
@@ -267,10 +281,12 @@ class ManageRoster extends Page implements HasForms
                 ]);
             }
         } else {
-            DB::table('individual_rosteritem')->insert([
-                'individual_id' => $state,
-                'rosteritem_id' => $ri->id
-            ]);
+            if (isset($state)){
+                DB::table('individual_rosteritem')->insert([
+                    'individual_id' => $state,
+                    'rosteritem_id' => $ri->id
+                ]);
+            }
         }
     }
 

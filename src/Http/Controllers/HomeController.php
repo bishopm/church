@@ -36,6 +36,7 @@ use Illuminate\Http\Request as FormRequest;
 use Illuminate\Support\Facades\Mail;
 use Spatie\GoogleCalendar\Event;
 use Bishopm\Church\Models\Event as ChurchEvent;
+use Bishopm\Church\Models\Roster;
 use Bishopm\Church\Models\Tag;
 use Vedmant\FeedReader\Facades\FeedReader;
 
@@ -451,8 +452,13 @@ class HomeController extends Controller
         $roster=Individual::with('rosteritems.rostergroup.group')->where('id',$this->member['id'])->first();
         $data['roster']=array();
         foreach ($roster->rosteritems as $ri){
+            $ss=Roster::find($ri->rostergroup->roster_id)->sundayservice;
             if ($ri->rosterdate>$today){
-                $data['roster'][$ri->rosterdate][]=$ri->rostergroup->group->groupname;
+                $gn=$ri->rostergroup->group->groupname;
+                if ($ss){
+                    $gn.= " (" . $ss . ")";
+                } 
+                $data['roster'][$ri->rosterdate][]=$gn;
             }
         }
         ksort($data['roster']);

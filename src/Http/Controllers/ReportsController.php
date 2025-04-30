@@ -560,7 +560,7 @@ class ReportsController extends Controller
             ->where('rosters.id',$id)
             ->orderBy('groupname')
             ->get();
-        if ((isset($rostermodel->sundayservice)) and ($rostermodel->sundayservice==1)){
+        if ((isset($rostermodel->sundayservice)) and ($rostermodel->sundayservice!=='')){
             $preachergroup=new stdClass();
             $preachergroup->groupname="Preacher";
             $preachergroup->id=0;
@@ -647,12 +647,13 @@ class ReportsController extends Controller
             $cc=$indiv->cellphone;
             if ($indiv->pivot->categories){
                 foreach (json_decode($indiv->pivot->categories) as $cat){
-                    $indivs[$cat][]=$indiv;
+                    $indivs[$cat][$indiv->firstname . $indiv->surname]=$indiv;
                 }
             } else {
                 $indivs['other'][]=$indiv;
             }
         }
+        ksort($indivs);
         foreach ($indivs as $k=>$category){
             if (is_array($indivs[$k])){
                 ksort($indivs[$k]);

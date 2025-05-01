@@ -4,8 +4,7 @@ namespace Bishopm\Church\Providers;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use Bishopm\Church\Filament\Pages\Dashboard;
-use Bishopm\Church\Filament\Widgets\Birthdays;
-use Bishopm\Church\Filament\Widgets\PastoralContact;
+use Bishopm\Church\Filament\Widgets\Diary;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -21,9 +20,8 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Bishopm\Church\Filament\Widgets\MeasuresChart;
-use Bishopm\Church\Filament\Widgets\NewMembers;
+use Bishopm\Church\Filament\Widgets\Pastoral;
 use Bishopm\Church\Filament\Widgets\TasksToDo;
-use Bishopm\Church\Filament\Widgets\UpcomingServices;
 use Filament\Navigation\NavigationItem;
 
 class AdminPanelProvider extends PanelProvider
@@ -54,11 +52,9 @@ class AdminPanelProvider extends PanelProvider
                     ])
             ])
             ->widgets([
-                NewMembers::class,
+                Pastoral::class,
                 MeasuresChart::class,
-                Birthdays::class,
-                PastoralContact::class,
-                UpcomingServices::class,
+                Diary::class,
                 TasksToDo::class
             ])
             ->sidebarCollapsibleOnDesktop()

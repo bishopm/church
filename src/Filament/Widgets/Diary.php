@@ -3,12 +3,14 @@
 namespace Bishopm\Church\Filament\Widgets;
 
 use Bishopm\Church\Models\Plan;
+use Carbon\Carbon;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\DB;
+use Spatie\GoogleCalendar\Event;
 
-class UpcomingServices extends Widget
+class Diary extends Widget
 {
-    protected static string $view = 'church::widgets.upcoming-services';
+    protected static string $view = 'church::widgets.diary';
 
     public ?array $widgetdata;
 
@@ -21,6 +23,22 @@ class UpcomingServices extends Widget
         $today = date('Y-m-d');
         $nextweek = date('Y-m-d',strtotime('+1 week'));
         $this->widgetdata['plans']=Plan::with('person')->whereIn('service_id',array_keys($this->widgetdata['services']))->where('servicedate','>=',$today)->where('servicedate','<=',$nextweek)->get();
+        $events=Event::get(new Carbon($today),new Carbon(date('Y-m-d',strtotime('+1 month'))));
+        foreach ($events as $event){
+            if ($event->startDateTime){
+                $this->widgetdata['events'][]=[
+                    'name' => $event->name,
+                    'date' => date('D j M',strtotime($event->startDateTime)),
+                    'time' => date('H:i',strtotime($event->startDateTime))
+                ];
+            } else {
+                $this->widgetdata['events'][]=[
+                    'name' => $event->name,
+                    'date' => date('D j M',strtotime($event->startDate)),
+                    'time' => ''
+                ];
+            }
+        }
     }
 
     public static function canView(): bool 

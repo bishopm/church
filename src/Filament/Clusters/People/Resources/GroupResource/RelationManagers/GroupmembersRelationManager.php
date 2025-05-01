@@ -15,6 +15,8 @@ class GroupmembersRelationManager extends RelationManager
 {
     protected static string $relationship = 'groupmembers';
 
+    protected static ?string $title = 'Group members';
+
     public function form(Form $form): Form
     {
         return $form
@@ -37,6 +39,7 @@ class GroupmembersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('individual.fullname')->label('Name'),
                 Tables\Columns\TextColumn::make('categories')->label('Service (if applicable)'),
             ])
+            ->emptyStateHeading('No group members')
             ->filters([
                 //
             ])

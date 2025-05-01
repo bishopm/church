@@ -131,8 +131,14 @@ class IndividualResource extends Resource
                                 Forms\Components\TextInput::make('homephone')->label('Home phone'),
                                 Forms\Components\TextInput::make('sortsurname')->required()->label('Family surname for sorting purposes'),
                             ]),
-                        Section::make('')
-                            ->description('Changing details below will affect all members of this household')
+                        Section::make('Household details')
+                            ->headerActions([
+                                Action::make('Edit household record')
+                                    ->url(function (Individual $record){
+                                        return route('filament.admin.people.resources.households.edit', ['record' => $record->household_id]);
+                                    })
+                                ])
+                            ->description('Changing these fields will affect all members of this household')
                             ->relationship('household')
                             ->schema([
                                 Group::make()

@@ -24,7 +24,7 @@
                     <table class="table">
                         <tr><td><b>Date</b></td><td><b>Time</b></td><td><b>Preacher</b></td></tr>
                         @foreach ($widgetdata['plans'] as $plan)
-                            <tr><td>{{$plan->servicedate}}</td><td style="padding-left:5px; padding-right:5px;">{{$widgetdata['services'][$plan->service_id]}}</td><td><b>{{$plan->person->firstname ?? '' }} {{$plan->person->surname ?? '' }}</b></td></tr>
+                            <tr><td>{{$plan->servicedate}}</td><td style="padding-left:5px; padding-right:5px;">{{$widgetdata['services'][$plan->service_id]}}</td><td>{{$plan->person->firstname ?? '' }} {{$plan->person->surname ?? '' }}</td></tr>
                         @endforeach
                     </table>
                 @else

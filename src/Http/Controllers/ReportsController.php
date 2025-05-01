@@ -20,6 +20,7 @@ use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Midweek;
+use Bishopm\Church\Models\Plan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use stdClass;
@@ -516,18 +517,26 @@ class ReportsController extends Controller
                 $weeks[]=date('Y-m-d',strtotime($firstday . ' + ' . $i * 7 . ' days'));
             }
         }
+
+        // Deal with midweek services and check if potential services have preachers before adding to this roster
         $mws=array();
-        $sunday = Roster::find($roster)->sundayservice;
-        if ($sunday==1){
-            $midweeks=Midweek::where('servicedate','>=',$ym.'-01')->where('servicedate','<=',$nm.'-01')->get();
+        $roster = Roster::find($roster);
+        $servicetime=str_replace("h",":",$roster->sundayservice);
+        $service=DB::connection('methodist')->table('services')->where('society_id',setting('services.society_id'))->where('servicetime',$servicetime)->first();
+        $midweeks=Midweek::where('servicedate','>=',$firstday)->where('servicedate','<',date('Y-m-d',strtotime($firstday . ' + 1 month')))->get();
+        $mws=array();
+        if (count($midweeks)){
             foreach ($midweeks as $mw){
-                if (date('l',strtotime($mw->servicedate))<>date('l',strtotime($firstday))){
-                    $weeks[]=$mw->servicedate;
+                if ($service){
+                    $plan=Plan::where('servicedate',$mw->servicedate)->where('service_id',$service->id)->get();
+                    if (count($plan)){
+                        $weeks[]=$mw->servicedate;
+                    }
                     $mws[$mw->servicedate]=$mw->midweek;
                 }
             }
-            asort($weeks);
         }
+        asort($weeks);
         $dum=[
             'columns' => array_values($weeks),
             'midweeks' => $mws
@@ -539,12 +548,6 @@ class ReportsController extends Controller
         $firstday=date('l',strtotime($today.'-01'));
         $alldays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         $rostermodel=Roster::find($id);
-        $servicetimes = setting('general.services');
-        foreach ($servicetimes as $st){
-            if (str_contains($rostermodel->roster,$st)){
-                $servicetime=$st;
-            }
-        }
         $dday = 8 - array_search($firstday,$alldays) + array_search($rostermodel->dayofweek,$alldays);
         if ($dday > 7){
             $dday=$dday-7;
@@ -575,7 +578,7 @@ class ReportsController extends Controller
             foreach ($data['columns'] as $col){
                 $fixdate=date('Y-m-d',strtotime($col));
                 if ($group->id==0){
-                    $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $st . "/" . date('Y-m-d',strtotime($col));
+                    $url="https://methodist.church.net.za/preacher/" . setting('services.society_id') . "/" . $rostermodel->sundayservice . "/" . date('Y-m-d',strtotime($col));
                     $response=Http::get($url);
                     $extra = $response->body();
                     if ((isset($set->series)) and ($set->series->series !== "")) {

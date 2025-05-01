@@ -26,6 +26,7 @@ use Filament\Notifications\Notification;
 use Bishopm\Church\Http\Controllers\ReportsController;
 use Bishopm\Church\Mail\ReportMail;
 use Bishopm\Church\Models\Midweek;
+use Bishopm\Church\Models\Plan;
 use Filament\Actions\ActionGroup;
 use Illuminate\Support\Facades\Mail;
 
@@ -242,7 +243,6 @@ class ManageRoster extends Page implements HasForms
         $thismonth=date('Y-m',strtotime($firstofmonth));
         $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
         $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
-        $midweeks=Midweek::where('servicedate','>=',$firstofmonth)->where('servicedate','<',date('Y-m-d',strtotime($firstofmonth . ' + 1 month')))->get();
         for ($i=1;$i<7;$i++){
             if (date('l',strtotime($thismonth . "-" . $i)) == $this->record->dayofweek) {
                 $weeks[]=date('Y-m-d',strtotime($thismonth . "-" . $i));
@@ -253,9 +253,19 @@ class ManageRoster extends Page implements HasForms
                 $weeks[]=date('Y-m-d',strtotime($weeks[0] . ' + ' . $j . ' week'));
             }
         }
+
+        // Deal with midweek services and check if potential services have preachers before adding to this roster
+        $servicetime=str_replace("h",":",$this->record->sundayservice);
+        $service=DB::connection('methodist')->table('services')->where('society_id',setting('services.society_id'))->where('servicetime',$servicetime)->first();
+        $midweeks=Midweek::where('servicedate','>=',$firstofmonth)->where('servicedate','<',date('Y-m-d',strtotime($firstofmonth . ' + 1 month')))->get();
         if (count($midweeks)){
             foreach ($midweeks as $mw){
-                $weeks[]=$mw->servicedate;
+                if ($service){
+                    $plan=Plan::where('servicedate',$mw->servicedate)->where('service_id',$service->id)->get();
+                    if (count($plan)){
+                        $weeks[]=$mw->servicedate;
+                    }
+                }
             }
         }
         asort($weeks);

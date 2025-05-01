@@ -452,13 +452,15 @@ class HomeController extends Controller
         $roster=Individual::with('rosteritems.rostergroup.group')->where('id',$this->member['id'])->first();
         $data['roster']=array();
         foreach ($roster->rosteritems as $ri){
-            $ss=Roster::find($ri->rostergroup->roster_id)->sundayservice;
-            if ($ri->rosterdate>$today){
-                $gn=$ri->rostergroup->group->groupname;
-                if ($ss){
-                    $gn.= " (" . $ss . ")";
-                } 
-                $data['roster'][$ri->rosterdate][]=$gn;
+            if ($ri->rostergroup){
+                $ss=Roster::find($ri->rostergroup->roster_id)->sundayservice;
+                if ($ri->rosterdate>$today){
+                    $gn=$ri->rostergroup->group->groupname;
+                    if ($ss){
+                        $gn.= " (" . $ss . ")";
+                    } 
+                    $data['roster'][$ri->rosterdate][]=$gn;
+                }
             }
         }
         ksort($data['roster']);

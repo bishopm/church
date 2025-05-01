@@ -58,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 MeasuresChart::class,
                 Birthdays::class,
                 PastoralContact::class,
-                //UpcomingServices::class,
+                UpcomingServices::class,
                 TasksToDo::class
             ])
             ->sidebarCollapsibleOnDesktop()

@@ -21,7 +21,7 @@ class Diary extends Widget
         }
         $this->widgetdata['services']=DB::connection('methodist')->table('services')->where('society_id',setting('services.society_id'))->whereIn('servicetime',$stimes)->pluck('servicetime','id')->toArray();
         $today = date('Y-m-d');
-        $nextweek = date('Y-m-d',strtotime('+1 week'));
+        $nextweek = date('Y-m-d',strtotime('+10 days'));
         $this->widgetdata['plans']=Plan::with('person')->whereIn('service_id',array_keys($this->widgetdata['services']))->where('servicedate','>=',$today)->where('servicedate','<=',$nextweek)->get();
         $events=Event::get(new Carbon($today),new Carbon(date('Y-m-d',strtotime('+1 month'))));
         foreach ($events as $event){

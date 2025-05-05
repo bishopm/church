@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Filament\Clusters\People\Resources\RosterResource\RelationManagers;
 
+use Bishopm\Church\Models\Video;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -22,29 +23,27 @@ class RostergroupsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('group_id')
-                ->relationship('group','groupname')
-                ->required(),
-                Forms\Components\TextInput::make('maxpeople')
-                ->required()
-                ->numeric(),
-                Forms\Components\TextInput::make('video')
-                ->maxLength(255)
-                ->suffixAction(MediaAction::make('showVideo')
-                    ->icon('heroicon-m-video-camera')
-                    ->media(fn (Get $get) => $get('video'))
-                ),
+                    ->relationship('group','groupname')
+                    ->required(),
+                Forms\Components\TextInput::make('maxpeople')->label('Maximum number of people')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\Select::make('videos')
+                    ->multiple()
+                    ->formatStateUsing(function ($state){
+                        if ($state){
+                            return json_decode($state);
+                        }
+                    })
+                    ->options(function (){
+                        return Video::orderBy('title')->get()->pluck('title','id');
+                    }),
                 Forms\Components\Select::make('extrainfo')
-                ->label('Extra info with SMS?')
-                ->options([
-                    'reading' => 'Reading'
-                ])
-                ->placeholder(''),
-                Forms\Components\ToggleButtons::make('editable')
-                ->label('Editable?')
-                ->boolean()
-                ->inline(false)
-                ->default(false)
-                ->grouped()
+                    ->label('Extra info with SMS?')
+                    ->options([
+                        'reading' => 'Reading'
+                    ])
+                ->placeholder('')
             ]);
     }
 
@@ -54,6 +53,11 @@ class RostergroupsRelationManager extends RelationManager
             ->recordTitleAttribute('group.groupname')
             ->columns([
                 Tables\Columns\TextColumn::make('group.groupname')->sortable(),
+                Tables\Columns\TextColumn::make('videos')
+                    ->formatStateUsing(function ($state){
+                        return count(json_decode($state));
+                    })
+
             ])
             ->defaultSort('group.groupname','ASC')
             ->filters([

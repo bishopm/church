@@ -41,8 +41,9 @@ class ChurchMail extends Mailable
             markdown: 'church::mail.templates.email',
             with: [
                 'firstname' => $this->data['firstname'],
-                'subject' => $this->data['subject'],
-                'body' => $this->data['body']
+                'subject' => $this->data['subject'] ?? 'Message from ' . setting('general.church_name'),
+                'body' => $this->data['body'],
+                'sender' => $this->data['sender'] ?? ''
             ],
         );
     }

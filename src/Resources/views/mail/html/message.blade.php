@@ -2,6 +2,7 @@
 {{-- Header --}}
 <x-slot:header>
 <x-mail::header :url="config('app.url')">
+![alt](env('APP_URL')}}/church/images/logo.png)
 {{ config('app.name') }}
 </x-mail::header>
 </x-slot:header>

@@ -109,7 +109,7 @@
             </a>
             <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">             
               <a class="dropdown-item" href="{{route('app.blog')}}">Blog</a>
-              <a class="dropdown-item" href="http://{{env('APP_URL')}}">WMC website</a>
+              <a class="dropdown-item" href="{{env('APP_URL')}}">WMC website</a>
             </div>
           </li>
           <li class="nav-item dropdown">

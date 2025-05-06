@@ -2,7 +2,7 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => $url])
-<p style="text-align: center;"><img src="{{setting('website.logo_url')}}" class="logo" alt="Logo"></p>
+<p style="text-align: center;"><img src="{{setting('website.logo_url')}}" class="logo" alt="{{ setting('general.church_abbreviation') }}"></p>
 <p style="text-align: center;">{{setting('general.church_name')}}</p>
 @endcomponent
 @endslot
@@ -15,7 +15,8 @@ Dear {{$firstname}}
 {{$body}}
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ $sender }}<br>
+{{ setting('general.church_abbreviation') }}
 
 {{-- Footer --}}
 @slot('footer')

@@ -93,7 +93,12 @@ class IndividualResource extends Resource
                                 ->form([
                                     Forms\Components\TextInput::make('subject')->label('Subject')->required(),
                                     FileUpload::make('attachment')->preserveFilenames()->directory('attachments'),
-                                    MarkdownEditor::make('body')
+                                    MarkdownEditor::make('body'),
+                                    Forms\Components\Select::make('sender')
+                                        ->options(function () {
+                                            $name=(auth()->user()->name);
+                                            return [$name=>$name];
+                                        })
                                 ])
                                 ->action(function (array $data, Individual $record): void {
                                     self::sendEmail($data,$record);

@@ -140,6 +140,7 @@
                 @if (isset($member['pastor_id']))
                   <a class="dropdown-item" href="{{route('app.pastoral')}}">Pastoral care</a>
                 @endif
+                <a class="dropdown-item" href="{{route('app.settings')}}">Settings</a>
               </div>
             </li>
           @else

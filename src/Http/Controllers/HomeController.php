@@ -490,6 +490,11 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.session',$data);
     }
 
+    public function settings() {
+        $data['settings']=$this->member['app'];
+        return view('church::app.settings',$data);
+    }
+
     public function song($id) {
         $song=Song::find($id);
         $song->lyrics=preg_replace('/\{[a-zA-Z0-9_]+?\}/','',$song->lyrics);

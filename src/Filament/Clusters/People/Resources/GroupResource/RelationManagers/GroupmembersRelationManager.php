@@ -68,7 +68,7 @@ class GroupmembersRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),                    
-                Tables\Actions\Action::make('view person')->url(fn ($record): string => route('filament.admin.people.resources.individuals.edit', $record))->icon('heroicon-m-eye'),
+                Tables\Actions\Action::make('view person')->url(fn ($record): string => route('filament.admin.people.resources.individuals.edit', $record->individual_id))->icon('heroicon-m-eye'),
                 Tables\Actions\DeleteAction::make()->label('Remove'),
             ])
             ->bulkActions([

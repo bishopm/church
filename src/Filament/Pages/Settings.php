@@ -178,6 +178,7 @@ class Settings extends BaseSettings
                             TextInput::make('website.instagram_account'),
                             TextInput::make('website.twitter_feed'),
                             TextInput::make('website.text_logo'),
+                            TextInput::make('website.logo_url'),
                             TextInput::make('website.mapbox_token'),
                             Select::make('website.theme')
                                 ->options([

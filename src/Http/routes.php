@@ -43,6 +43,7 @@ Route::domain('app.' . env('APP_URL'))->group(function() {
         Route::get('/sermons', 'sermons')->name('app.sermons');
         Route::get('/sermons/{year}/{slug}', 'series')->name('app.series');
         Route::get('/sermon/{year}/{slug}/{id}', 'sermon')->name('app.sermon');
+        Route::get('/settings', 'settings')->name('app.settings');
         Route::get('/songs', 'songs')->name('app.songs');
         Route::get('/songs/{id}', 'song')->name('app.song');
         Route::get('/subject/{slug}', 'subject')->name('app.subject');

@@ -146,6 +146,7 @@ class ChurchServiceProvider extends ServiceProvider
                     $member['pastor_id']=$pastor->id;
                 }
                 $member['directory']=false;
+                $member['app']=json_decode($indiv->app);
                 if (isset($indiv->user->roles)){
                     foreach ($indiv->user->roles as $role){
                         if ($role->name=="Super Admin"){

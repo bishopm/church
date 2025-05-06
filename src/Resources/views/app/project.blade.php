@@ -4,6 +4,6 @@
         <div>
             <img style="float:left; height:200px; padding-right:15px;" src="{{$project->image}}">
         </div>
-        {{$project->description}}<br>
+        {!!$project->description!!}<br>
     </div>
 </x-church::layout>                

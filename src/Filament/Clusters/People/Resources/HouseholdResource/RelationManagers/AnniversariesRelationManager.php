@@ -23,6 +23,16 @@ class AnniversariesRelationManager extends RelationManager
                 Forms\Components\TextInput::make('details')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\DatePicker::make('anniversarydate')->label('Date')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->format('Y-m-d'),
+                Forms\Components\Select::make('anniversarytype')
+                    ->options([
+                        'Baptism' => 'Baptism',
+                        'Death' => 'Death',
+                        'Wedding' => 'Wedding'
+                    ])
             ]);
     }
 
@@ -32,7 +42,8 @@ class AnniversariesRelationManager extends RelationManager
             ->recordTitleAttribute('details')
             ->columns([
                 Tables\Columns\TextColumn::make('details'),
-                Tables\Columns\TextColumn::make('anniversarydate')->label('Date')
+                Tables\Columns\TextColumn::make('anniversarydate')->label('Date'),
+                Tables\Columns\TextColumn::make('anniversarytype')->label('Anniversary type')
             ])
             ->filters([
                 //

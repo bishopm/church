@@ -6,7 +6,7 @@
     "display": "standalone",
     "theme_color": "#159CA0",
     "background_color": "#ffffff",
-    "orientation": "portrait",
+    "orientation": "portrait-primary",
     "status_bar": "black",
     "splash": {
       "640x1136": "/church/images/icons/splash-640x1136.png",

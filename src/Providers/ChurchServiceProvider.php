@@ -4,6 +4,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Bishopm\Church\Church;
 use Bishopm\Church\Http\Middleware\AdminRoute;
+use Bishopm\Church\Livewire\Appsettings;
 use Bishopm\Church\Livewire\BarcodeScanner;
 use Bishopm\Church\Livewire\BookReview;
 use Bishopm\Church\Livewire\Calendar;
@@ -86,6 +87,7 @@ class ChurchServiceProvider extends ServiceProvider
         Config::set('filament-spatie-roles-permissions.generator.user_model', \Bishopm\Church\Models\User::class);
         Config::set('filament-spatie-roles-permissions.generator.policies_namespace','Bishopm\Church\Filament\Policies');
         Config::set('filesystems.disks.google.folder','');
+        Livewire::component('appsettings', Appsettings::class);
         Livewire::component('barcodescanner', BarcodeScanner::class);
         Livewire::component('bookreview', BookReview::class);
         Livewire::component('calendar', Calendar::class);
@@ -146,7 +148,7 @@ class ChurchServiceProvider extends ServiceProvider
                     $member['pastor_id']=$pastor->id;
                 }
                 $member['directory']=false;
-                $member['app']=json_decode($indiv->app);
+                $member['app']=$indiv->app;
                 if (isset($indiv->user->roles)){
                     foreach ($indiv->user->roles as $role){
                         if ($role->name=="Super Admin"){

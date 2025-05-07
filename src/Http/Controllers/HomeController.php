@@ -236,18 +236,23 @@ class HomeController extends Controller
 
     public function devotionals(){
         $today=date('Y-m-d');
-        $ffdl=Cache::where('category','FFDL')->where(DB::raw('SUBSTRING(created_at,1,10)'),$today)->first();
-        if (!$ffdl){
-            $f = FeedReader::read('https://ffdl.co.za/feed/');
-            $ffdl=Cache::create([
-                'category'=>'FFDL',
-                'title'=>$f->get_items()[0]->get_title(),
-                'body'=>$f->get_items()[0]->get_content()
-            ]);
+        $data['settings']=$this->member['app'];
+        if ($data['settings']['Faith for daily living']){
+            $ffdl=Cache::where('category','FFDL')->where(DB::raw('SUBSTRING(created_at,1,10)'),$today)->first();
+            if (!$ffdl){
+                $f = FeedReader::read('https://ffdl.co.za/feed/');
+                $ffdl=Cache::create([
+                    'category'=>'FFDL',
+                    'title'=>$f->get_items()[0]->get_title(),
+                    'body'=>$f->get_items()[0]->get_content()
+                ]);
+            }
+            $data['ffdl']=$ffdl->body;
+            $data['ffdl_title']=$ffdl->title;
         }
-        $data['ffdl']=$ffdl->body;
-        $data['ffdl_title']=$ffdl->title;
-        $data['quiets']=Document::where('category','quiet-moments')->orderBy('created_at','DESC')->paginate(20);
+        if ($data['settings']['Quiet moments']){
+            $data['quiets']=Document::where('category','quiet-moments')->orderBy('created_at','DESC')->paginate(20);
+        }
         return view('church::app.devotionals',$data);
     }
 
@@ -491,7 +496,12 @@ class HomeController extends Controller
     }
 
     public function settings() {
-        $data['settings']=$this->member['app'];
+        $data['id']=$this->member['id'];
+        if ($this->member['app']){
+            $data['settings']=$this->member['app'];
+        } else {
+            $data['settings']=[];
+        }
         return view('church::app.settings',$data);
     }
 

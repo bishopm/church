@@ -15,6 +15,7 @@ class Individual extends Model
     protected $dates = ['deleted_at'];
     public $table = 'individuals';
     protected $guarded = ['id'];
+    protected $casts = ['app'=>'array'];
 
     public function attendances(): HasMany
     {

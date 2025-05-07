@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Console\Commands;
 
-use Bishopm\Church\Mail\ChurchHtmlMail;
+use Bishopm\Church\Mail\ChurchMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Recurringtask;
 use Bishopm\Church\Models\Task;
@@ -63,20 +63,20 @@ class RecurringTasks extends Command
                 $data[$task->individual_id]['tasks'][]=['description'=>$task->description,'duedate'=>$task->duedate];
             }
             foreach ($data as $indiv){
-                $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br>";
+                $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br><ul>";
                 foreach ($indiv['tasks'] as $task){
-                    $msg.="<br>" . $task['description'];
+                    $msg.="<li>" . $task['description'];
                     if ($task['duedate']){
-                        $msg.=" (Due: " . $task['duedate'] . ")";
+                        $msg.=" (Due: " . $task['duedate'] . ")</li>";
                     }
                 }
+                $msg.="</ul><br>";
                 $data=array();
                 $data['firstname']=$indiv['indiv']->firstname;
                 $data['subject']=setting('general.church_abbreviation') . " weekly reminder";
-                $data['sender']=setting('email.church_email');
                 $data['body']=$msg;
                 $data['email']=$indiv['indiv']->email;
-                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+                Mail::to($data['email'])->queue(new ChurchMail($data));
             }
         }
     }

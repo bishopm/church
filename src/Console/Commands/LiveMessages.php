@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Console\Commands;
 
-use Bishopm\Church\Mail\ChurchHtmlMail;
+use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Message;
@@ -52,10 +52,9 @@ class LiveMessages extends Command
                 $data['firstname']=$recip->firstname;
                 $data['subject']="Online service transcript: " . $churchname;
                 $data['url']="https://westvillemethodist.co.za";
-                $data['sender']=$churchemail;
                 $data['body']=$body . "</table>";
                 $data['email']=$recip->email;
-                Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+                Mail::to($data['email'])->queue(new ChurchMail($data));
                 Log::info('Cleaning up live service messages as at: ' . date('Y-m-d H:i'));
                 Message::truncate();
             }

@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Console\Commands;
 
-use Bishopm\Church\Mail\ChurchHtmlMail;
+use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Group;
 use Bishopm\Church\Models\Individual;
 use Illuminate\Console\Command;
@@ -42,11 +42,11 @@ class CheckinEmail extends Command
                 $data['never'][]=$missing;
             }
         }
-        $message="The following people have never used a nametag at a service:<br>";
+        $message="The following people have never used a nametag at a service:\n\n";
         foreach ($data['never'] as $never){
             $message.=$never->firstname . " " . $never->surname . ". Cellphone: " . $never->cellphone . "<br>";
         }
-        $message.="<br>The following people have not used a nametag at a service since " . $sixweeks . ":<br>";
+        $message.="\n\n" . "The following people have not used a nametag at a service since " . $sixweeks . ":\n\n";
         foreach ($data['attended'] as $attended){
             $message.=$attended->firstname . " " . $attended->surname . ". Cellphone: " . $attended->cellphone . " (Last seen: " . $attended->lastseen . ")<br>";
         }
@@ -60,10 +60,9 @@ class CheckinEmail extends Command
             $data['firstname']=$recip->firstname;
             $data['subject']="Follow up email: " . $churchname;
             $data['url']="https://westvillemethodist.co.za";
-            $data['sender']=$churchemail;
             $data['body']=$message;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+            Mail::to($data['email'])->queue(new ChurchMail($data));
         }
         Log::info('Check in email sent on ' . date('Y-m-d H:i'));
     }

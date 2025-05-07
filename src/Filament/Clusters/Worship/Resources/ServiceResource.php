@@ -142,7 +142,7 @@ class ServiceResource extends Resource
                                         $setitem=Setitem::with('setitemable')->where('id',$state['id'])->first();
                                         return $setitem->setitemable->title;
                                     } else {
-                                        dd($state);
+                                        //dd($state);
                                     }
                                 }
                             })

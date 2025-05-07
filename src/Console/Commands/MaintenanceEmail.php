@@ -2,7 +2,7 @@
 
 namespace Bishopm\Church\Console\Commands;
 
-use Bishopm\Church\Mail\ChurchHtmlMail;
+use Bishopm\Church\Mail\ChurchMail;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Maintenancetask;
 use Bishopm\Church\Models\Group;
@@ -67,11 +67,10 @@ class MaintenanceEmail extends Command
             $data=array();
             $data['firstname']=$recip->firstname;
             $data['subject']="Maintenance: " . $churchname . " (as at " . date('d M Y') . ")";
-            $data['sender']=$churchemail;
             $data['url']="https://westvillemethodist.co.za";
             $data['body']=$message;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->queue(new ChurchHtmlMail($data));
+            Mail::to($data['email'])->queue(new ChurchMail($data));
         }
         Log::info('Maintenance email sent on ' . date('Y-m-d H:i'));
     }

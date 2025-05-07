@@ -1042,8 +1042,7 @@ class ReportsController extends Controller
             }
         }
         if ($output){
-            $this->pdf->Output('F', storage_path('app/attachments/WMCrosters.pdf'));
-            return;
+            return $this->pdf->Output('S');
         } else {
             $this->pdf->Output();
         }

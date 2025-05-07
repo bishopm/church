@@ -12,7 +12,7 @@
 
 Dear {{$firstname}}
 
-{{$body}}
+{!!$body!!}
 
 Thanks,<br>
 {{ $sender }}<br>

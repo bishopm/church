@@ -24,9 +24,10 @@ use Filament\Resources\Pages\Page;
 use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
 use Bishopm\Church\Http\Controllers\ReportsController;
-use Bishopm\Church\Mail\ReportMail;
+use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Midweek;
 use Bishopm\Church\Models\Plan;
+use Bishopm\Church\Models\Video;
 use Filament\Actions\ActionGroup;
 use Illuminate\Support\Facades\Mail;
 
@@ -182,7 +183,7 @@ class ManageRoster extends Page implements HasForms
                     if (!isset($indivs[$member->id])){
                         $indivs[$member->id]=array();
                     }
-                    $indivs[$member->id][]=['group_id'=>$group->group->id,'groupname'=>$group->group->groupname,'video'=>$group->video];
+                    $indivs[$member->id][]=['group_id'=>$group->group->id,'groupname'=>$group->group->groupname,'videos'=>$group->videos];
                 }
             }
         }
@@ -200,20 +201,30 @@ class ManageRoster extends Page implements HasForms
                         $message.=$tm->firstname . " " . $tm->surname . " (" . $tm->cellphone . ")\n\n";
                     }
                 }
-                if ($group['video']) {
-                    $message.="\nIf you are new to the team, or have not seen it yet, have a look at the **<a href=\"" . $group['video'] . "\">training video</a>** we have prepared for this team. We hope it is helpful - please share any feedback you may have to help us improve!\n";
+                if ($group['videos']) {
+                    $videos=Video::whereIn('id',json_decode($group['videos']))->get();
+                    if (count($videos)>1){
+                        $add="s";
+                    } else {
+                        $add="";
+                    }
+                    $message.="\nIf you are new to the team, or have not seen it yet, have a look at the following training video" . $add . " we have prepared for this team. We hope this is helpful - please share any feedback you may have to help us improve!\n\n";
+                    foreach ($videos as $video) {
+                        $message.="* [" . $video->title . "](" . $video->url . ")\n";
+                    }
                 }
             }
             $message.="\nMay God bless you as you serve him here. Thank you!";
             $data=array();
             $data['body'] = $message;
-            $data['subject'] = $rost->roster . ": " . $rostertitle . " Roster";
+            $data['subject'] = $rostertitle . " Roster: " . $rost->roster;
             $data['firstname'] = $person->firstname;
             $data['url'] = "https://westvillemethodist.co.za";
             $data['firstname'] = $person->firstname;
-            $data['attachment'] = storage_path('public/attachments/WMCrosters.pdf');
+            $data['attachdata']=base64_encode($makepdf);
+            $data['attachname']=str_replace(" ","_",$data['subject']) . ".pdf";
             $emailcount++;
-            Mail::to($person->email)->queue(new ReportMail($data));
+            Mail::to($person->email)->queue(new ChurchMail($data));
             Notification::make('Email sent')->title('Emails sent: ' . $emailcount)->send();
         }
         return "Emails sent: " . $emailcount;

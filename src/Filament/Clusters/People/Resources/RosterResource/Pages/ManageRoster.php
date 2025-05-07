@@ -126,18 +126,10 @@ class ManageRoster extends Page implements HasForms
             foreach ($ri->individuals as $indiv){
                 if ($indiv->cellphone){
                     $msg = $indiv->firstname . ", " . $record->message . " (" . $ri->rostergroup->group->groupname . ")";
-                    if ($ri->rostergroup->extrainfo==="yes"){
-                        if ($ri->rostergroup->extrainfo=="reading"){
-                            $servicetimes=setting('general.services');
-                            foreach ($servicetimes as $service){
-                                if (strpos($ri->rostergroup->group->groupname,$service)){
-                                    $stime = $service;
-                                }
-                            }
-                            $reading = Service::where('servicedate',$rosterdate)->where('servicetime',$stime)->first();
-                            if ((isset($reading->reading)) and (str_contains($ri->rostergroup->group->groupname, 'Readers'))){
-                                $msg = $msg . " Reading: " . $reading->reading;
-                            }
+                    if ($ri->rostergroup->extrainfo=="reading"){
+                        $reading = Service::where('servicedate',$rosterdate)->where('servicetime',$record->sundayservice)->first();
+                        if (isset($reading->reading)){
+                            $msg = $msg . " Reading: " . $reading->reading;
                         }
                     }
                     $this->data['ridata'][$ri->rostergroup->group->groupname][$indiv->cellphone]=$msg;
@@ -159,7 +151,7 @@ class ManageRoster extends Page implements HasForms
         if ($this->credits >= count($this->data['allmessages'])) {
             SendSMS::dispatch($this->data['allmessages']);
             if (count($this->data['allmessages']) > 1){
-                Notification::make('SMS sent')->title('SMSes sent to ' . $this->count . ' individuals')->send();
+                Notification::make('SMS sent')->title('SMSes sent to ' . count($this->data['allmessages']) . ' individuals')->send();
             } elseif (count($this->data['allmessages'])==1) {
                 Notification::make('SMS sent')->title('SMS sent to 1 individual')->send();
             }

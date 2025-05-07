@@ -74,6 +74,9 @@
       <h2 class="text-white ms-auto pt-2"><a href="{{route('app.home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('app.contact')}}">Contact us</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Connecting

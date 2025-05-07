@@ -17,7 +17,8 @@ class Appsettings extends Component
             'Bible in a year' => false,
             'Faith for daily living' => false,
             'Methodist prayer' => false,
-            'Quiet moments' => false
+            'Quiet moments' => false,
+            'Login' => date('Y-m-d')
         ];
         foreach ($allsettings as $thiskey=>$thissetting){
             if (!in_array($thiskey,$this->settings)){
@@ -25,15 +26,20 @@ class Appsettings extends Component
             }
         }
         ksort($this->settings);
+        $this->savetoDb();
     }
 
-    public function updateSettings(){
+    private function savetoDb(){
         $indiv=Individual::find($this->id);
         $indiv->app=$this->settings;
         $indiv->save();
         $member=Config::get('member');
         $member['app']=$indiv->app;
         Config::set('member',$member);
+    }
+
+    public function updateSettings(){
+        $this->savetoDb();
     }
 
     public function render()

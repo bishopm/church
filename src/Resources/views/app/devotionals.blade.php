@@ -11,6 +11,11 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-meth-tab" data-bs-toggle="pill" data-bs-target="#pills-meth" type="button" role="tab" aria-controls="pills-meth" aria-selected="false">
+                <i class="bi bi-fire"> </i>Methodist prayer
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-biay-tab" data-bs-toggle="pill" data-bs-target="#pills-biay" type="button" role="tab" aria-controls="pills-biay" aria-selected="false">
                 <i class="bi bi-book"> </i>Bible in a Year
             </button>
@@ -28,6 +33,11 @@
             <div class="card p-3">
                 <h4>{!!$ffdl_title!!}</h4>
                 {!!$ffdl!!}
+            </div>
+        </div>
+        <div class="tab-pane fade show" id="pills-meth" role="tabpanel" aria-labelledby="pills-meth-tab">
+            <div class="card p-3">
+                <iframe src="https://methodistprayer.org/morning" frameborder="0" height="700px" allowfullscreen></iframe>
             </div>
         </div>
         <div class="tab-pane fade show" id="pills-biay" role="tabpanel" aria-labelledby="pills-biay-tab">

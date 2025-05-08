@@ -159,6 +159,13 @@ class ChurchServiceProvider extends ServiceProvider
                             'Quiet moments' => true
                         ];
                 }
+                if (!isset($member['app']['Home page content'])){
+                    $member['app']['Home page content']=
+                        [
+                            'Blog posts' => true,
+                            'Services' => true
+                        ];
+                }
                 $indiv->app=$member['app'];
                 $indiv->save();
                 if (isset($indiv->user->roles)){

@@ -60,16 +60,21 @@ class HomeController extends Controller
      */
     
     public function app(){
+        $settings=$this->member['app']['Home page content'];
         $today=date('Y-m-d');
         $data['content']=array();
-        $monthago=date('Y-m-d',strtotime('-31 days'));      
-        $sermons=Service::where('servicedate','>',$monthago)->where('servicedate','<',$today)->whereNotNull('audio')->orderBy('servicedate','DESC')->get();
-        foreach ($sermons as $sermon){
-            $data['content'][strtotime($sermon->servicedate)]=$sermon;
+        $monthago=date('Y-m-d',strtotime('-31 days'));
+        if ($settings['Services']==true){
+            $sermons=Service::where('servicedate','>',$monthago)->where('servicedate','<',$today)->whereNotNull('audio')->orderBy('servicedate','DESC')->get();
+            foreach ($sermons as $sermon){
+                $data['content'][strtotime($sermon->servicedate)]=$sermon;
+            }
         }
-        $blogs=Post::where('published_at','>',$monthago)->orderBy('published_at','DESC')->get();
-        foreach ($blogs as $blog){
-            $data['content'][strtotime($blog->published_at)]=$blog;
+        if ($settings['Blog posts']==true){
+            $blogs=Post::where('published_at','>',$monthago)->orderBy('published_at','DESC')->get();
+            foreach ($blogs as $blog){
+                $data['content'][strtotime($blog->published_at)]=$blog;
+            }
         }
         $soon=date('Y-m-d',strtotime('+10 days'));
         $courses=Course::withWhereHas('coursesessions', function ($q) use($soon,$today) { $q->where('sessiondate','>',$soon)->where('sessiondate','<',$today);})->orderBy('course','ASC')->get();

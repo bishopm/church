@@ -149,6 +149,18 @@ class ChurchServiceProvider extends ServiceProvider
                 }
                 $member['directory']=false;
                 $member['app']=$indiv->app;
+                $member['app']['Admin']['Login']=date('Y-m-d');
+                if (!isset($member['app']['Devotional'])){
+                    $member['app']['Devotional']=
+                        [
+                            'Bible in a year' => true,
+                            'Faith for daily living' => true,
+                            'Methodist prayer' => true,
+                            'Quiet moments' => true
+                        ];
+                }
+                $indiv->app=$member['app'];
+                $indiv->save();
                 if (isset($indiv->user->roles)){
                     foreach ($indiv->user->roles as $role){
                         if ($role->name=="Super Admin"){

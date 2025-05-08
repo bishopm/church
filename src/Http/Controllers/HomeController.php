@@ -236,7 +236,15 @@ class HomeController extends Controller
 
     public function devotionals(){
         $today=date('Y-m-d');
-        $data['settings']=$this->member['app'];
+        $data['settings']=$this->member['app']['Devotional'];
+        ksort($data['settings']);
+        $data['active']="";
+        foreach ($data['settings'] as $cat=>$setting){
+            if ($data['settings'][$cat]==true){
+                $data['active']=$cat;
+                break;
+            }
+        }
         if ($data['settings']['Faith for daily living']){
             $ffdl=Cache::where('category','FFDL')->where(DB::raw('SUBSTRING(created_at,1,10)'),$today)->first();
             if (!$ffdl){

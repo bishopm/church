@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('tenant');
             $table->string('slug');
             $table->string('contact')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->text('description')->nullable();
             $table->tinyinteger('active')->nullable();
             $table->tinyinteger('publish')->nullable();

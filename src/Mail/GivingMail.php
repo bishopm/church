@@ -27,7 +27,10 @@ class GivingMail extends Mailable
     {
         return new Envelope(
             subject: $this->data['title'],
-            from: new Address(setting('email.mail_from_address'),setting('email.mail_from_name'))
+            from: new Address(setting('giving.feedback_email'), setting('general.church_email')),
+            replyTo: [
+                new Address(setting('giving.feedback_email'), setting('general.church_email')),
+            ]
         );
     }
 

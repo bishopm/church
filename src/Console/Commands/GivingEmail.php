@@ -94,8 +94,7 @@ class GivingEmail extends Command
             }
             $msg.="\n\nThank you!";
             $nodat=array();
-            $nodat['subject']="Planned giving emails sent";
-            $nodat['sender']=setting('email.church_email');
+            $nodat['subject']="Planned giving emails sent";;
             $nodat['firstname']="Planned Giving Administrator";
             $nodat['church']=setting('general.church_name');
             $nodat['email']=$administrator;
@@ -105,11 +104,7 @@ class GivingEmail extends Command
                 $data[$giver->giving]['email'][]=$giver->email;
                 if (count($data[$giver->giving]['email'])==1) {
                     $data[$giver->giving]['period']=$startofperiod . " to " . $endofperiod;
-                    if ($nodat['sender']) {
-                        $data[$giver->giving]['sender']=$nodat['sender'];
-                    } else {
-                        $data[$giver->giving]['sender']="admin@church.net.za";
-                    }
+                    $data[$giver->giving]['sender']=setting('email.church_email');
                     $data[$giver->giving]['pg']=$giver->giving;
                     $data[$giver->giving]['pgyr']=$repyr;
                     $data[$giver->giving]['church']=$nodat['church'];

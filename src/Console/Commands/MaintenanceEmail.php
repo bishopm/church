@@ -61,7 +61,6 @@ class MaintenanceEmail extends Command
         // Send to maintenance group
         $setting=intval(setting('automation.maintenance_group'));
         $churchname=setting('general.church_name');
-        $churchemail=setting('email.church_email');
         $group=Group::with('individuals')->find($setting);
         foreach ($group->individuals as $recip) {
             $data=array();

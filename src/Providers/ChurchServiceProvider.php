@@ -58,8 +58,10 @@ class ChurchServiceProvider extends ServiceProvider
             Config::set('mail.mailers.' . setting('email.mailer') . '.username',setting('email.mail_username'));
             Config::set('mail.mailers.' . setting('email.mailer') . '.password',setting('email.mail_password'));
             Config::set('mail.mailers.' . setting('email.mailer') . '.encryption',setting('email.mail_encryption'));
-            Config::set('mail.mailers.' . setting('email.mailer') . '.from_address',setting('email.mail_from_address'));
-            Config::set('mail.mailers.' . setting('email.mailer') . '.from_name',setting('email.mail_from_name'));    
+            Config::set('from.address',setting('email.mail_from_address'));
+            Config::set('from.name',setting('email.mail_from_name'));    
+            Config::set('reply_to.address',setting('email.church_email'));
+            Config::set('reply_to.name',setting('general.church_name'));
             Config::set('filesystems.disks.google.driver','google');
             Config::set('filesystems.disks.google.clientId',setting('services.drive_clientid'));
             Config::set('filesystems.disks.google.clientSecret',setting('services.drive_clientsecret'));

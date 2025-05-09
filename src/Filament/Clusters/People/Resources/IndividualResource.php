@@ -95,9 +95,13 @@ class IndividualResource extends Resource
                                     FileUpload::make('attachment')->preserveFilenames()->directory('attachments'),
                                     MarkdownEditor::make('body'),
                                     Forms\Components\Select::make('sender')
+                                        ->selectablePlaceholder(false)
                                         ->options(function () {
-                                            $name=(auth()->user()->name);
-                                            return [$name=>$name];
+                                            $user=(auth()->user());
+                                            return [
+                                                0 => setting('general.church_name'),
+                                                $user->id => $user->name
+                                            ];
                                         })
                                 ])
                                 ->action(function (array $data, Individual $record): void {
@@ -115,7 +119,7 @@ class IndividualResource extends Resource
                                         ->required(),
                                 ])
                                 ->action(function (array $data, Individual $record): void {
-                                    dd($record);
+                                    //dd($record);
                                 })),
                         Forms\Components\TextInput::make('officephone')
                             ->label('Office phone')

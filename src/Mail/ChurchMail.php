@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Mail;
 
+use Bishopm\Church\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -26,9 +27,20 @@ class ChurchMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        if ((isset($this->data['sender'])) and ($this->data['sender']<>0)){
+            $user=User::find($this->data['sender']);
+            $sender=$user->email;
+            $sendername=$user->name;
+        } else {
+            $sender=setting('email.church_email');
+            $sendername=setting('general.church_name');
+        }
         return new Envelope(
             subject: $this->data['subject'],
-            from: new Address(setting('email.mail_from_address'),setting('email.mail_from_name'))
+            replyTo: [
+                new Address($sender, $sendername),
+            ],
+            from: new Address($sender, $sendername)
         );
     }
 
@@ -44,7 +56,7 @@ class ChurchMail extends Mailable
                 'url' => setting('general.church_website'),
                 'subject' => $this->data['subject'] ?? 'Message from ' . setting('general.church_name'),
                 'body' => $this->data['body'],
-                'sender' => $this->data['sender'] ?? ''
+                'sender' => $this->data['sendername'] ?? ''
             ],
         );
     }

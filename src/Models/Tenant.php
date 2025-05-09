@@ -23,4 +23,9 @@ class Tenant extends Model
     {
         return $this->morphMany(Diaryentry::class,'diarisable');
     }
+
+    public function getContactAttribute()
+    {
+        return $this->contact_firstname . ' ' . $this->contact_surname;
+    }
 }

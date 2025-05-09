@@ -36,10 +36,12 @@ class TenantResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('contact')
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email(),
+                Forms\Components\TextInput::make('contact_firstname')->label('First name of contact person')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('contact_surname')->label('Surname of contact person')
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('phone'),
                 Forms\Components\FileUpload::make('image')
                     ->directory('images/tenant')
@@ -64,10 +66,10 @@ class TenantResource extends Resource
                                     ->required(),
                             ])
                     ]),
+                Forms\Components\Toggle::make('active'),
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
                 Forms\Components\TextInput::make('slug')
                     ->required(),
-                Forms\Components\Toggle::make('active'),
-                Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
             ]);
     }
 

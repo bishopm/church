@@ -13,7 +13,8 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->string('tenant');
             $table->string('slug');
-            $table->string('contact')->nullable();
+            $table->string('contact_firstname')->nullable();
+            $table->string('contact_surname')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->text('description')->nullable();

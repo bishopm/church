@@ -80,12 +80,17 @@ class TenantResource extends Resource
                 Tables\Columns\TextColumn::make('tenant')->label('Group')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('contact')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('contact'),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()
                     ->forceSearchCaseInsensitive(true)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('contact_firstname')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('contact_surname')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 
             ])
             ->filters([

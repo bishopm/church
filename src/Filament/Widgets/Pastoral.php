@@ -6,6 +6,7 @@ use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Pastoralnote;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class Pastoral extends Widget
 {
@@ -24,13 +25,19 @@ class Pastoral extends Widget
         $monthago=date('Y-m-d',strtotime('-1 month'));
         $this->pastoraldata['appusers']=[];
         $this->pastoraldata['appusers']['thismonth']=0;
+        $users=array();
+        $appcount=1;
         foreach ($app as $appuser){
             if ($appuser->logindate > $monthago){
                 $this->pastoraldata['appusers']['thismonth'];
             }
-            $this->pastoraldata['appusers']['users'][strtotime($appuser->logindate)][]=$appuser;
+            $users[strtotime($appuser->logindate)][]=$appuser;
+            $appcount++;
+            if ($appcount==10){
+                break;
+            }
         }
-        //dd($this->pastoraldata);
+        $this->pastoraldata['appusers']['users']=Arr::flatten($users);
         $todaynum=date('w');
         $thisyr=date("Y");
         $mon=strval(date('m-d', strtotime("next Monday")));

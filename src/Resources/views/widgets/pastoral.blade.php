@@ -84,14 +84,12 @@
             <x-filament::section>
                 Total users this month: {{$pastoraldata['appusers']['thismonth']}}<br>
                 Most recent users: 
-                @forelse ($pastoraldata['appusers']['users'] as $day)
-                    @foreach ($day as $appuser)
-                        @if ($loop->last) 
-                            {{$appuser->firstname}} {{$appuser->surname}}.
-                        @else
-                            {{$appuser->firstname}} {{$appuser->surname}}, 
-                        @endif
-                    @endforeach
+                @forelse ($pastoraldata['appusers']['users'] as $appuser)
+                    @if ($loop->last) 
+                        {{$appuser->firstname}} {{$appuser->surname}}.
+                    @else
+                        {{$appuser->firstname}} {{$appuser->surname}}, 
+                    @endif
                 @empty
                     <div>No users of the app yet</div>
                 @endforelse

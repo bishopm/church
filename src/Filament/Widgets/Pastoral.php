@@ -31,10 +31,8 @@ class Pastoral extends Widget
             if ($appuser->logindate > $monthago){
                 $this->pastoraldata['appusers']['thismonth']++;
             }
-            $users[strtotime($appuser->logindate)][]=$appuser;
-            $appcount++;
-            if ($appcount==11){
-                break;
+            if ($appcount<11){
+                $users[strtotime($appuser->logindate)][]=$appuser;
             }
         }
         $this->pastoraldata['appusers']['users']=Arr::flatten($users);

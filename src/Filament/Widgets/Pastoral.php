@@ -29,11 +29,11 @@ class Pastoral extends Widget
         $appcount=1;
         foreach ($app as $appuser){
             if ($appuser->logindate > $monthago){
-                $this->pastoraldata['appusers']['thismonth'];
+                $this->pastoraldata['appusers']['thismonth']++;
             }
             $users[strtotime($appuser->logindate)][]=$appuser;
             $appcount++;
-            if ($appcount==10){
+            if ($appcount==11){
                 break;
             }
         }

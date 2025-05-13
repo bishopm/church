@@ -10,6 +10,9 @@
             <x-filament::tabs.item @click="tab = 'tab3'" :alpine-active="'tab === \'tab3\''">
                 Pastoral contact
             </x-filament::tabs.item>
+            <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''">
+                App users
+            </x-filament::tabs.item>
         </x-filament::tabs>
         <div x-show="tab === 'tab1'">
             <x-filament::section>
@@ -74,6 +77,23 @@
                     @endif
                 @empty
                     <div>No pastoral notes have been added</div>
+                @endforelse
+            </x-filament::section>
+        </div>
+        <div x-show="tab === 'tab4'">
+            <x-filament::section>
+                Total users this month: {{$pastoraldata['appusers']['thismonth']}}<br>
+                Most recent users: 
+                @forelse ($pastoraldata['appusers']['users'] as $day)
+                    @foreach ($day as $appuser)
+                        @if ($loop->last) 
+                            {{$appuser->firstname}} {{$appuser->surname}}.
+                        @else
+                            {{$appuser->firstname}} {{$appuser->surname}}, 
+                        @endif
+                    @endforeach
+                @empty
+                    <div>No users of the app yet</div>
                 @endforelse
             </x-filament::section>
         </div>

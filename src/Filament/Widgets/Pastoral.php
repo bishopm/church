@@ -20,6 +20,17 @@ class Pastoral extends Widget
         $this->pastoraldata['individuals']=Individual::where('welcome_email',0)->orderBy('created_at','DESC')->take(5)->get();
         $this->pastoraldata['duplicates']=DB::table('individuals')->select('firstname','surname', DB::raw('COUNT(*) as `count`'))->groupBy('firstname', 'surname')->having('count', '>', 1)->get()->take(15);
         $this->pastoraldata['whatsapp']=setting('messages.welcome_whatsapp');
+        $app=DB::table('individuals')->whereJsonLength('app->Admin->Login','>',0)->select('app->Admin->Login AS logindate','firstname','surname')->get();
+        $monthago=date('Y-m-d',strtotime('-1 month'));
+        $this->pastoraldata['appusers']=[];
+        $this->pastoraldata['appusers']['thismonth']=0;
+        foreach ($app as $appuser){
+            if ($appuser->logindate > $monthago){
+                $this->pastoraldata['appusers']['thismonth'];
+            }
+            $this->pastoraldata['appusers']['users'][strtotime($appuser->logindate)][]=$appuser;
+        }
+        //dd($this->pastoraldata);
         $todaynum=date('w');
         $thisyr=date("Y");
         $mon=strval(date('m-d', strtotime("next Monday")));

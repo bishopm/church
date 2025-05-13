@@ -82,8 +82,8 @@
         </div>
         <div x-show="tab === 'tab4'">
             <x-filament::section>
-                Total users this month: {{$pastoraldata['appusers']['thismonth']}}<br>
-                Most recent users: 
+                <b>Total app users this month:</b> {{$pastoraldata['appusers']['thismonth']}}<br>
+                <b>Most recent users: </b>
                 @forelse ($pastoraldata['appusers']['users'] as $appuser)
                     @if ($loop->last) 
                         {{$appuser->firstname}} {{$appuser->surname}}.

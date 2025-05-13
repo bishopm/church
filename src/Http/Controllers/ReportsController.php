@@ -18,6 +18,7 @@ use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
+use Bishopm\Church\Models\Form;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Midweek;
 use Bishopm\Church\Models\Plan;
@@ -474,6 +475,28 @@ class ReportsController extends Controller
         $replace = array("'","'",'"','"',' - ',' - ',"'","'",'"','"',' - ',' ');
     
         return str_replace($search, $replace, $string);
+    }
+
+    public function form($id)
+    {
+        $form = Form::with('formitems')->where('id',$id)->first();
+        if ($form->orientation=='portrait'){
+            $this->pdf->AddPage('P');
+        } else {
+            $this->pdf->AddPage('L');
+        }
+        $this->pdf->SetTitle($form->name);
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('Arial', 'B', 12);
+        foreach ($form->formitems as $item){
+            if ($item->itemtype=="text"){
+                $props=json_decode($item->itemdata);
+                $this->pdf->text($props->x,$props->y,$props->text);
+            }
+        }
+        $filename=Str::slug($form->name, "-");
+        $this->pdf->Output('I',$filename);
+        exit;
     }
 
     private function GetExtraInfo($setitem){

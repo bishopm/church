@@ -7,12 +7,16 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\Pages;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\RelationManagers;
 use Bishopm\Church\Models\Form as FormModel;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Joaopaulolndev\FilamentPdfViewer\Forms\Components\PdfViewerField;
+use Joaopaulolndev\FilamentPdfViewer\Infolists\Components\PdfViewerEntry;
 
 class FormResource extends Resource
 {
@@ -26,15 +30,44 @@ class FormResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('orientation')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('width')
-                    ->required()
-                    ->maxLength(255),
+                Group::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\Select::make('orientation')
+                            ->selectablePlaceholder(false)
+                            ->default('portrait')
+                            ->options([
+                                'portrait'=>'Portrait',
+                                'landscape'=>'Landscape'
+                            ]),
+                        Forms\Components\Select::make('width')
+                            ->selectablePlaceholder(false)
+                            ->default('full')
+                            ->options([
+                                'full'=>'100%',
+                                'half'=>'50%',
+                                'third'=>'33%',
+                                'quarter'=>'25%'
+                            ]),
+                        Placeholder::make('listener')
+                            ->label('')
+                            ->content('')
+                            ->extraAttributes([
+                                'x-data' => '',
+                                'x-init' => "window.addEventListener('formitem-created', () => { \$wire.\$refresh() })",
+                            ])
+                    ]),
+                Group::make()
+                    ->schema([
+                        PdfViewerField::make('file')
+                            ->hiddenOn('create')
+                            ->label('')
+                            ->minHeight('30svh')
+                            ->fileUrl(fn (FormModel $record) => url('/') . '/admin/reports/form/' . $record->id)
+                            ->columnSpanFull(),
+                    ])
             ]);
     }
 

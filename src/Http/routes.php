@@ -66,6 +66,7 @@ Route::middleware(['web',ReportsRoute::class])->group(function () {
 
 // Open reports
 Route::get('/admin/reports/calendar/{yr?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@calendar','as' => 'reports.calendar']);
+Route::get('/admin/reports/form/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@form','as' => 'reports.form']);    
 Route::get('/admin/reports/meeting/a4/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@a4meeting','as' => 'reports.a4meeting']);
 Route::get('/admin/reports/meeting/a5/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@a5meeting','as' => 'reports.a5meeting']);
 Route::get('/admin/reports/meetings/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@meetings','as' => 'reports.meetings']);

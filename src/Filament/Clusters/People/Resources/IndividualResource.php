@@ -141,6 +141,7 @@ class IndividualResource extends Resource
                                 Forms\Components\TextInput::make('sortsurname')->required()->label('Family surname for sorting purposes'),
                             ]),
                         Section::make('Household details')
+                            ->hiddenOn('create')
                             ->headerActions([
                                 Action::make('Edit household record')
                                     ->url(function (Individual $record){

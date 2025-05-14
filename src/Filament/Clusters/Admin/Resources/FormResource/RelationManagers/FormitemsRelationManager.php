@@ -9,7 +9,6 @@ use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Livewire\Livewire;
 
 class FormitemsRelationManager extends RelationManager
 {
@@ -82,13 +81,17 @@ class FormitemsRelationManager extends RelationManager
                             'itemdata' => $itemdata
                         ]);
                         return $new;
-                    })->after(function () {
-                        Livewire::dispatchBrowserEvent('formitem-created');
+                    })->after(function (RelationManager $livewire) {
+                        $livewire->dispatch('form-items-updated');
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->after(function (RelationManager $livewire) {
+                        $livewire->dispatch('form-items-updated');
+                    }),
+                Tables\Actions\DeleteAction::make()->after(function (RelationManager $livewire) {
+                        $livewire->dispatch('form-items-updated');
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

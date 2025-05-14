@@ -13,10 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Joaopaulolndev\FilamentPdfViewer\Forms\Components\PdfViewerField;
-use Joaopaulolndev\FilamentPdfViewer\Infolists\Components\PdfViewerEntry;
 
 class FormResource extends Resource
 {
@@ -50,23 +47,17 @@ class FormResource extends Resource
                                 'half'=>'50%',
                                 'third'=>'33%',
                                 'quarter'=>'25%'
-                            ]),
-                        Placeholder::make('listener')
-                            ->label('')
-                            ->content('')
-                            ->extraAttributes([
-                                'x-data' => '',
-                                'x-init' => "window.addEventListener('formitem-created', () => { \$wire.\$refresh() })",
                             ])
                     ]),
                 Group::make()
                     ->schema([
-                        PdfViewerField::make('file')
+                        PdfViewerField::make('pdf_preview')
                             ->hiddenOn('create')
                             ->label('')
                             ->minHeight('30svh')
-                            ->fileUrl(fn (FormModel $record) => url('/') . '/admin/reports/form/' . $record->id)
-                            ->columnSpanFull(),
+                            ->fileUrl(fn ($livewire) => $livewire->pdfUrl)
+                            ->columnSpanFull()
+                            ->live(),
                     ])
             ]);
     }

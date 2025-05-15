@@ -4,11 +4,14 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\Relation
 
 use Bishopm\Church\Models\Formitem;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class FormitemsRelationManager extends RelationManager
 {
@@ -27,6 +30,12 @@ class FormitemsRelationManager extends RelationManager
                         'line'=>'Line',
                         'text'=>'Text',
                     ])
+                    ->afterStateHydrated(function ($record, Set $set) {
+                        $props=json_decode($record->itemdata);
+                        foreach ($props as $fld=>$prop){
+                            $set($fld,$prop);
+                        }
+                    })
                     ->default('cell')
                     ->selectablePlaceholder(false)
                     ->columnSpanFull()
@@ -86,7 +95,17 @@ class FormitemsRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->after(function (RelationManager $livewire) {
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Edit form item')
+                    ->using(function ($record,array $data, RelationManager $livewire) {
+                        $itemtype=$data['itemtype'];
+                        unset($data['itemtype']);
+                        $itemdata=json_encode($data);
+                        $record->itemdata=$itemdata;
+                        $record->itemtype=$itemtype;
+                        $record->save();
+                        return $record;
+                    })->after(function (RelationManager $livewire) {
                         $livewire->dispatch('form-items-updated');
                     }),
                 Tables\Actions\DeleteAction::make()->after(function (RelationManager $livewire) {

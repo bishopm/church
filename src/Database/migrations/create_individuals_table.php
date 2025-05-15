@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('welcome_email', 255)->nullable();
             $table->integer('user_id')->nullable();
             $table->string('uid', 255)->nullable();
+            $table->json('app', 255)->nullable();
             $table->tinyInteger('online')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

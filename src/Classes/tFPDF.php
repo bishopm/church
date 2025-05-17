@@ -467,6 +467,7 @@ function Rect($x, $y, $w, $h, $style='')
 	$this->_out(sprintf('%.2F %.2F %.2F %.2F re %s',$x*$this->k,($this->h-$y)*$this->k,$w*$this->k,-$h*$this->k,$op));
 }
 
+
 function AddFont($family, $style='', $file='', $uni=false)
 {
 	// Add a TrueType, OpenType or Type1 font

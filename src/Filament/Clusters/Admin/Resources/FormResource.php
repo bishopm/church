@@ -47,14 +47,29 @@ class FormResource extends Resource
                                 'half'=>'50%',
                                 'third'=>'33%',
                                 'quarter'=>'25%'
-                            ])
+                            ]),
+                        Forms\Components\Select::make('font')
+                            ->label('Default font')
+                            ->required()
+                            ->selectablePlaceholder(false)
+                            ->default('Arial')
+                            ->options([
+                                'Arial'=>'Arial',
+                                'Courier'=>'Courier',
+                                'Times'=>'Times New Roman'
+                            ]),
+                        Forms\Components\TextInput::make('fontsize')
+                            ->label('Default font size')
+                            ->default(12)
+                            ->numeric()
+                            ->required(),
                     ]),
                 Group::make()
                     ->schema([
                         PdfViewerField::make('pdf_preview')
                             ->hiddenOn('create')
                             ->label('')
-                            ->minHeight('30svh')
+                            ->minHeight('50svh')
                             ->fileUrl(fn ($livewire) => $livewire->pdfUrl)
                             ->columnSpanFull()
                             ->live(),

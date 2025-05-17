@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('orientation', 255);
             $table->string('width', 255);
+            $table->string('font', 255);
+            $table->integer('fontsize');
         });
     }
     

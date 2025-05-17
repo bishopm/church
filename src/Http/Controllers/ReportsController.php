@@ -489,9 +489,17 @@ class ReportsController extends Controller
         $this->pdf->SetAutoPageBreak(true, 0);
         $this->pdf->SetFont('Arial', 'B', 12);
         foreach ($form->formitems as $item){
+            $props=json_decode($item->itemdata);
             if ($item->itemtype=="text"){
-                $props=json_decode($item->itemdata);
                 $this->pdf->text($props->x,$props->y,$props->text);
+            } elseif ($item->itemtype=="cell"){
+                $this->pdf->setxy($props->x,$props->y);
+                if ($props->rounded > 0){
+                    $this->pdf->RoundedRect($props->x,$props->y,$props->width,$props->height,$props->rounded);
+                    $this->pdf->cell($props->width,$props->height,$props->text,0,0,$props->alignment,0);
+                } else {
+                    $this->pdf->cell($props->width,$props->height,$props->text,$props->border,0,$props->alignment,$props->fill);
+                }
             }
         }
         $filename=Str::slug($form->name, "-");

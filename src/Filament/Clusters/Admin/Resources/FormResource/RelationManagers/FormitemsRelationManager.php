@@ -31,9 +31,11 @@ class FormitemsRelationManager extends RelationManager
                         'text'=>'Text',
                     ])
                     ->afterStateHydrated(function ($record, Set $set) {
-                        $props=json_decode($record->itemdata);
-                        foreach ($props as $fld=>$prop){
-                            $set($fld,$prop);
+                        if ($record){
+                            $props=json_decode($record->itemdata);
+                            foreach ($props as $fld=>$prop){
+                                $set($fld,$prop);
+                            }
                         }
                     })
                     ->default('cell')
@@ -41,18 +43,22 @@ class FormitemsRelationManager extends RelationManager
                     ->columnSpanFull()
                     ->live()
                     ->required(),
-                Forms\Components\TextInput::make('x')
+                Forms\Components\TextInput::make('x')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
-                Forms\Components\TextInput::make('y')
+                Forms\Components\TextInput::make('y')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
-                Forms\Components\TextInput::make('width')
+                Forms\Components\TextInput::make('width')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
-                Forms\Components\TextInput::make('height')
+                Forms\Components\TextInput::make('height')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
                 Forms\Components\TextInput::make('text')
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
+                Forms\Components\TextInput::make('font')
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
                 Forms\Components\Toggle::make('border')
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                Forms\Components\TextInput::make('rounded')->numeric()->default(0)->label('Rounded box corner angle')
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
                 Forms\Components\Select::make('alignment')
                     ->selectablePlaceholder(false)
                     ->options([

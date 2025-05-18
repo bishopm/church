@@ -491,8 +491,10 @@ class ReportsController extends Controller
         foreach ($form->formitems as $item){
             $props=json_decode($item->itemdata);
             if ($item->itemtype=="text"){
+                $this->pdf->SetFont($props->font,'',$props->fontsize);
                 $this->pdf->text($props->x,$props->y,$props->text);
             } elseif ($item->itemtype=="cell"){
+                $this->pdf->SetFont($props->font,$props->fontstyle,$props->fontsize);
                 $this->pdf->setxy($props->x,$props->y);
                 if ($props->rounded > 0){
                     $this->pdf->RoundedRect($props->x,$props->y,$props->width,$props->height,$props->rounded);
@@ -500,6 +502,10 @@ class ReportsController extends Controller
                 } else {
                     $this->pdf->cell($props->width,$props->height,$props->text,$props->border,0,$props->alignment,$props->fill);
                 }
+            } elseif ($item->itemtype=="line"){
+                $this->pdf->line($props->x,$props->y,$props->x2,$props->y2);
+            } elseif ($item->itemtype=="image"){
+                $this->pdf->image(url('/') . "/church/images/" . $props->file,$props->x,$props->y,$props->width,$props->height);
             }
         }
         $filename=Str::slug($form->name, "-");

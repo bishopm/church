@@ -16,4 +16,22 @@ class Formitem extends Model
     {
         return $this->belongsTo(Form::class);
     }
+
+    public function getDetailsAttribute() {
+        $props=json_decode($this->itemdata);
+        if ($this->itemtype=="line"){
+            return "Line";
+        } elseif ($this->itemtype=="cell"){
+            return "Text box: " . $props->text;
+        } elseif ($this->itemtype=="image"){
+            return "Image: " . $props->file;
+        } elseif ($this->itemtype=="text"){
+            return "Text: " . $props->text;
+        }
+    }
+
+    public function getRowAttribute() {
+        $props=json_decode($this->itemdata);
+        return $props->y;
+    }
 }

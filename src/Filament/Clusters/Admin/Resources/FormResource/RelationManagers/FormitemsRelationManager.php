@@ -4,6 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\Relation
 
 use Bishopm\Church\Models\Formitem;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -11,7 +12,6 @@ use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\DB;
 
 class FormitemsRelationManager extends RelationManager
 {
@@ -47,18 +47,45 @@ class FormitemsRelationManager extends RelationManager
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
                 Forms\Components\TextInput::make('y')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
+                Forms\Components\TextInput::make('x2')->numeric()->default(0)
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["line"])),
+                Forms\Components\TextInput::make('y2')->numeric()->default(0)
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["line"])),
                 Forms\Components\TextInput::make('width')->numeric()->default(0)
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","image"])),
                 Forms\Components\TextInput::make('height')->numeric()->default(0)
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","image"])),
                 Forms\Components\TextInput::make('text')
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
-                Forms\Components\TextInput::make('font')
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"])),
+                Forms\Components\Select::make('font')
+                    ->afterStateHydrated(function (Select $component){
+                        $component->state($this->ownerRecord->font);
+                    })
+                    ->options([
+                        'Arial'=>'Arial',
+                        'Courier'=>'Courier',
+                        'Times'=>'Times New Roman'
+                    ])
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"])),
+                Forms\Components\TextInput::make('fontsize')
+                    ->afterStateHydrated(function (TextInput $component){
+                        $component->state($this->ownerRecord->fontsize);
+                    })
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"]))->label('Font size')->numeric(),
+                Forms\Components\Select::make('fontstyle')->label('Font style')
+                    ->selectablePlaceholder(false)
+                    ->options([
+                        ''=>'Normal',
+                        'B'=>'Bold',
+                        'I'=>'Italic'
+                    ])
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"])),
                 Forms\Components\Toggle::make('border')
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
                 Forms\Components\TextInput::make('rounded')->numeric()->default(0)->label('Rounded box corner angle')
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
+                Forms\Components\TextInput::make('file')->label('Image filename')
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["image"])),
                 Forms\Components\Select::make('alignment')
                     ->selectablePlaceholder(false)
                     ->options([
@@ -66,9 +93,9 @@ class FormitemsRelationManager extends RelationManager
                         'C'=>'Centre',
                         'R'=>'Right'
                     ])
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
                 Forms\Components\Toggle::make('fill')
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
             ]);
     }
 
@@ -77,8 +104,8 @@ class FormitemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('itemdata')
             ->columns([
-                Tables\Columns\TextColumn::make('itemtype')->label('Type'),
-                Tables\Columns\TextColumn::make('itemdata')->label('Properties'),
+                Tables\Columns\TextColumn::make('row')->label('Row'),
+                Tables\Columns\TextColumn::make('details')->label('Details'),
             ])
             ->filters([
                 //

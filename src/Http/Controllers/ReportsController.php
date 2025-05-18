@@ -480,32 +480,44 @@ class ReportsController extends Controller
     public function form($id)
     {
         $form = Form::with('formitems')->where('id',$id)->first();
+        $widths=array(
+            'full'=>1,
+            'half'=>2,
+            'third'=>3,
+            'quarter'=>4
+        );
+        $i=$widths[$form->width];
         if ($form->orientation=='portrait'){
             $this->pdf->AddPage('P');
+            $xadd=210/$i;
         } else {
             $this->pdf->AddPage('L');
+            $xadd=297/$i;
         }
         $this->pdf->SetTitle($form->name);
         $this->pdf->SetAutoPageBreak(true, 0);
         $this->pdf->SetFont('Arial', 'B', 12);
-        foreach ($form->formitems as $item){
-            $props=json_decode($item->itemdata);
-            if ($item->itemtype=="text"){
-                $this->pdf->SetFont($props->font,'',$props->fontsize);
-                $this->pdf->text($props->x,$props->y,$props->text);
-            } elseif ($item->itemtype=="cell"){
-                $this->pdf->SetFont($props->font,$props->fontstyle,$props->fontsize);
-                $this->pdf->setxy($props->x,$props->y);
-                if ($props->rounded > 0){
-                    $this->pdf->RoundedRect($props->x,$props->y,$props->width,$props->height,$props->rounded);
-                    $this->pdf->cell($props->width,$props->height,$props->text,0,0,$props->alignment,0);
-                } else {
-                    $this->pdf->cell($props->width,$props->height,$props->text,$props->border,0,$props->alignment,$props->fill);
+        // A4 is 210 x 297mm
+        for ($j=0;$j<$i;$j++){
+            foreach ($form->formitems as $item){
+                $props=json_decode($item->itemdata);
+                if ($item->itemtype=="text"){
+                    $this->pdf->SetFont($props->font,'',$props->fontsize);
+                    $this->pdf->text($props->x+($j*$xadd),$props->y,$props->text);
+                } elseif ($item->itemtype=="cell"){
+                    $this->pdf->SetFont($props->font,$props->fontstyle,$props->fontsize);
+                    $this->pdf->setxy($props->x+($j*$xadd),$props->y);
+                    if ($props->rounded > 0){
+                        $this->pdf->RoundedRect($props->x+($j*$xadd),$props->y,$props->width,$props->height,$props->rounded);
+                        $this->pdf->cell($props->width,$props->height,$props->text,0,0,$props->alignment,0);
+                    } else {
+                        $this->pdf->cell($props->width,$props->height,$props->text,$props->border,0,$props->alignment,$props->fill);
+                    }
+                } elseif ($item->itemtype=="line"){
+                    $this->pdf->line($props->x+($j*$xadd),$props->y,$props->x2+($j*$xadd),$props->y2);
+                } elseif ($item->itemtype=="image"){
+                    $this->pdf->image(url('/') . "/church/images/" . $props->file,$props->x+($j*$xadd),$props->y,$props->width,$props->height);
                 }
-            } elseif ($item->itemtype=="line"){
-                $this->pdf->line($props->x,$props->y,$props->x2,$props->y2);
-            } elseif ($item->itemtype=="image"){
-                $this->pdf->image(url('/') . "/church/images/" . $props->file,$props->x,$props->y,$props->width,$props->height);
             }
         }
         $filename=Str::slug($form->name, "-");

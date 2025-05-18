@@ -84,8 +84,18 @@ class FormitemsRelationManager extends RelationManager
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
                 Forms\Components\TextInput::make('rounded')->numeric()->default(0)->label('Rounded box corner angle')
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell"])),
-                Forms\Components\TextInput::make('file')->label('Image filename')
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["image"])),
+                Forms\Components\Select::make('file')->label('Image filename')
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["image"]))
+                    ->options(function (){
+                        $files=scandir(public_path("/church/images/"));
+                        $options=array();
+                        foreach ($files as $file){
+                            if (strpos($file,'.')>2){
+                                $options[$file]=$file;
+                            }
+                        }
+                        return $options;
+                    }),
                 Forms\Components\Select::make('alignment')
                     ->selectablePlaceholder(false)
                     ->options([

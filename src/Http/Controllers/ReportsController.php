@@ -123,31 +123,13 @@ class ReportsController extends Controller
     }
 
     private function addRoster($label,$servicetime,$servicedate){
-        if ($label=="Bible reading"){
-            $groupname="Readers " . $servicetime;
-        } elseif ($label=="Society Stewards") {
-            $groupname=$label;
-        } else {
-            $groupname=$label . " " . $servicetime;
-        }
-        if (substr($groupname,0,1) == "B"){
-            dd($groupname);
-        }
-        $group=Group::where('groupname',$groupname)->first();
+        $group=Group::where('groupname',$label)->first();
         if ($group){
             $group_id=$group->id;
-            if ($label<>"Society Stewards"){
-                $rgroup=Rostergroup::where('group_id',$group_id)->first();
-                if ($rgroup){
-                    $rostergroup=$rgroup->id;
-                    $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rostergroup)->where('rosterdate',$servicedate)->first();
-                } 
-            } else {
-                $rostergroups=Rostergroup::with('roster')->where('group_id',$group_id)->get();
-                foreach ($rostergroups as $rg){
-                    if (str_contains($rg->roster->roster,$servicetime)){
-                        $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate',$servicedate)->first();
-                    }
+            $rostergroups=Rostergroup::with('roster')->where('group_id',$group_id)->get();
+            foreach ($rostergroups as $rg){
+                if (str_contains($rg->roster->roster,$servicetime)){
+                    $rosteritem=Rosteritem::with('individuals')->where('rostergroup_id',$rg->id)->where('rosterdate',$servicedate)->first();
                 }
             }
             if ((isset($rosteritem)) and ($rosteritem->individuals)){
@@ -157,7 +139,7 @@ class ReportsController extends Controller
                 }
                 if ($label=="Society Stewards"){
                     $label = "Society Steward: " . implode(", ", $indivs);
-                } elseif ($label=="Bible reading") {
+                } elseif ($label=="Readers") {
                     $label = implode(", ", $indivs);
                 } else {
                     $label = $label . ": " . implode(", ", $indivs);
@@ -540,7 +522,7 @@ class ReportsController extends Controller
         } elseif (!isset($setitem->setitemable_id)) {
             $set=Service::with('series')->where('id',$setitem->service_id)->first();
             if ($setitem->note=="Bible reading"){
-                return $set->reading . " (" . $this->addRoster("Bible reading",$set->servicetime,$set->servicedate) . ")";
+                return $set->reading . " (" . $this->addRoster("Readers",$set->servicetime,$set->servicedate) . ")";
             } elseif ($setitem->note=="Sermon"){
                 if ($set->person){
                     $extra=$set->person->firstname . " " . $set->person->surname;

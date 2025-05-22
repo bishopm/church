@@ -26,6 +26,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Set;
 use Illuminate\Support\Facades\Auth;
 
 class IndividualResource extends Resource
@@ -195,6 +196,16 @@ class IndividualResource extends Resource
                                 ->form([
                                     Grid::make(2)
                                     ->schema([
+                                        Forms\Components\Select::make('care')
+                                            ->options([
+                                                'Sent flowers to'=>'Flowers',
+                                                'Messaged'=>'Messaged',
+                                                'Phoned'=>'Phoned',
+                                                'Visited'=>'Visited'
+                                            ])
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(fn (Set $set, ?string $state, Individual $record) => $set('details', $state . " " . $record->firstname))
+                                            ->label('Care'),
                                         Forms\Components\DatePicker::make('pastoraldate')
                                             ->label('Date')
                                             ->default(now())
@@ -218,7 +229,7 @@ class IndividualResource extends Resource
                                                 return $indiv->pastor->id;
                                             })
                                             ->required(),
-                                        Forms\Components\TextInput::make('details')->required()->columnSpanFull()
+                                        Forms\Components\TextInput::make('details')->required()
                                     ])
                                 ])
                             ->action(function (array $data, Individual $record): void {

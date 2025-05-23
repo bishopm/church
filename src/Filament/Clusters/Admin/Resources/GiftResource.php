@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -28,10 +29,10 @@ class GiftResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('pgnumber')
+                Forms\Components\TextInput::make('pgnumber')->label('PG number')
                     ->required()
                     ->numeric(),
-                Forms\Components\DatePicker::make('paymentdate')
+                Forms\Components\DatePicker::make('paymentdate')->label('Payment date')
                     ->required(),
                 Forms\Components\TextInput::make('amount')
                     ->required()
@@ -43,27 +44,23 @@ class GiftResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('pgnumber')
+                Tables\Columns\TextColumn::make('pgnumber')->label('PG number')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('paymentdate')
+                Tables\Columns\TextColumn::make('paymentdate')->label('Payment date')
                     ->date()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('paymentdate', 'desc')
             ->filters([
-                //
+                Filter::make('hide_older_payments')
+                ->query(fn (Builder $query): Builder => $query->where('paymentdate', '>', date('Y-m-d H:i:00',strtotime('1 year ago'))))
+                ->default()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

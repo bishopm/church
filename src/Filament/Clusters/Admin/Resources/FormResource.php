@@ -7,8 +7,9 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\Pages;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\FormResource\RelationManagers;
 use Bishopm\Church\Models\Form as FormModel;
 use Filament\Forms;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -27,8 +28,18 @@ class FormResource extends Resource
     {
         return $form
             ->schema([
-                Group::make()
+                Tabs::make('Add New Form')->columnSpanFull()->tabs([
+                    Tab::make('Preview')
                     ->schema([
+                        PdfViewerField::make('pdf_preview')
+                            ->hiddenOn('create')
+                            ->label('')
+                            ->minHeight('50svh')
+                            ->fileUrl(fn ($livewire) => $livewire->pdfUrl)
+                            ->columnSpanFull()
+                            ->live(),
+                    ]),
+                    Tab::make('Details')->columns(2)->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -68,18 +79,9 @@ class FormResource extends Resource
                             ->default(5)
                             ->numeric()
                             ->required(),
-                    ]),
-                Group::make()
-                    ->schema([
-                        PdfViewerField::make('pdf_preview')
-                            ->hiddenOn('create')
-                            ->label('')
-                            ->minHeight('50svh')
-                            ->fileUrl(fn ($livewire) => $livewire->pdfUrl)
-                            ->columnSpanFull()
-                            ->live(),
                     ])
-            ]);
+            ])
+        ]);
     }
 
     public static function table(Table $table): Table

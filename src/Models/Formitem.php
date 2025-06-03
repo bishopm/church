@@ -30,8 +30,17 @@ class Formitem extends Model
         }
     }
 
-    public function getRowAttribute() {
+    public function getXyAttribute() {
         $props=json_decode($this->itemdata);
-        return $props->y;
+        if ($this->itemtype=="line"){
+            return $props->x . "," . $props->y;
+        } elseif ($this->itemtype=="cell"){
+            return $props->x . "," . $props->y;
+        } elseif ($this->itemtype=="image"){
+            return $props->x . "," . $props->y;
+        } elseif ($this->itemtype=="text"){
+            return $props->x . "," . $props->y;
+        }
     }
+
 }

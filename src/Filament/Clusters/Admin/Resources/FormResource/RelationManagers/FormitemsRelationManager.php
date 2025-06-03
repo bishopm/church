@@ -137,7 +137,7 @@ class FormitemsRelationManager extends RelationManager
             ->recordTitleAttribute('itemdata')
             ->columns([
                 Tables\Columns\TextColumn::make('itemorder')->label('No'),
-                Tables\Columns\TextColumn::make('row')->label('Row'),
+                Tables\Columns\TextColumn::make('xy')->label('X,Y'),
                 Tables\Columns\TextColumn::make('details')->label('Details'),
             ])
             ->filters([

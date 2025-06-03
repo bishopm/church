@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('width', 255);
             $table->string('font', 255);
             $table->integer('fontsize');
+            $table->integer('lineheight');
         });
     }
     

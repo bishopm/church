@@ -44,9 +44,27 @@ class FormitemsRelationManager extends RelationManager
                     ->live()
                     ->required(),
                 Forms\Components\TextInput::make('x')->numeric()->default(0)
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"]))
+                    ->default(function (RelationManager $livewire){
+                        $items=$livewire->ownerRecord->formitems;
+                        foreach ($items as $item){
+                            if ($item->itemorder==count($items)){
+                                $props=json_decode($item->itemdata);
+                                return $props->x;
+                            }
+                        }
+                    }),
                 Forms\Components\TextInput::make('y')->numeric()->default(0)
-                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"])),
+                    ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","line","image","text"]))
+                    ->default(function (RelationManager $livewire){
+                        $items=$livewire->ownerRecord->formitems;
+                        foreach ($items as $item){
+                            if ($item->itemorder==count($items)){
+                                $props=json_decode($item->itemdata);
+                                return $props->y+$livewire->ownerRecord->lineheight;
+                            }
+                        }
+                    }),
                 Forms\Components\TextInput::make('x2')->numeric()->default(0)
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["line"])),
                 Forms\Components\TextInput::make('y2')->numeric()->default(0)
@@ -58,8 +76,10 @@ class FormitemsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('text')
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"])),
                 Forms\Components\Select::make('font')
-                    ->afterStateHydrated(function (Select $component){
-                        $component->state($this->ownerRecord->font);
+                    ->afterStateHydrated(function (Select $component, ?string $state){
+                        if (!$state){
+                            $component->state($this->ownerRecord->font);
+                        }
                     })
                     ->options([
                         'Arial'=>'Arial',
@@ -68,8 +88,10 @@ class FormitemsRelationManager extends RelationManager
                     ])
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"])),
                 Forms\Components\TextInput::make('fontsize')
-                    ->afterStateHydrated(function (TextInput $component){
-                        $component->state($this->ownerRecord->fontsize);
+                    ->afterStateHydrated(function (TextInput $component, ?string $state){
+                        if (!$state){
+                            $component->state($this->ownerRecord->fontsize);
+                        }
                     })
                     ->visible(fn (Get $get) => in_array($get('itemtype'),["cell","text"]))->label('Font size')->numeric(),
                 Forms\Components\Select::make('fontstyle')->label('Font style')
@@ -114,12 +136,15 @@ class FormitemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('itemdata')
             ->columns([
+                Tables\Columns\TextColumn::make('itemorder')->label('No'),
                 Tables\Columns\TextColumn::make('row')->label('Row'),
                 Tables\Columns\TextColumn::make('details')->label('Details'),
             ])
             ->filters([
                 //
             ])
+            ->reorderable('itemorder')
+            ->defaultSort('itemorder')
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->using(function (array $data, RelationManager $livewire) {
@@ -130,7 +155,8 @@ class FormitemsRelationManager extends RelationManager
                         $new=Formitem::create([
                             'form_id' =>  $parent,
                             'itemtype' => $itemtype,
-                            'itemdata' => $itemdata
+                            'itemdata' => $itemdata,
+                            'itemorder' => 1+count($livewire->ownerRecord->formitems)
                         ]);
                         return $new;
                     })->after(function (RelationManager $livewire) {

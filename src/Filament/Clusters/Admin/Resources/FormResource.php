@@ -63,6 +63,11 @@ class FormResource extends Resource
                             ->default(12)
                             ->numeric()
                             ->required(),
+                        Forms\Components\TextInput::make('lineheight')
+                            ->label('Default line height (px)')
+                            ->default(5)
+                            ->numeric()
+                            ->required(),
                     ]),
                 Group::make()
                     ->schema([

@@ -484,7 +484,7 @@ class ReportsController extends Controller
             foreach ($form->formitems as $item){
                 $props=json_decode($item->itemdata);
                 if ($item->itemtype=="text"){
-                    $this->pdf->SetFont($props->font,'',$props->fontsize);
+                    $this->pdf->SetFont($props->font,$props->fontstyle,$props->fontsize);
                     $this->pdf->text($props->x+($j*$xadd),$props->y,$props->text);
                 } elseif ($item->itemtype=="cell"){
                     $this->pdf->SetFont($props->font,$props->fontstyle,$props->fontsize);

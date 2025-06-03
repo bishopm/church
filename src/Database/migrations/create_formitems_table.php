@@ -12,6 +12,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id')->unsigned();
             $table->integer('form_id');
+            $table->integer('itemorder')->nullable();
             $table->string('itemtype', 100);
             $table->json('itemdata');
         });

@@ -55,7 +55,7 @@ Route::domain('app.' . env('APP_URL'))->group(function() {
     });
 });
 
-// Closed reports routes
+// Closed reports and admin routes
 Route::middleware(['web',ReportsRoute::class])->group(function () {
     Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
     Route::get('/admin/reports/barcodes/{newonly?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@barcodes','as' => 'reports.barcodes']);

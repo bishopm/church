@@ -13,6 +13,7 @@ class ListTasks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('Task board')->url(route('filament.admin.admin.resources.tasks.taskboard')),
             Actions\Action::make('Recurring tasks')->url(fn (): string => route('filament.admin.admin.resources.recurringtasks.index')),
             Actions\CreateAction::make(),
         ];

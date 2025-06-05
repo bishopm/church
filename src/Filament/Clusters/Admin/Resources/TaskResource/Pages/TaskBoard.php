@@ -50,8 +50,9 @@ class TaskBoard extends Page implements HasForms, HasActions {
         }
         $statuses=[
             'projects'=>'Projects',
-            'someday'=>'Some day',
-            'todo'=>'To do'
+            'doing'=>'Underway',
+            'todo'=>'To do',
+            'someday'=>'Some day'
         ];
         $this->statuses=$statuses;
         $this->tasks=$fin;

@@ -1,9 +1,15 @@
 <x-filament-panels::page>
+    <style>
+        .active {
+            background-color:grey;
+            color:red;
+        }
+    </style>
     <div x-data="{ tab: 'projects' }">
         <x-filament::tabs label="Task status">
             @foreach ($statuses as $key=>$status)
                 @if (isset($tasks[$key]))
-                    <x-filament::tabs.item @click="tab = '{{$key}}'" :alpine-active="'tab === \'{{$key}}\''">
+                    <x-filament::tabs.item x-on:click="tab = '{{$key}}'" :alpine-active="'tab === \'{{$key}}\''">
                         {{strtoupper($status)}}
                     </x-filament::tabs.item>
                 @endif

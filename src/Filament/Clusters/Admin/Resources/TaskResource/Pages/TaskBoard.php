@@ -31,6 +31,7 @@ class TaskBoard extends Page implements HasForms, HasActions {
     public $tasks;
     public $statuses;
     public $individual_id;
+    public $tab;
 
     public function mount(){
         $indiv = Individual::where('user_id',Auth::user()->id)->first();
@@ -70,6 +71,7 @@ class TaskBoard extends Page implements HasForms, HasActions {
                     'duedate' => $task->duedate,
                     'status' => $task->status,
                     'visibility' => $task->visibility,
+                    'statusnote' => $task->statusnote,
                     'tags' => $task->tags()->pluck('id')
                 ];
             })
@@ -97,6 +99,7 @@ class TaskBoard extends Page implements HasForms, HasActions {
                     'done' => 'Done'
                 ])
                 ->default('todo'),
+                TextInput::make('statusnote'),
                 Select::make('visibility')->options([
                     'public' => 'Public',
                     'private' => 'Private'

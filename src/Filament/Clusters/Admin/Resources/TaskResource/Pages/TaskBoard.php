@@ -3,10 +3,20 @@
 namespace Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\Pages;
 
 use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource;
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Task;
+use Bishopm\Church\Models\User;
+use Filament\Actions\Action;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 
-class TaskBoard extends Page {
+class TaskBoard extends Page implements HasForms, HasActions {
 
     protected static string $resource = TaskResource::class;
 
@@ -15,13 +25,89 @@ class TaskBoard extends Page {
     protected static string $view = 'church::taskboard';
 
     public $tasks;
+    public $statuses;
+    public $individual_id;
 
     public function mount(){
-        $tasks=Task::all();
+        $indiv = Individual::where('user_id',Auth::user()->id)->first();
+        $this->individual_id=$indiv->id;
+        $this->getTasks();
+    }
+
+    private function getTasks(){
+        $tasks=Task::where('status','<>','done')->get();
         foreach ($tasks as $task){
             $fin[$task->status][]=$task;
+            if ($task->tags){
+                foreach ($task->tags as $project){
+                    $fin['projects'][$project->name][]=$task;
+                }
+            }
         }
+        $statuses=[
+            'projects'=>'Projects',
+            'someday'=>'Some day',
+            'todo'=>'To do'
+        ];
+        $this->statuses=$statuses;
         $this->tasks=$fin;
+    }
+
+    public function editAction(): Action {
+
+        return Action::make('edit')
+            ->fillForm(function ($arguments){
+                $task = Task::find($arguments['task']);
+                return [
+                    'id' => $task->id,
+                    'description' => $task->description,
+                    'individual_id' => $task->individual_id,
+                    'duedate' => $task->duedate,
+                    'status' => $task->status,
+                    'visibility' => $task->visibility
+                ];
+            })
+            ->form([
+                Hidden::make('id'),
+                TextInput::make('description')->required(),
+                Select::make('individual_id')
+                    ->label('Assigned to')
+                    ->options(User::with('individual')->orderBy('name')->get()->pluck('name', 'individual.id'))
+                    ->default($this->individual_id)
+                    ->searchable(),
+                DatePicker::make('duedate')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->format('Y-m-d')
+                    ->label('Due date')
+                    ->default(date('Y-m-d',strtotime('+7 days'))),
+                Select::make('status')->options([
+                    'todo' => 'To do',
+                    'doing' => 'Underway',
+                    'someday' => 'Some day',
+                    'done' => 'Done'
+                ])
+                ->default('todo'),
+                Select::make('visibility')->options([
+                    'public' => 'Public',
+                    'private' => 'Private'
+                ])
+                ->default('public')
+            ])
+            ->action(function (array $data) {
+                $task=Task::find($data['id']);
+                $task->update($data);
+            });
+    }
+
+    public function done($id){
+        $updatetask=Task::find($id);
+        $updatetask->status="done";
+        if ($updatetask->agendaitem_id){
+            $updatetask->statusnote="Completed on " . date('Y-m-d');
+        }
+        $updatetask->save();
+        $this->getTasks();
     }
 
 }

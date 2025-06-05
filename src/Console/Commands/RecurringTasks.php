@@ -55,22 +55,35 @@ class RecurringTasks extends Command
 
         // Send task reminders
         if (setting('automation.tasks_day') == date('w')){
-            $tasks=Task::withWhereHas('individual')->where('status','todo')->get();
+            $tasks=Task::withWhereHas('individual')->whereIn('status',['todo','doing'])->get();
             foreach ($tasks as $task){
                 if (!isset($data[$task->individual_id])){
                     $data[$task->individual_id]['indiv']=$task->individual;
                 }
-                $data[$task->individual_id]['tasks'][]=['description'=>$task->description,'duedate'=>$task->duedate];
+                $data[$task->individual_id]['tasks'][$task->status][]=['description'=>$task->description,'duedate'=>$task->duedate,'statusnote'=>$task->statusnote];
             }
             foreach ($data as $indiv){
-                $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br><ul>";
-                foreach ($indiv['tasks'] as $task){
-                    $msg.="<li>" . $task['description'];
-                    if ($task['duedate']){
-                        $msg.=" (Due: " . $task['duedate'] . ")</li>";
+                $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br>";
+                foreach ($indiv['tasks'] as $key=>$tasktype){
+                    if ($key=="todo"){
+                        $msg.="<h4>To do</h4>";
+                    } else {
+                        $msg.="<h4>Progress</h4>";
+                    } 
+                    $msg.="<ul>";
+                    foreach ($tasktype as $task){
+                        $msg.="<li>" . $task['description'];
+                        if ($task['duedate']){
+                            $msg.=" (Due: " . $task['duedate'] . ")";
+                        }
+                        if ($key=="doing"){
+                            $msg.=" <b>Current status:</b> " . $task['statusnote'];
+                        }
+                        $msg.="</li>";
                     }
+                    $msg.="</ul>";
                 }
-                $msg.="</ul><br>";
+                $msg.="<br>";
                 $data=array();
                 $data['firstname']=$indiv['indiv']->firstname;
                 $data['subject']=setting('general.church_abbreviation') . " weekly reminder";

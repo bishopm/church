@@ -69,7 +69,7 @@ class TaskResource extends Resource
                                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                                     ->required(),
                                 Forms\Components\TextInput::make('type')
-                                    ->default('project')
+                                    ->default('task')
                                     ->readonly()
                                     ->required(),
                                 Forms\Components\TextInput::make('slug')

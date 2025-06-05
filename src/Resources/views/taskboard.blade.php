@@ -2,9 +2,11 @@
     <div x-data="{ tab: 'projects' }">
         <x-filament::tabs label="Task status">
             @foreach ($statuses as $key=>$status)
-                <x-filament::tabs.item @click="tab = '{{$key}}'" :alpine-active="'tab === \'{{$key}}\''">
-                    {{strtoupper($status)}}
-                </x-filament::tabs.item>
+                @if (isset($tasks[$key]))
+                    <x-filament::tabs.item @click="tab = '{{$key}}'" :alpine-active="'tab === \'{{$key}}\''">
+                        {{strtoupper($status)}}
+                    </x-filament::tabs.item>
+                @endif
             @endforeach
         </x-filament::tabs>
         @foreach ($statuses as $key=>$status)
@@ -26,7 +28,7 @@
                                 </tr>
                             @endforeach    
                         @endforeach
-                    @else
+                    @elseif (isset($tasks[$key]))
                         <tr style="background-color:grey;color:white;"><th>Description</th><th>Assigned to</th><th></th></tr>
                         @foreach ($tasks[$key] as $task)
                             <tr>

@@ -81,7 +81,7 @@ class TaskBoard extends Page implements HasForms, HasActions {
                 TextInput::make('description')->required(),
                 Select::make('individual_id')
                     ->label('Assigned to')
-                    ->options(User::with('individual')->orderBy('name')->get()->pluck('name', 'individual.id'))
+                    ->options(Individual::orderBy('firstname')->get()->pluck('name', 'id'))
                     ->default($this->individual_id)
                     ->searchable(),
                 DatePicker::make('duedate')

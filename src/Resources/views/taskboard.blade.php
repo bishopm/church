@@ -20,7 +20,7 @@
                                     <td class="px-2" wire:key="{{ $task->id }}">
                                         <input type="checkbox" class="form-control" wire:click="done({{$task->id}})"> {{$task->description}}
                                     </td>
-                                    <td>{{$task->status}}</td>
+                                    <td>{{$statuses[$task->status]}}</td>
                                     <td class="px-2">{{$task->individual->name}}</td>
                                     <td>{{  ($this->editAction)(['task' => $task->id]) }}</td>
                                 </tr>

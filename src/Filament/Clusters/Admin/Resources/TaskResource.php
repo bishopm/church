@@ -4,12 +4,10 @@ namespace Bishopm\Church\Filament\Clusters\Admin\Resources;
 
 use Bishopm\Church\Filament\Clusters\Admin;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\Pages;
-use Bishopm\Church\Filament\Clusters\Admin\Resources\TaskResource\RelationManagers;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Task;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -17,9 +15,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class TaskResource extends Resource

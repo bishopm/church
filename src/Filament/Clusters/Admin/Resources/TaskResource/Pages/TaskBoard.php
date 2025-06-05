@@ -9,12 +9,16 @@ use Bishopm\Church\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Set;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class TaskBoard extends Page implements HasForms, HasActions {
 
@@ -64,8 +68,12 @@ class TaskBoard extends Page implements HasForms, HasActions {
                     'individual_id' => $task->individual_id,
                     'duedate' => $task->duedate,
                     'status' => $task->status,
-                    'visibility' => $task->visibility
+                    'visibility' => $task->visibility,
+                    'tags' => $task->tags()->pluck('id')
                 ];
+            })
+            ->record(function ($arguments){
+                return Task::find($arguments['task']);
             })
             ->form([
                 Hidden::make('id'),
@@ -92,7 +100,26 @@ class TaskBoard extends Page implements HasForms, HasActions {
                     'public' => 'Public',
                     'private' => 'Private'
                 ])
-                ->default('public')
+                ->default('public'),
+                Select::make('tags')->label('Project')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','task'))
+                    ->multiple()
+                    ->createOptionForm([
+                        Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                    ->required(),
+                                TextInput::make('type')
+                                    ->default('task')
+                                    ->readonly()
+                                    ->required(),
+                                TextInput::make('slug')
+                                    ->required(),
+                            ])
+                    ]),
             ])
             ->action(function (array $data) {
                 $task=Task::find($data['id']);

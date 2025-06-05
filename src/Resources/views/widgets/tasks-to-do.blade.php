@@ -1,6 +1,7 @@
 <x-filament-widgets::widget>
     <div x-data="{ tab: 'tab1' }">
         <x-filament::tabs label="Content tabs">
+            <a href="{{route('filament.admin.admin.resources.tasks.taskboard')}}"><x-heroicon-o-adjustments-horizontal class="pt-2" width="18"/></a>
             <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''">
                 To do <span class="rounded-md" style="background-color: black; margin-left:0.2rem; padding-left:0.5rem;padding-right:0.5rem;padding-top:0.25rem;padding-bottom:0.25rem;">{{$tcount}}</span>
             </x-filament::tabs.item>

@@ -1,19 +1,31 @@
 <x-filament-panels::page>
-    <style>
-        .active {
-            background-color:grey;
-            color:red;
-        }
-    </style>
     <div x-data="{ tab: 'projects' }">
-        <x-filament::tabs label="Task status">
-            @foreach ($statuses as $key=>$status)
-                @if (isset($tasks[$key]))
-                    <x-filament::tabs.item x-on:click="tab = '{{$key}}'" :alpine-active="'tab === \'{{$key}}\''">
-                        {{strtoupper($status)}}
-                    </x-filament::tabs.item>
-                @endif
-            @endforeach
+        <x-filament::tabs label="Task status" contained="false">
+            @if (isset($tasks['projects']))
+                <x-filament::tabs.item x-on:click="tab = 'projects'" :alpine-active="'tab === \'projects\''">
+                    Projects
+                </x-filament::tabs.item>
+            @endif
+            @if (isset($tasks['todo']))
+                <x-filament::tabs.item x-on:click="tab = 'todo'" :alpine-active="'tab === \'todo\''">
+                    To do
+                </x-filament::tabs.item>
+            @endif
+            @if (isset($tasks['doing']))
+                <x-filament::tabs.item x-on:click="tab = 'doing'" :alpine-active="'tab === \'doing\''">
+                    Underway
+                </x-filament::tabs.item>
+            @endif
+            @if (isset($tasks['someday']))
+                <x-filament::tabs.item x-on:click="tab = 'someday'" :alpine-active="'tab === \'someday\''">
+                    Some day
+                </x-filament::tabs.item>
+            @endif
+            @if (isset($tasks['done']))
+                <x-filament::tabs.item x-on:click="tab = 'done'" :alpine-active="'tab === \'done\''">
+                    Completed
+                </x-filament::tabs.item>
+            @endif
         </x-filament::tabs>
         @foreach ($statuses as $key=>$status)
             <div x-show="tab === '{{$key}}'">

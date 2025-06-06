@@ -1,6 +1,6 @@
 <x-filament-widgets::widget>
     <div x-data="{ tab: 'tab1' }">
-        <x-filament::tabs label="Content tabs">
+        <x-filament::tabs label="Content tabs" contained="false">
             <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''">
                 Upcoming events
             </x-filament::tabs.item>

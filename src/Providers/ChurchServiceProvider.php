@@ -256,6 +256,7 @@ class ChurchServiceProvider extends ServiceProvider
             'Bishopm\Church\Console\Commands\BirthdayEmail',
             'Bishopm\Church\Console\Commands\CheckinEmail',
             'Bishopm\Church\Console\Commands\GivingEmail',
+            'Bishopm\Church\Console\Commands\GroupsEmail',
             'Bishopm\Church\Console\Commands\InstallChurch',
             'Bishopm\Church\Console\Commands\LiveMessages',
             'Bishopm\Church\Console\Commands\MaintenanceEmail',

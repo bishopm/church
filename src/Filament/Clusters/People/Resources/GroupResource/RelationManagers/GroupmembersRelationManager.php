@@ -26,6 +26,13 @@ class GroupmembersRelationManager extends RelationManager
                     ->options(Individual::orderBy('surname')->get()->pluck('fullname', 'id'))
                     ->searchable(),
                 Forms\Components\Select::make('categories')->label('Service times (if applicable)')
+                    ->visible(function ($livewire){
+                        if ($livewire->ownerRecord->grouptype=="service"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })
                     ->multiple()
                     ->options(fn () => array_combine(setting('general.services'),setting('general.services'))),
             ]);
@@ -37,7 +44,14 @@ class GroupmembersRelationManager extends RelationManager
             ->recordTitle(fn (Groupmember $record): string => "{$record->firstname} {$record->surname}")
             ->columns([
                 Tables\Columns\TextColumn::make('individual.fullname')->label('Name'),
-                Tables\Columns\TextColumn::make('categories')->label('Service (if applicable)'),
+                Tables\Columns\TextColumn::make('categories')->label('Service (if applicable)')
+                    ->visible(function ($livewire){
+                        if ($livewire->ownerRecord->grouptype=="service"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }),
             ])
             ->emptyStateHeading('No group members')
             ->filters([
@@ -67,7 +81,14 @@ class GroupmembersRelationManager extends RelationManager
                 }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),                    
+                Tables\Actions\EditAction::make()
+                    ->visible(function ($livewire){
+                        if ($livewire->ownerRecord->grouptype=="service"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }),                    
                 Tables\Actions\Action::make('view person')->url(fn ($record): string => route('filament.admin.people.resources.individuals.edit', $record->individual_id))->icon('heroicon-m-eye'),
                 Tables\Actions\DeleteAction::make()->label('Remove'),
             ])

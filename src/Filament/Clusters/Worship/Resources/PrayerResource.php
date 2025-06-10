@@ -65,7 +65,7 @@ class PrayerResource extends Resource
                                         ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                                         ->required(),
                                     Forms\Components\TextInput::make('type')
-                                        ->default('prayer')
+                                        ->default('liturgy')
                                         ->readonly()
                                         ->required(),
                                     Forms\Components\TextInput::make('slug')

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->integer('taggable_id');
             $table->integer('tag_id');
-            $table->integer('taggable_type');
+            $table->string('taggable_type');
             $table->primary(['taggable_id','tag_id','taggable_type']);
         });
     }

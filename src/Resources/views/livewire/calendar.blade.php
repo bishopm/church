@@ -2,6 +2,15 @@
     <h3 class="text-center">
         {{setting('general.church_abbreviation')}} Diary <a class="btn btn-secondary" wire:click="toggleStatus">{{$headings[$status]}}</a>
     </h3>
+    @if ($status=='public')
+        <div class="p-2">
+            <b>Full church calendar</b>
+        </div>
+    @else
+        <div class="p-2">
+            <b>My group meetings</b>
+        </div>
+    @endif
     <div>
         <table class="table table-compact">
             @forelse ($events[$status] as $event)

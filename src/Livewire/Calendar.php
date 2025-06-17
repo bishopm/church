@@ -18,8 +18,8 @@ class Calendar extends Component
  
     public function mount()
     {
-        $this->headings['public']="Full church calendar";
-        $this->headings['my']="My personal calendar";
+        $this->headings['public']="Show personal calendar";
+        $this->headings['my']="Show full calendar";
         $today=date('Y-m-d');
         $sixmonths=date('Y-m-d',strtotime('+ 6 months'));
         $this->events['public']=Diaryentry::with('diarisable')->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->where('calendar',1)->orderBy('diarydatetime','ASC')->get();

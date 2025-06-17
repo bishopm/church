@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Livewire;
 
 use Bishopm\Church\Models\Diaryentry;
+use Bishopm\Church\Models\Individual;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -22,9 +23,13 @@ class Calendar extends Component
         $today=date('Y-m-d');
         $sixmonths=date('Y-m-d',strtotime('+ 6 months'));
         $this->events['public']=Diaryentry::with('diarisable')->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->where('calendar',1)->get();
-        $this->events['my']=Diaryentry::where('diarisable_type','group')->with('diarisable.groupmembers',function($q){ $q->individual_id=$_COOKIE['wmc-id'];})
-            ->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->get();
-            $this->first=false;
+        $indiv=Individual::with('groups')->where('id',$_COOKIE['wmc-id'])->first();
+        $mygroups=array();
+        foreach ($indiv->groups as $group){
+            $mygroups[]=$group->id;
+        }
+        $this->events['my']=Diaryentry::where('diarisable_type','group')->whereIn('diarisable_id',$mygroups)->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->get();
+        $this->first=false;
         $this->loaded = true;
     }
 

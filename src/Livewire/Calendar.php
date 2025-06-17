@@ -22,13 +22,13 @@ class Calendar extends Component
         $this->headings['my']="My personal calendar";
         $today=date('Y-m-d');
         $sixmonths=date('Y-m-d',strtotime('+ 6 months'));
-        $this->events['public']=Diaryentry::with('diarisable')->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->where('calendar',1)->get();
+        $this->events['public']=Diaryentry::with('diarisable')->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->where('calendar',1)->orderBy('diarydatetime','ASC')->get();
         $indiv=Individual::with('groups')->where('id',$_COOKIE['wmc-id'])->first();
         $mygroups=array();
         foreach ($indiv->groups as $group){
             $mygroups[]=$group->id;
         }
-        $this->events['my']=Diaryentry::where('diarisable_type','group')->whereIn('diarisable_id',$mygroups)->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->get();
+        $this->events['my']=Diaryentry::where('diarisable_type','group')->whereIn('diarisable_id',$mygroups)->where('diarydatetime','>',$today)->where('diarydatetime','<',$sixmonths)->orderBy('diarydatetime','ASC')->get();
         $this->first=false;
         $this->loaded = true;
     }

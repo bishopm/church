@@ -27,6 +27,8 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Set;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class IndividualResource extends Resource
@@ -271,6 +273,7 @@ class IndividualResource extends Resource
                         Forms\Components\Textarea::make('notes')
                             ->columnSpanFull(),
                         Forms\Components\Checkbox::make('welcome_email'),
+                        Forms\Components\DateTimePicker::make('deleted_at'),
                     ])
                 ])
             ]);
@@ -292,7 +295,9 @@ class IndividualResource extends Resource
                 Tables\Columns\TextColumn::make('lastseen')->label('Last seen'),
             ])
             ->filters([
-                //
+                Filter::make('hide_deleted')
+                    ->query(fn (Builder $query): Builder => $query->whereNull('deleted_at'))
+                    ->default()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

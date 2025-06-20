@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -115,6 +116,10 @@ class PostResource extends Resource
                         Forms\Components\FileUpload::make('image')
                         ->hintAction(
                             UnsplashPickerAction::make()
+                                ->useSquareDisplay(false)
+                                ->defaultSearch(function (Get $get){
+                                    return $get('title');
+                                })
                         )
                         ->image()
                         ->directory('images/blog')

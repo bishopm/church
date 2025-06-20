@@ -4,7 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\Website\Resources;
 
 use Bishopm\Church\Filament\Clusters\Website;
 use Bishopm\Church\Filament\Clusters\Website\Resources\PostResource\Pages;
-use Bishopm\Church\Filament\Clusters\Website\Resources\PostResource\RelationManagers;
+use Mansoor\UnsplashPicker\Actions\UnsplashPickerAction;
 use Bishopm\Church\Models\Post;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -113,6 +113,9 @@ class PostResource extends Resource
                     ]),
                     Tab::make('Media')->columns(2)->schema([
                         Forms\Components\FileUpload::make('image')
+                        ->hintAction(
+                            UnsplashPickerAction::make()
+                        )
                         ->image()
                         ->directory('images/blog')
                         ->previewable(false)

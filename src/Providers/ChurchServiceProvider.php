@@ -72,7 +72,7 @@ class ChurchServiceProvider extends ServiceProvider
             Config::set('broadcasting.pusher.app_id',setting('services.pusher.app_id'));
             Config::set('broadcasting.pusher.options.cluster',setting('services.pusher.app_cluster'));
             Config::set('broadcasting.pusher.options.useTLS',true);
-
+            Config::set('services.unsplash.client_id',setting('services.unsplash_client_id'));
         }
         Config::set('auth.providers.users.model','Bishopm\Church\Models\User');
         Config::set('filament-spatie-roles-permissions.clusters.permissions',\Bishopm\Church\Filament\Clusters\Settings::class);

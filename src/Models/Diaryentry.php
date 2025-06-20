@@ -4,12 +4,12 @@ namespace Bishopm\Church\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Guava\Calendar\Contracts\Eventable;
-use Guava\Calendar\ValueObjects\Event;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Models\Agendaitem;
 use Bishopm\Church\Models\Tenant;
+use Guava\Calendar\ValueObjects\CalendarEvent;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Diaryentry extends Model implements Eventable
@@ -17,7 +17,7 @@ class Diaryentry extends Model implements Eventable
     public $table = 'diaryentries';
     protected $guarded = ['id'];
 
-    public function toEvent(): Event|array {
+    public function toCalendarEvent(): CalendarEvent|array {
         $colour="#14B8A6";
         if ($this->details==''){
             if ($this->diarisable_type=="tenant"){
@@ -82,7 +82,7 @@ class Diaryentry extends Model implements Eventable
             $this->details = "-";
         }
 
-        $event = Event::make($this)
+        $event = CalendarEvent::make($this)
             ->title($this->details)
             ->backgroundColor($colour)
             ->start($this->diarydatetime)

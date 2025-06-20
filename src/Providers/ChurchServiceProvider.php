@@ -16,11 +16,11 @@ use Bishopm\Church\Livewire\PastoralNote;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -202,6 +202,9 @@ class ChurchServiceProvider extends ServiceProvider
             $schedule->command('church:groupsemail')->monthlyOn(10, '8:30');
             $schedule->command('church:livemessages')->dailyAt('21:30');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
+        });
+        Filament::serving(function () {
+            Filament::registerTheme(asset('church/css/admintheme.css'));
         });
     }
 

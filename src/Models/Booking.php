@@ -5,21 +5,20 @@ namespace Bishopm\Church\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Guava\Calendar\Contracts\Eventable;
-use Guava\Calendar\ValueObjects\Event;
-
+use Guava\Calendar\ValueObjects\CalendarEvent;
 
 class Booking extends Model implements Eventable
 {
     public $table = 'bookings';
     protected $guarded = ['id'];
 
-    public function toEvent(): Event|array {
+    public function toCalendarEvent(): CalendarEvent|array {
         if (isset($this->tenant->tenant)){
             $this->title = $this->tenant->tenant;
         } else {
             $this->title="Title";
         }
-        return Event::make($this)
+        return CalendarEvent::make($this)
             ->title($this->title)
             ->start($this->bookingdate)
             ->end(date('Y-m-d',strtotime($this->bookingdate)) . " " . $this->endtime)

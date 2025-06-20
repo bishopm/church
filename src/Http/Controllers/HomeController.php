@@ -326,6 +326,10 @@ class HomeController extends Controller
         return view('church::app.offline');
     }
 
+    public function path(){
+        return view('church::app.path');
+    }
+
     public function page($page){
         $data['page']=Page::where('slug',$page)->where('published',1)->firstOrFail();
         return view('church::' . $this->routeName . '.page',$data);

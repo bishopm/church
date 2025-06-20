@@ -165,6 +165,7 @@ class Settings extends BaseSettings
                             TextInput::make('services.methodist_database'),
                             TextInput::make('services.methodist_username'),
                             TextInput::make('services.methodist_password')->password(),
+                            TextInput::make('services.unsplash_client_id')->label('Unsplash Client ID'),
                         ]),                    
                     Tabs\Tab::make('Website')
                         ->columns(2)

@@ -26,7 +26,8 @@
         "spatie/laravel-google-calendar": "~3",
         "yaza/laravel-google-drive-storage": "^4",
         "spatie/laravel-honeypot": "^4",
-        "pusher/pusher-php-server": "^7"
+        "pusher/pusher-php-server": "^7",
+        "mansoor/filament-unsplash-picker": "^1"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

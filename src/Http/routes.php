@@ -32,6 +32,7 @@ Route::domain('app.' . env('APP_URL'))->group(function() {
         Route::get('/groups/{id}', 'group')->name('app.group');
         Route::get('/login', 'login')->name('app.login');
         Route::get('/offline', 'offline')->name('app.offline');
+        Route::get('/path', 'path')->name('app.path');
         Route::get('/practices', 'practices')->name('app.practices');
         Route::get('/people/{slug}', 'person')->name('app.person');
         Route::get('/projects/{id}', 'project')->name('app.project');

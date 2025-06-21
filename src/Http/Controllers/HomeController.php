@@ -8,6 +8,7 @@ use Bishopm\Church\Mail\MessageMail;
 use Bishopm\Church\Models\Attendance;
 use Bishopm\Church\Models\Book;
 use Bishopm\Church\Models\Cache;
+use Bishopm\Church\Models\Card;
 use Bishopm\Church\Models\Comment;
 use Bishopm\Church\Models\Course;
 use Bishopm\Church\Models\Coursesession;
@@ -326,8 +327,9 @@ class HomeController extends Controller
         return view('church::app.offline');
     }
 
-    public function path(){
-        return view('church::app.path');
+    public function path($url){
+        $data['card']=Card::with('carditems')->where('url',$url)->first();
+        return view('church::app.path',$data);
     }
 
     public function page($page){

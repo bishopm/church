@@ -38,7 +38,7 @@ class CardResource extends Resource
                                 ->useSquareDisplay(false)
                         )
                         ->image()
-                        ->directory('images/blog')
+                        ->directory('images/card')
                         ->previewable(false)
                         ->imageResizeMode('cover')
                         ->imageCropAspectRatio('16:9')

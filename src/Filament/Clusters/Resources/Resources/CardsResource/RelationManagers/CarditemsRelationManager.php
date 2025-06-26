@@ -4,6 +4,7 @@ namespace Bishopm\Church\Filament\Clusters\Resources\Resources\CardsResource\Rel
 
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,9 +19,25 @@ class CarditemsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('itemtype')->label('Item type')
+                    ->options([
+                        'button'=>'Action button',
+                        'image'=>'Image',
+                        'text'=>'Text'
+                    ])
+                    ->afterStateHydrated(function ($record, Set $set) {
+                        if ($record){
+                            $props=json_decode($record->properties);
+                            foreach ($props as $fld=>$prop){
+                                $set($fld,$prop);
+                            }
+                        }
+                    })
+                    ->default('text')
+                    ->selectablePlaceholder(false)
+                    ->columnSpanFull()
+                    ->live()
+                    ->required(),                
             ]);
     }
 

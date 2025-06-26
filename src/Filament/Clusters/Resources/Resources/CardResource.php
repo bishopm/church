@@ -55,7 +55,10 @@ class CardResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('card')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->state(function (Card $record) {
+                        return url('storage/' . $record->image);
+                    }),
                 Tables\Columns\TextColumn::make('url')
                     ->searchable(),
             ])

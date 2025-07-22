@@ -3,7 +3,6 @@
 namespace Bishopm\Church\Filament\Clusters\People\Resources;
 
 use Bishopm\Church\Filament\Clusters\People\Resources\IndividualResource\Pages;
-use Bishopm\Church\Filament\Clusters\People\Resources\IndividualResource\RelationManagers;
 use Bishopm\Church\Filament\Clusters\People;
 use Bishopm\Church\Jobs\SendEmail;
 use Filament\Forms\Components\Actions\Action;
@@ -245,6 +244,12 @@ class IndividualResource extends Resource
                             })
                         ])
                     ]),
+                    Tab::make('Groups')->schema([
+                        Forms\Components\Select::make('groups')
+                            ->columnSpanFull()
+                            ->multiple()
+                            ->relationship('groups','groupname'),
+                    ]),
                     Tab::make('Admin')->schema([
                         Forms\Components\Select::make('memberstatus')
                             ->label('Membership status')
@@ -274,7 +279,7 @@ class IndividualResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\Checkbox::make('welcome_email'),
                         Forms\Components\DateTimePicker::make('deleted_at'),
-                    ])
+                        ]),
                 ])
             ]);
     }
@@ -321,7 +326,6 @@ class IndividualResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\GroupsRelationManager::class,
         ];
     }
 

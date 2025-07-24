@@ -22,6 +22,7 @@ use Bishopm\Church\Models\Form;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Midweek;
 use Bishopm\Church\Models\Plan;
+use Bishopm\Church\Models\Task;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use stdClass;
@@ -74,6 +75,10 @@ class ReportsController extends Controller
             }
             $yy=$yy+8;
         }
+        if ($mtg->nextmeeting){
+            $this->pdf->SetFont('DejaVu', 'B', 12);
+            $this->pdf->text(20, $yy, "Next meeting:  " . date('D j M Y H:i', strtotime($mtg->nextmeeting)));
+        }
         $filename=$this->title;
         $this->pdf->Output('I',$filename);
         exit;
@@ -116,6 +121,11 @@ class ReportsController extends Controller
                 $this->pdf->text($xadd+15, $yy, $ndx . "  " . $item->heading);
             }
             $yy=$yy+7;
+        }
+        if ($mtg->nextmeeting){
+            $this->pdf->SetFont('DejaVu', 'B', 11);
+            $this->pdf->text(10, $yy, "Next meeting:  " . date('D j M Y H:i', strtotime($mtg->nextmeeting)));
+            $this->pdf->text($xadd+10, $yy, "Next meeting:  " . date('D j M Y H:i', strtotime($mtg->nextmeeting)));
         }
         $filename=$this->title;
         $this->pdf->Output('I',$filename);
@@ -1405,6 +1415,14 @@ class ReportsController extends Controller
         exit;
     }
     
+    public function tasks(){
+        $tasks=Task::where('status','<>','done')->get();
+        $this->title="Outstanding tasks";
+        $this->pdf=$this->report_header();
+        $this->pdf->Output('I','Outstanding tasks');
+        exit;
+    }
+
     public function onTransposeUp($recordId){
         //return $this->_transposeLyrics(input("Song[lyrics]"),"up");
         /*$this->vars['pdfId']=$recordId;

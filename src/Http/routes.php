@@ -76,6 +76,7 @@ Route::get('/admin/reports/roster/{id}/{year}/{month}', ['uses' => '\Bishopm\Chu
 Route::get('/admin/reports/seriesplan/{start?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@seriesplan','as' => 'reports.seriesplan']);
 Route::get('/admin/reports/service/{id}/{time?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@service','as' => 'reports.service']);
 Route::get('/admin/reports/song/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@song','as' => 'reports.song']);    
+Route::get('/admin/reports/tasks', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@tasks','as' => 'reports.tasks']);    
 
 // Giving routes
 Route::middleware(['web',GivingRoute::class])->group(function () {

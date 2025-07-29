@@ -241,12 +241,12 @@ class ManageRoster extends Page implements HasForms
         }
     }*/
 
-    protected function getWeeks($firstofmonth){
-
+    protected function getWeeks($firstofmonth)
+    {
         $thismonth=date('Y-m',strtotime($firstofmonth));
         $this->data['prev']=date('M Y',strtotime($thismonth . '-01 -1 month'));
         $this->data['next']=date('M Y',strtotime($thismonth . '-01 +1 month'));
-        for ($i=1;$i<7;$i++){
+        for ($i=1;$i<=7;$i++){
             if (date('l',strtotime($thismonth . "-" . $i)) == $this->record->dayofweek) {
                 $weeks[]=date('Y-m-d',strtotime($thismonth . "-" . $i));
             }

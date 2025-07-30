@@ -10,10 +10,6 @@ class Rostergroup extends Model
 {
     public $table = 'rostergroups';
     protected $guarded = ['id'];
-    protected $casts = [
-        'editable' => 'boolean',
-        'extrainfo' => 'boolean'
-    ];
 
     public function roster(): BelongsTo
     {

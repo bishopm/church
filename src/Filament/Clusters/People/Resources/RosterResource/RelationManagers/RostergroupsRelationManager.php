@@ -43,7 +43,7 @@ class RostergroupsRelationManager extends RelationManager
                     ->options([
                         'reading' => 'Reading'
                     ])
-                ->placeholder('')
+                    ->placeholder('')
             ]);
     }
 

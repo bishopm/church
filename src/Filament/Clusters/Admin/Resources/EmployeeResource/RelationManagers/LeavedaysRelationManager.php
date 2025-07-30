@@ -14,13 +14,30 @@ class LeavedaysRelationManager extends RelationManager
 {
     protected static string $relationship = 'leavedays';
 
+    protected static ?string $modelLabel = 'Leave day';
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('startdate')
+                Forms\Components\DatePicker::make('startdate')
+                    ->label('Start date')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->format('Y-m-d')
+                    ->default(date('Y-m-d'))
+                    ->required(),
+                Forms\Components\DatePicker::make('enddate')
+                    ->label('End date')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->format('Y-m-d')
+                    ->default(date('Y-m-d'))
+                    ->required(),
+                Forms\Components\TextInput::make('numberofdays')
+                    ->label('Number of days')
                     ->required()
-                    ->maxLength(255),
+                    ->numeric(),
             ]);
     }
 
@@ -29,7 +46,9 @@ class LeavedaysRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('startdate')
             ->columns([
-                Tables\Columns\TextColumn::make('startdate'),
+                Tables\Columns\TextColumn::make('startdate')->label('Start date'),
+                Tables\Columns\TextColumn::make('enddate')->label('End date'),
+                Tables\Columns\TextColumn::make('numberofdays')->label('Days')
             ])
             ->filters([
                 //

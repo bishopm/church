@@ -49,6 +49,7 @@ class RecurringTasks extends Command
                 'updated_at' => $fulldate
             ]);
         }
+        // Remove completed tasks, except where they have a status note and are needed for meeting minutes
         DB::table('tasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
         DB::table('tasks')->where('status', 'done')->whereNull('statusnote')->delete();
         Log::info('Task clean up completed on ' . date('Y-m-d H:i'));

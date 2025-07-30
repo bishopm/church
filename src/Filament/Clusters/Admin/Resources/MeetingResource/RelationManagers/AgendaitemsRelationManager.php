@@ -55,6 +55,7 @@ class AgendaitemsRelationManager extends RelationManager
                                 return $data;
                             })
                             ->required(),
+                        Forms\Components\TextInput::make('statusnote')->label('Status note'),
                         Forms\Components\DatePicker::make('duedate')->label('Due'),
                         Forms\Components\Hidden::make('agendaitem_id')
                             ->default($this->mountedTableActionRecord),

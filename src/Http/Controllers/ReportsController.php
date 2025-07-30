@@ -739,7 +739,8 @@ class ReportsController extends Controller
     }
 
     public function minutes($id, $email="") {
-        $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.tasks' => fn($q) => $q->withTrashed()])->where('id',$id)->first();
+        $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.tasks' => fn($q) => $q
+            ->where('statusnote','<>','')->orWhereNull('deleted_at')->withTrashed()])->where('id',$id)->first();
         if (isset($meeting->group)){
             $this->title = $meeting->group->groupname  . " minutes";
         } else {

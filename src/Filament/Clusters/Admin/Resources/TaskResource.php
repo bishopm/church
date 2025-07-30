@@ -13,8 +13,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -108,7 +110,7 @@ class TaskResource extends Resource
                     ->forceSearchCaseInsensitive(true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('visibility')
-                    ->searchable(),
+                    ->searchable()
             ])
             ->filters([
                 SelectFilter::make('status')->label('Status')
@@ -131,7 +133,8 @@ class TaskResource extends Resource
                     }),
                 Filter::make('hide_completed')
                     ->query(fn (Builder $query): Builder => $query->where('status', '<>', 'done'))
-                    ->default()
+                    ->default(),
+                TrashedFilter::make()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -158,5 +161,13 @@ class TaskResource extends Resource
             'edit' => Pages\EditTask::route('/{record}/edit'),
             'taskboard' => Pages\TaskBoard::route('/taskboard')
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }

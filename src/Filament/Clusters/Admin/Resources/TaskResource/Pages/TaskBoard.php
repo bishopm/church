@@ -29,6 +29,7 @@ class TaskBoard extends Page implements HasForms, HasActions {
     protected static string $view = 'church::taskboard';
 
     public $tasks;
+    public $reminders;
     public $statuses;
     public $individual_id;
     public $tab;
@@ -40,6 +41,15 @@ class TaskBoard extends Page implements HasForms, HasActions {
     }
 
     private function getTasks(){
+        $rems=Task::withWhereHas('individual')->whereIn('status',['todo','doing'])->get();
+        foreach ($rems as $rem){
+            $this->reminders[$rem->individual->firstname . " " . $rem->individual->surname][]=[
+                'id'=>$rem->id,
+                'description'=>$rem->description,
+                'statusnote'=>$rem->statusnote,
+                'duedate'=>$rem->duedate
+            ];
+        }
         $tasks=Task::where('status','<>','done')->get();
         foreach ($tasks as $task){
             $fin[$task->status][]=$task;
@@ -53,7 +63,8 @@ class TaskBoard extends Page implements HasForms, HasActions {
             'projects'=>'Projects',
             'doing'=>'Underway',
             'todo'=>'To do',
-            'someday'=>'Some day'
+            'someday'=>'Some day',
+            'reminders'=>'Reminders'
         ];
         $this->statuses=$statuses;
         $this->tasks=$fin;

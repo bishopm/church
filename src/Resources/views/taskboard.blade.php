@@ -26,6 +26,9 @@
                     Completed
                 </x-filament::tabs.item>
             @endif
+            <x-filament::tabs.item x-on:click="tab = 'reminders'" :alpine-active="'tab === \'reminders\''">
+                Reminders
+            </x-filament::tabs.item>
         </x-filament::tabs>
         @foreach ($statuses as $key=>$status)
             <div x-show="tab === '{{$key}}'">
@@ -45,6 +48,18 @@
                                     <td>{{  ($this->editAction)(['task' => $task->id]) }}</td>
                                 </tr>
                             @endforeach    
+                        @endforeach
+                    @elseif ($status=="Reminders")
+                        @foreach ($reminders as $ind=>$rems)
+                            <tr><th>{{$ind}}</th></tr>
+                            @foreach ($rems as $rem)
+                                <tr>
+                                    <td>{{$rem['description']}}</td>
+                                    <td>{{$rem['statusnote']}}</td>
+                                    <td>{{$rem['duedate']}}</td>
+                                    <td>{{  ($this->editAction)(['task' => $rem['id']]) }}</td>
+                                </tr>
+                            @endforeach                            
                         @endforeach
                     @elseif (isset($tasks[$key]))
                         <tr style="background-color:grey;color:white;"><th>Description</th><th>Assigned to</th><th></th></tr>

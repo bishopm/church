@@ -739,7 +739,7 @@ class ReportsController extends Controller
     }
 
     public function minutes($id, $email="") {
-        $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.tasks' => fn($q) => $q
+        $meeting=Meeting::with('group','agendaitems')->with(['agendaitems.meetingtasks' => fn($q) => $q
             ->where('statusnote','<>','')->orWhereNull('deleted_at')->withTrashed()])->where('id',$id)->first();
         if (isset($meeting->group)){
             $this->title = $meeting->group->groupname  . " minutes";
@@ -769,7 +769,7 @@ class ReportsController extends Controller
         $count=1;
         foreach ($meeting->agendaitems as $agenda){
             $sub=1;
-            if ((isset($agenda->minute)) or (count($agenda->tasks))){
+            if ((isset($agenda->minute)) or (count($agenda->meetingtasks))){
                 if ($y>255){
                     $this->pdf=$this->report_header();
                     $page++;
@@ -785,7 +785,7 @@ class ReportsController extends Controller
                     $this->pdf->MultiCell(181,4.5,$agenda->minute,0,'J');
                     $y=$this->pdf->getY()+4;
                 }
-                foreach ($agenda->tasks as $task){
+                foreach ($agenda->meetingtasks as $task){
                     if ($y>255){
                         $this->pdf=$this->report_header();
                         $page++;

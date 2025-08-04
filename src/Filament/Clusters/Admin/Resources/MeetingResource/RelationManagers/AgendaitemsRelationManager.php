@@ -37,7 +37,7 @@ class AgendaitemsRelationManager extends RelationManager
                     ->numeric(),
                 Forms\Components\Textarea::make('minute')
                     ->columnSpanFull(),
-                Forms\Components\Repeater::make('tasks')
+                Forms\Components\Repeater::make('meetingtasks')->label('Actions')
                     ->relationship()
                     ->hiddenOn('create')
                     ->schema([
@@ -76,7 +76,7 @@ class AgendaitemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('heading'),
                 Tables\Columns\TextColumn::make('sortorder')->label('Order'),
                 Tables\Columns\TextColumn::make('level'),
-                Tables\Columns\TextColumn::make('tasks')
+                Tables\Columns\TextColumn::make('meetingtasks')->label('Actions')
                     ->formatStateUsing(function ($state){
                         return substr_count($state,'{');
                     })

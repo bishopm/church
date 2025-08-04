@@ -3,6 +3,7 @@
 namespace Bishopm\Church\Console\Commands;
 
 use Bishopm\Church\Mail\ChurchMail;
+use Bishopm\Church\Models\Meetingtask;
 use Illuminate\Console\Command;
 use Bishopm\Church\Models\Recurringtask;
 use Bishopm\Church\Models\Task;
@@ -50,8 +51,9 @@ class RecurringTasks extends Command
             ]);
         }
         // Remove completed tasks, except where they have a status note and are needed for meeting minutes
-        DB::table('tasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
-        DB::table('tasks')->where('status', 'done')->whereNull('statusnote')->delete();
+        DB::table('tasks')->where('status', 'done')->delete();
+        DB::table('meetingtasks')->where('status', 'done')->update(['deleted_at' => Carbon::now()]);
+        DB::table('meetingtasks')->where('status', 'done')->whereNull('statusnote')->delete();
         Log::info('Task clean up completed on ' . date('Y-m-d H:i'));
 
         // Send task reminders
@@ -61,7 +63,14 @@ class RecurringTasks extends Command
                 if (!isset($data[$task->individual_id])){
                     $data[$task->individual_id]['indiv']=$task->individual;
                 }
-                $data[$task->individual_id]['tasks'][$task->status][]=['description'=>$task->description,'duedate'=>$task->duedate,'statusnote'=>$task->statusnote];
+                $data[$task->individual_id]['tasks'][$task->status][]=['description'=>$task->description,'duedate'=>$task->duedate,'statusnote'=>''];
+            }
+            $meetingtasks=Meetingtask::withWhereHas('individual')->whereIn('status',['todo','doing'])->get();
+            foreach ($meetingtasks as $mtask){
+                if (!isset($data[$mtask->individual_id])){
+                    $data[$mtask->individual_id]['indiv']=$mtask->individual;
+                }
+                $data[$mtask->individual_id]['tasks'][$mtask->status][]=['description'=>$mtask->description,'duedate'=>$mtask->duedate,'statusnote'=>$mtask->statusnote];
             }
             foreach ($data as $indiv){
                 $msg = "Here's your weekly reminder email from " . setting('general.church_abbreviation') . " :) Please let us know if any of these items need to be changed, reassigned, updated or marked complete:<br>";

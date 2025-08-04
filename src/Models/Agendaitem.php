@@ -11,8 +11,8 @@ class Agendaitem extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
-    public function tasks(): HasMany
+    public function meetingtasks(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Meetingtask::class);
     }
 }

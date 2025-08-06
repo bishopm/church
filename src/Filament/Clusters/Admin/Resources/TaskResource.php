@@ -170,4 +170,5 @@ class TaskResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
 }

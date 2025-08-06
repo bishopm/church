@@ -7,6 +7,7 @@ use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingtaskResource\Pages;
 use Bishopm\Church\Filament\Clusters\Admin\Resources\MeetingtaskResource\RelationManagers;
 use Bishopm\Church\Models\Agendaitem;
 use Bishopm\Church\Models\Individual;
+use Bishopm\Church\Models\Meeting;
 use Bishopm\Church\Models\Meetingtask;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -38,17 +39,35 @@ class MeetingtaskResource extends Resource
                 Forms\Components\Select::make('individual_id')->label('Individual')
                     ->options(Individual::orderBy('firstname')->get()->pluck('fullname', 'id'))
                     ->required(),
-                Forms\Components\Select::make('agendaitem_id')->label('Agenda item')
-                    ->options(Agendaitem::orderBy('heading')->get()->pluck('heading', 'id')),
+                Forms\Components\Select::make('agendaitem_id')
+                    ->options(function (Meetingtask $record) {
+                            $agendaitem=Agendaitem::find($record->agendaitem_id);
+                            $options=Agendaitem::where('meeting_id',$agendaitem->meeting_id)->orderBy('heading')->get()->pluck('heading', 'id');
+                            return $options;
+                        })
+                    ->label(function (Meetingtask $record){
+                        $agendaitem=Agendaitem::with('meeting')->find($record->agendaitem_id);
+                        return ($agendaitem->meeting->details . ' (' . $agendaitem->meeting->meetingdatetime . ')');
+                    })
+                    ->required(),
                 Forms\Components\DatePicker::make('duedate')->label('Due date'),
-                Forms\Components\TextInput::make('visibility')
+                Forms\Components\Select::make('visibility')
+                    ->options([
+                        'public'=>'Public',
+                        'private'=>'Private'
+                    ])
+                    ->placeholder('')
                     ->required()
-                    ->maxLength(199)
                     ->default('public'),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(199)
-                    ->default('todo'),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'todo'=>'To do',
+                        'doing'=>'Underway',
+                        'someday'=>'Some day',
+                        'done'=>'Done'
+                    ])
+                    ->placeholder('')
+                    ->required(),
                 Forms\Components\TextInput::make('statusnote')
                     ->label('Status note')
                     ->maxLength(199),

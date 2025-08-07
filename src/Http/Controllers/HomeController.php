@@ -423,8 +423,8 @@ class HomeController extends Controller
         return view('church::' . $this->routeName . '.person',$data);
     }
 
-    public function project($id){
-        $data['project']=Project::find($id);
+    public function project($slug){
+        $data['project']=Project::where('slug',$slug)->first();
         return view('church::' . $this->routeName . '.project',$data);
     }
 

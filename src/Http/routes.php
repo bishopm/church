@@ -35,7 +35,7 @@ Route::domain('app.' . env('APP_URL'))->group(function() {
         Route::get('/paths/{url}', 'path')->name('app.path');
         Route::get('/practices', 'practices')->name('app.practices');
         Route::get('/people/{slug}', 'person')->name('app.person');
-        Route::get('/projects/{id}', 'project')->name('app.project');
+        Route::get('/projects/{slug}', 'project')->name('app.project');
         Route::get('/projects', 'projects')->name('app.projects');
         Route::get('/pastoral', 'pastoral')->name('app.pastoral');
         Route::get('/pastoral/{type}/{id}', 'pastoralcase')->name('app.pastoralcase');
@@ -103,7 +103,7 @@ Route::middleware(['web'])->controller('\Bishopm\Church\Http\Controllers\HomeCon
     Route::get('/offline', 'offline')->name('web.offline');
     Route::get('/people/{slug}', 'person')->name('web.person');
     Route::get('/preacher/{slug}', 'preacher')->name('web.preacher');
-    Route::get('/projects/{id}', 'project')->name('web.project');
+    Route::get('/projects/{slug}', 'project')->name('web.project');
     Route::get('/projects', 'projects')->name('web.projects');
     Route::get('/quietmoments', 'quietmoments')->name('web.quietmoments');
     Route::get('/rosters/{slug}', 'roster')->name('web.roster');

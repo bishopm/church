@@ -59,7 +59,15 @@ class AgendaitemsRelationManager extends RelationManager
                         Forms\Components\DatePicker::make('duedate')->label('Due'),
                         Forms\Components\Hidden::make('agendaitem_id')
                             ->default($this->mountedTableActionRecord),
-                        Forms\Components\Hidden::make('status')
+                        Forms\Components\Select::make('status')
+                            ->options([
+                                'todo'=>'To do',
+                                'doing'=>'Underway',
+                                'someday'=>'Some day',
+                                'done'=>'Done'
+                            ])
+                            ->placeholder('')
+                            ->required()
                             ->default('todo'),
                         Forms\Components\Hidden::make('visibility')
                             ->default('public')

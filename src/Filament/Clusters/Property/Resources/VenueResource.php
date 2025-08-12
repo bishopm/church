@@ -11,6 +11,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class VenueResource extends Resource
@@ -37,7 +38,30 @@ class VenueResource extends Resource
                     ->image(),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\TextInput::make('slug')
-                    ->required(),                
+                    ->required(),
+                Forms\Components\TextInput::make('width')
+                    ->numeric(),
+                Forms\Components\TextInput::make('length')
+                    ->numeric(),
+                Forms\Components\Select::make('tags')->label('Features')
+                    ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','venue'))
+                    ->multiple()
+                    ->createOptionForm([
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                                    ->required(),
+                                Forms\Components\TextInput::make('type')
+                                    ->default('venue')
+                                    ->readonly()
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                    ]),
                 Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
                 Forms\Components\Toggle::make('resource')
                     ->hiddenOn('view')

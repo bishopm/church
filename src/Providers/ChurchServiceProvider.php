@@ -116,7 +116,9 @@ class ChurchServiceProvider extends ServiceProvider
             'sermon' => 'Bishopm\Church\Models\Service',
             'song' => 'Bishopm\Church\Models\Song',
             'task' => 'Bishopm\Church\Models\Task',
-            'tenant' => 'Bishopm\Church\Models\Tenant'
+            'tenant' => 'Bishopm\Church\Models\Tenant',
+            'venue' => 'Bishopm\Church\Models\Venue',
+            'video' => 'Bishopm\Church\Models\Video'
         ]);
         Gate::policy(Role::class, \Bishopm\Church\Filament\Policies\RolePolicy::class);
         Gate::policy(Permission::class, \Bishopm\Church\Filament\Policies\PermissionPolicy::class);

@@ -29,7 +29,7 @@ use stdClass;
 
 class ReportsController extends Controller
 {
-    public $pdf, $title, $subtitle, $page, $logo, $widelogo;
+    public $pdf, $title, $subtitle, $page, $logo, $hublogo, $widelogo;
 
     public function __construct(){
         $this->pdf = new tFPDF();
@@ -42,6 +42,7 @@ class ReportsController extends Controller
         $this->subtitle="";
         $this->page=0;
         $this->logo=url('/') . "/church/images/blacklogo.png";
+        $this->hublogo=url('/') . "/church/images/hublogosmall.png";
         $this->widelogo=url('/') . "/church/images/bwidelogo.png";
     }
 
@@ -1506,7 +1507,7 @@ class ReportsController extends Controller
         return $lyrics;
     }
     
-    public function venue($id, $reportdate){
+    public function venue($id, $reportdate, $header){
         $days=array();
         $fday=intval(date('N',strtotime($reportdate)));
         if ($fday==1){
@@ -1524,9 +1525,17 @@ class ReportsController extends Controller
         $this->pdf->AddPage('P');
         $this->pdf->SetTitle($this->title);
         $this->pdf->SetAutoPageBreak(true, 0);
+        if ($header=="hub"){
+            $htext="Westville Community Hub";
+            $this->pdf->Image($this->hublogo,10,5,22,22);
+            $this->pdf->SetFont('Arial', 'B', 10);
+            $this->pdf->text(167, 9, "www.westville.org.za");
+        } else {
+            $htext=setting('general.church_name');
+            $this->pdf->Image($this->logo,10,0,25,25);
+        }
         $this->pdf->SetFont('Arial', 'B', 22);
-        $this->pdf->Image($this->logo,10,0,25,25);
-        $this->pdf->text(40, 12, setting('general.church_name'));
+        $this->pdf->text(40, 12, $htext);
         $this->pdf->SetFont('Arial', '', 16);
         $this->pdf->text(40, 20, $this->title);
         $this->pdf->SetFont('Arial', 'B', 12);

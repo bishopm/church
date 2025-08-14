@@ -76,6 +76,11 @@ class ChurchCalendarWidget extends CalendarWidget
         return [
             Action::make('report')->label('Weekly report')
                 ->form([
+                    Select::make('header')->options([
+                        'hub' => 'Westville Community Hub',
+                        'church' => setting('general.church_name')
+                    ])
+                    ->default('hub'),
                     DatePicker::make('reportdate')
                         ->label('Starting date')
                         ->format('Y-m-d')
@@ -86,7 +91,7 @@ class ChurchCalendarWidget extends CalendarWidget
                 ])
                 ->icon('heroicon-o-newspaper')
                 ->action(function (array $data): void {
-                    redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate']]);
+                    redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate'], 'header'=>$data['header']]);
                 }),
                 CreateAction::make('createDiaryentry')->label('Add a booking')
                     ->icon('heroicon-o-calendar-days')

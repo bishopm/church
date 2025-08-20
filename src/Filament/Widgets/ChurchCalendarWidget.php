@@ -205,7 +205,9 @@ class ChurchCalendarWidget extends CalendarWidget
                         ->selectablePlaceholder(false)
                         ->default('tenant')
                 ])->columns(),
-                Hidden::make('venue_id')
+                Select::make('venue_id')->label('Venue')
+                    ->options(Venue::orderBy('venue')->get()->pluck('venue', 'id'))
+                    ->searchable()
                     ->default($this->record->id),
                 Textarea::make('details')
                     ->rows(5),

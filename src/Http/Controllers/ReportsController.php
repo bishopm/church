@@ -1528,6 +1528,7 @@ class ReportsController extends Controller
         if ($header=="hub"){
             $htext="Westville Community Hub";
             $this->pdf->Image($this->hublogo,10,5,22,22);
+            $this->pdf->Image(url('/') . "/church/images/hub-qr-code.png",185,10,18,18);
             $this->pdf->SetFont('Arial', 'B', 10);
             $this->pdf->text(167, 9, "www.westville.org.za");
         } else {
@@ -1536,7 +1537,7 @@ class ReportsController extends Controller
         }
         $this->pdf->SetFont('Arial', 'B', 22);
         $this->pdf->text(40, 12, $htext);
-        $this->pdf->SetFont('Arial', '', 16);
+        $this->pdf->SetFont('Arial', '', 14);
         $this->pdf->text(40, 20, $this->title);
         $this->pdf->SetFont('Arial', 'B', 12);
         $yy=40;

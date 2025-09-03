@@ -60,6 +60,7 @@ Route::domain('app.' . env('APP_URL'))->group(function() {
 Route::middleware(['web',ReportsRoute::class])->group(function () {
     Route::get('/admin/reports/venues/{reportdate?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@allvenues','as' => 'reports.allvenues']);
     Route::get('/admin/reports/barcodes/{newonly?}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@barcodes','as' => 'reports.barcodes']);
+    Route::get('/admin/reports/chord/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@chord','as' => 'reports.chord']);
     Route::get('/admin/reports/group/{id}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@group','as' => 'reports.group']);
     Route::get('/admin/reports/removenames', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@removenames','as' => 'reports.removenames']);
     Route::get('/admin/reports/venue/{id}/{reportdate}/{header}', ['uses' => '\Bishopm\Church\Http\Controllers\ReportsController@venue','as' => 'reports.venue']);

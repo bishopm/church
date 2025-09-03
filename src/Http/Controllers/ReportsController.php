@@ -456,6 +456,66 @@ class ReportsController extends Controller
         exit;
     }
 
+    public function chord($id){
+        $this->pdf->AddPage('P');
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVuCond', 'B', 22);
+        $dbchord = Chord::find($id);
+        $x1=10;
+        $y=10;
+        $this->pdf->setxy(0,$y-2);
+        $this->pdf->SetFont('Courier', 'B', 10);
+        $this->pdf->cell(60,5,$dbchord->chord,0,0,'C');
+        if ($dbchord->fret==0){
+            $this->pdf->line(10,$y+5,40,$y+5);
+            $this->pdf->rect(10,$y+5,30,1,'F');
+            $f=0;
+        } else {
+            $f=1;
+            $this->pdf->text(43,$y+10,$dbchord->fret);
+        }
+        for ($i=6;$i>0;$i--){
+            $svar="s" . $i;
+            if ($dbchord->{$svar}=="x"){
+                $this->pdf->SetDrawColor(175,175,175);
+                $this->pdf->line($x1,$y+5+$f,$x1,$y+30);
+            } else {
+                $this->pdf->SetDrawColor(0,0,0);
+                $this->pdf->line($x1,$y+5+$f,$x1,$y+30);
+            }
+            $this->pdf->SetDrawColor(0,0,0);
+            $x1=$x1+6;
+            if ($i<6){
+                $this->pdf->line(10,$y+$i*6,40,$y+$i*6);
+            }
+        }
+        $x=7.5;
+        $cdata=array(
+            "s6"=>$dbchord->s6,
+            "s5"=>$dbchord->s5,
+            "s4"=>$dbchord->s4,
+            "s3"=>$dbchord->s3,
+            "s2"=>$dbchord->s2,
+            "s1"=>$dbchord->s1
+        );
+        foreach ($cdata as $cd){
+            if ($cd !== 'x'){
+                $cd = $cd - $dbchord->fret + $f;
+                $this->pdf->SetFont('Courier', 'B', 14);
+                if ($cd > 0){
+                    $this->pdf->SetFont('Courier', 'B', 20);
+                    $circle=url('/') . "/church/images/circle.png";
+                    $this->pdf->Image($circle,$x+0.5,$y+1+6*$cd,4,4);
+                    $this->pdf->SetFont('Courier', 'B', 14);
+                }
+                $this->pdf->SetFont('Courier', '', 7);
+            }
+            $x=$x+6;
+        }
+        $this->pdf->Output();
+        exit;
+    }
+
     public function convert_smart_quotes($string) {
         $search = array(chr(0xe2) . chr(0x80) . chr(0x98),
                         chr(0xe2) . chr(0x80) . chr(0x99),

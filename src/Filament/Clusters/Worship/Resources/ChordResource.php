@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Joaopaulolndev\FilamentPdfViewer\Forms\Components\PdfViewerField;
 
 class ChordResource extends Resource
 {
@@ -28,23 +29,40 @@ class ChordResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('chord')
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\TextInput::make('s1')->label('E string (treble)')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('s2')->label('B string')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('s3')->label('G string')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('s4')->label('D string')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('s5')->label('A string')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('s6')->label('E string (bass)')
-                    ->maxLength(10),
-                Forms\Components\TextInput::make('fret')
-                    ->maxLength(10),
+                Forms\Components\Group::make([
+                    Forms\Components\TextInput::make('chord')
+                        ->required()
+                        ->maxLength(50),
+                    Forms\Components\Select::make('fret')
+                        ->required()
+                        ->default(0)
+                        ->options([0,1,2,3,4,5,6,7,8,9,10]),
+                    PdfViewerField::make('preview')
+                        ->hiddenOn('create')
+                        ->label('')
+                        ->minHeight('30svh')
+                        ->fileUrl(fn (Chord $record) => url('/') . '/admin/reports/chord/' . $record->id),
+                ]),
+                Forms\Components\Group::make([
+                    Forms\Components\Select::make('s1')->label('E string (treble)')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                    Forms\Components\Select::make('s2')->label('B string')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                    Forms\Components\Select::make('s3')->label('G string')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                    Forms\Components\Select::make('s4')->label('D string')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                    Forms\Components\Select::make('s5')->label('A string')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                    Forms\Components\Select::make('s6')->label('E string (bass)')
+                        ->required()
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                ])
             ]);
     }
 

@@ -288,54 +288,50 @@ class SongResource extends Resource
     }
 
     public static function transpose(string $updown, string $lyrics): string {
-        // Chromatic scale (using sharps)
-        $notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    {
+        // Normalize direction
+        $dir = (strtolower($updown) === 'down') ? -1 : 1;
 
-        // Map enharmonic equivalents (flats -> sharps)
+        // Use sharps internally
+        $notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+        // Enharmonic normalization (flats → sharps + accidentals)
         $enharmonics = [
-            'Db' => 'C#',
-            'Eb' => 'D#',
-            'Gb' => 'F#',
-            'Ab' => 'G#',
-            'Bb' => 'A#'
+            'Db' => 'C#', 'Eb' => 'D#', 'Gb' => 'F#', 'Ab' => 'G#', 'Bb' => 'A#',
+            'Cb' => 'B',  'Fb' => 'E',  'E#' => 'F',  'B#' => 'C',
         ];
 
-        // Regex to match chords inside [...]
-        return preg_replace_callback('/\[([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]*(?:\/[A-G][#b]?)?)\]/', function ($matches) use ($notes, $enharmonics, $updown) {
-            $chord = $matches[1];
+        $transposeNote = function (string $note) use ($dir, $notes, $enharmonics): string {
+            if (isset($enharmonics[$note])) {
+                $note = $enharmonics[$note];
+            }
+            $i = array_search($note, $notes, true);
+            if ($i === false) {
+                return $note; // unknown root; leave unchanged
+            }
+            $i = ($i + $dir) % 12;
+            if ($i < 0) $i += 12;
+            return $notes[$i];
+        };
 
-            // Split slash chords (eg A/C#)
-            $parts = explode('/', $chord);
-            foreach ($parts as &$part) {
-                // Extract root note + remainder (e.g. G#m7 -> root=G#, suffix=m7)
-                if (preg_match('/^([A-G][#b]?)(.*)$/', $part, $m)) {
-                    $root = $m[1];
-                    $suffix = $m[2];
+        // Match chords inside [ ... ]
+        return preg_replace_callback('/\[([^\]]+)\]/', function ($m) use ($transposeNote) {
+            $sym = trim($m[1]);
 
-                    // Convert flats to sharps
-                    if (isset($enharmonics[$root])) {
-                        $root = $enharmonics[$root];
-                    }
-
-                    // Find index in chromatic scale
-                    $index = array_search($root, $notes);
-                    if ($index === false) {
-                        return $matches[0]; // Unknown chord root, leave unchanged
-                    }
-
-                    // Move up or down one semitone
-                    if (strtolower($updown) === 'up') {
-                        $index = ($index + 1) % 12;
-                    } else {
-                        $index = ($index + 11) % 12; // down is -1 mod 12
-                    }
-
-                    // Replace root with transposed note
-                    $part = $notes[$index] . $suffix;
-                }
+            // Root + optional suffix + optional /Bass
+            // Suffix can contain digits, words, parentheses, #, b, +, - etc.
+            if (!preg_match('/^([A-G][#b]?)([^\/]*)(?:\/([A-G][#b]?))?$/', $sym, $p)) {
+                return $m[0]; // Not a chord, leave unchanged
             }
 
-            return '[' . implode('/', $parts) . ']';
+            $root   = $p[1];
+            $suffix = $p[2] ?? '';
+            $bass   = $p[3] ?? null;
+
+            $rootT = $transposeNote($root);
+            $bassT = $bass !== null ? $transposeNote($bass) : null;
+
+            return '[' . $rootT . $suffix . ($bassT ? '/' . $bassT : '') . ']';
         }, $lyrics);
     }
 

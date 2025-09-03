@@ -287,8 +287,7 @@ class SongResource extends Resource
             ]);
     }
 
-    public static function transpose(string $updown, string $lyrics): string {
-    {
+    public static function transpose(string $updown, string $lyrics): string { 
         // Normalize direction
         $dir = (strtolower($updown) === 'down') ? -1 : 1;
 

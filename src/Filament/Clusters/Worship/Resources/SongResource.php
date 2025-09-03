@@ -40,6 +40,21 @@ class SongResource extends Resource
 
     public $record;
 
+    public array $allkeys = [
+                                'A' => 'A',
+                                'A#/Bb' => 'A#/Bb',
+                                'B' => 'B',
+                                'C' => 'C',
+                                'C#/Db' => 'C#/Db',
+                                'D' => 'D',
+                                'D#/Eb' => 'D#/Eb',
+                                'E' => 'E',
+                                'F' => 'F',
+                                'F#/Gb' => 'F#/Gb',
+                                'G' => 'G',
+                                'G#/Ab' => 'G#/Ab'
+                            ];
+
     public static function form(Form $form): Form
     {
         return $form
@@ -128,6 +143,42 @@ class SongResource extends Resource
                             ->maxLength(191),
                         Forms\Components\TextInput::make('bible')->label('Bible reference')
                             ->maxLength(191),
+                        \Filament\Forms\Components\Actions::make([
+                            Action::make('transposeDown')
+                                ->label('Transpose Down')
+                                ->button()
+                                ->color('primary')
+                                ->action(function (Set $set, Get $get) {
+                                    $currentKey = $get('key');
+                                    $lyrics = $get('lyrics');
+                                    $keys=['A','A#/Bb','B','C','C#/Db','D','D#/Eb','E','F','F#/Gb','G','G#/Ab'];
+                                    if (in_array($currentKey, $keys)) {
+                                        $currentIndex = array_search($currentKey, $keys);
+                                        $newIndex = ($currentIndex - 1 + count($keys)) % count($keys);
+                                        $set('key', $keys[$newIndex]);
+                                    }
+                                    $newlyrics = self::transpose('down',$lyrics);
+                                    $set('lyrics', $newlyrics);
+                                })
+                                ->icon('heroicon-m-arrow-down'),
+                            Action::make('transposeUp')
+                                ->label('Transpose Up')
+                                ->button()
+                                ->color('primary')
+                                ->action(function (Set $set, Get $get) {
+                                    $currentKey = $get('key');
+                                    $lyrics = $get('lyrics');
+                                    $keys=['A','A#/Bb','B','C','C#/Db','D','D#/Eb','E','F','F#/Gb','G','G#/Ab'];
+                                    if (in_array($currentKey, $keys)) {
+                                        $currentIndex = array_search($currentKey, $keys);
+                                        $newIndex = ($currentIndex + 1) % count($keys);
+                                        $set('key', $keys[$newIndex]);
+                                    }
+                                    $newlyrics = self::transpose('up',$lyrics);
+                                    $set('lyrics', $newlyrics);
+                                })
+                                ->icon('heroicon-m-arrow-up')
+                        ]),
                         Forms\Components\Textarea::make('lyrics')
                             ->label('Lyrics ({} for sections, [] for chords)')
                             ->required()
@@ -234,6 +285,58 @@ class SongResource extends Resource
                     ]),
                 ]),
             ]);
+    }
+
+    public static function transpose ($updown,$lyrics){
+        // Chromatic scale (using sharps)
+        $notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        // Map enharmonic equivalents (flats -> sharps)
+        $enharmonics = [
+            'Db' => 'C#',
+            'Eb' => 'D#',
+            'Gb' => 'F#',
+            'Ab' => 'G#',
+            'Bb' => 'A#'
+        ];
+
+        // Regex to match chords inside [...]
+        return preg_replace_callback('/\[([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]*(?:\/[A-G][#b]?)?)\]/', function ($matches) use ($notes, $enharmonics, $updown) {
+            $chord = $matches[1];
+
+            // Split slash chords (eg A/C#)
+            $parts = explode('/', $chord);
+            foreach ($parts as &$part) {
+                // Extract root note + remainder (e.g. G#m7 -> root=G#, suffix=m7)
+                if (preg_match('/^([A-G][#b]?)(.*)$/', $part, $m)) {
+                    $root = $m[1];
+                    $suffix = $m[2];
+
+                    // Convert flats to sharps
+                    if (isset($enharmonics[$root])) {
+                        $root = $enharmonics[$root];
+                    }
+
+                    // Find index in chromatic scale
+                    $index = array_search($root, $notes);
+                    if ($index === false) {
+                        return $matches[0]; // Unknown chord root, leave unchanged
+                    }
+
+                    // Move up or down one semitone
+                    if (strtolower($updown) === 'up') {
+                        $index = ($index + 1) % 12;
+                    } else {
+                        $index = ($index + 11) % 12; // down is -1 mod 12
+                    }
+
+                    // Replace root with transposed note
+                    $part = $notes[$index] . $suffix;
+                }
+            }
+
+            return '[' . implode('/', $parts) . ']';
+        }, $lyrics);
     }
 
     public static function getServices (){

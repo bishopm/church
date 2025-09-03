@@ -8,4 +8,5 @@ class Chord extends Model
 {
     public $table = 'chords';
     protected $guarded = ['id'];
+    public $timestamps = false;
 }

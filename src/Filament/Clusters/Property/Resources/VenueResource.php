@@ -34,16 +34,22 @@ class VenueResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
+                    ->hiddenOn('view')
                     ->directory('images/venue')
                     ->image(),
-                Forms\Components\Textarea::make('description'),
+                Forms\Components\Textarea::make('description')
+                    ->hiddenOn('view'),
                 Forms\Components\TextInput::make('slug')
+                    ->hiddenOn('view')
                     ->required(),
                 Forms\Components\TextInput::make('width')
+                    ->hiddenOn('view')
                     ->numeric(),
                 Forms\Components\TextInput::make('length')
+                    ->hiddenOn('view')
                     ->numeric(),
                 Forms\Components\Select::make('tags')->label('Features')
+                    ->hiddenOn('view')
                     ->relationship('tags','name',modifyQueryUsing: fn (Builder $query) => $query->where('type','venue'))
                     ->multiple()
                     ->createOptionForm([
@@ -62,11 +68,14 @@ class VenueResource extends Resource
                                     ->required(),
                             ])
                     ]),
-                Forms\Components\Toggle::make('publish')->label('Publish on Hub website'),
+                Forms\Components\Toggle::make('publish')->label('Publish on Hub website')
+                    ->hiddenOn('view'),
                 Forms\Components\Toggle::make('resource')
+                    ->hiddenOn('view')
                     ->hiddenOn('view')
                     ->label('Show in resources view'),
                 Forms\Components\ColorPicker::make('colour')
+                    ->hiddenOn('view')
             ]);
     }
 

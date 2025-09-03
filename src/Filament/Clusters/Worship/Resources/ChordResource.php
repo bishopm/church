@@ -46,22 +46,22 @@ class ChordResource extends Resource
                 Forms\Components\Group::make([
                     Forms\Components\Select::make('s1')->label('E string (treble)')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                     Forms\Components\Select::make('s2')->label('B string')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                     Forms\Components\Select::make('s3')->label('G string')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                     Forms\Components\Select::make('s4')->label('D string')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                     Forms\Components\Select::make('s5')->label('A string')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                     Forms\Components\Select::make('s6')->label('E string (bass)')
                         ->required()
-                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x']),
+                        ->options([0,1,2,3,4,5,6,7,8,9,10,11,'x'=>'x']),
                 ])
             ]);
     }

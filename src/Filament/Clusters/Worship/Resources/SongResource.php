@@ -287,7 +287,7 @@ class SongResource extends Resource
             ]);
     }
 
-    public static function transpose ($updown,$lyrics){
+    public static function transpose(string $updown, string $lyrics): string {
         // Chromatic scale (using sharps)
         $notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 

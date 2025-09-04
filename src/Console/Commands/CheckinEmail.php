@@ -33,23 +33,21 @@ class CheckinEmail extends Command
     {
         Log::info('Preparing Check in email on ' . date('Y-m-d H:i'));
         $data=array();
-        $data['never']=array();      
+        $data = [
+            'never'  => [],
+            'over_six_months' => [],
+            'over_six_weeks'  => [],
+        ];
         $sixWeeks  = now()->subWeeks(6);
         $sixMonths = now()->subMonths(6);
-        $individuals = Individual::select('individuals.*')
+        $individuals = Individual::where(function ($q) { $q->whereNull('nametag_exclude')->orWhere('nametag_exclude', '!=', 1); })
+            ->select('individuals.*')
             ->addSelect([
                 'last_attended' => Attendance::selectRaw('MAX(attendancedate)')
                     ->whereColumn('individual_id', 'individuals.id')
             ])
             ->orderBy('surname', 'ASC')
             ->get();
-
-        $data = [
-            'never'  => [],
-            'over_six_months' => [],
-            'over_six_weeks'  => [],
-        ];
-
         foreach ($individuals as $individual) {
             $last = $individual->last_attended;
 
@@ -88,7 +86,10 @@ class CheckinEmail extends Command
             $data['url']="https://westvillemethodist.co.za";
             $data['body']=$message;
             $data['email']=$recip->email;
-            Mail::to($data['email'])->queue(new ChurchMail($data));
+            if ($data['email']=='michael@westvillemethodist.co.za') {
+                //Mail::to($data['email'])->queue(new ChurchMail($data));
+                Mail::to($data['email'])->send(new ChurchMail($data));
+            }
         }
         Log::info('Check in email sent on ' . date('Y-m-d H:i'));
     }

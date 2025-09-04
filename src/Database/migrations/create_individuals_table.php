@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('uid', 255)->nullable();
             $table->json('app', 255)->nullable();
             $table->tinyInteger('online')->nullable();
+            $table->tinyInteger('nametag_exclude')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();

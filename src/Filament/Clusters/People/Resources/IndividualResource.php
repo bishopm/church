@@ -278,6 +278,7 @@ class IndividualResource extends Resource
                         Forms\Components\Textarea::make('notes')
                             ->columnSpanFull(),
                         Forms\Components\Checkbox::make('welcome_email'),
+                        Forms\Components\Toggle::make('nametag_exclude')->label('Exclude from nametag use check'),
                         Forms\Components\DateTimePicker::make('deleted_at'),
                         ]),
                 ])

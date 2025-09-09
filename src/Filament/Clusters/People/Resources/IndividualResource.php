@@ -21,6 +21,7 @@ use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
 use Bishopm\Church\Mail\ChurchMail;
+use Bishopm\Church\Models\Anniversary;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
@@ -172,11 +173,21 @@ class IndividualResource extends Resource
                         ->schema([
                         Forms\Components\Placeholder::make('pastoraltext')
                             ->content(function (Individual $record){
+                                $anniversaries = Anniversary::where('household_id',$record->household_id)->get();
                                 $pastoralnotes=Pastoralnote::where('pastoralnotable_type','individual')->where('pastoralnotable_id',$record->id)
                                 ->orWhere(function ($q) use ($record) { $q->where('pastoralnotable_type', 'household')->where('pastoralnotable_id', $record->household_id);})
                                 ->orderBy('pastoraldate','DESC')->get();
                                 $content="<table>";
+                                if (count($anniversaries)){
+                                    $content=$content . "<tr><th colspan=\"2\" class=\"text-left\">Anniversaries</th><th colspan=\"2\" class=\"text-right\">";
+                                    foreach ($anniversaries as $anniv){
+                                        $content=$content . "<tr><td>" . svg('heroicon-o-calendar',['width'=>15,'height'=>15])->toHtml() . "</td><td>" . $anniv->anniversarydate . "</td><td colspan=\"2\" class=\"px-3\">" . $anniv->details . "</td><td></td></tr>";
+                                    }
+                                }
                                 $edit = svg('heroicon-o-pencil-square',['width'=>15,'height'=>15])->toHtml();
+                                if (count($pastoralnotes)){
+                                    $content=$content . "<tr><th class=\"text-left\" colspan=\"3\">Pastoral Notes</th></tr>";
+                                }
                                 foreach ($pastoralnotes as $pn){
                                     if ($pn->pastoralnotable_type=="individual"){
                                         $svg = svg('heroicon-o-user',['width'=>15,'height'=>15])->toHtml();
@@ -241,7 +252,11 @@ class IndividualResource extends Resource
                                     'pastoralnotable_type' => 'individual',
                                     'pastoralnotable_id' => $record->id
                                 ]);
-                            })
+                            }),
+                            Action::make('Add or edit household anniversaries')
+                                ->url(function (Individual $record){
+                                    return url('admin/people/households') . "/" . $record->household_id . "/edit?activeRelationManager=1";
+                                })
                         ])
                     ]),
                     Tab::make('Groups')->schema([

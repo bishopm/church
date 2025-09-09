@@ -86,10 +86,7 @@ class CheckinEmail extends Command
             $data['url']="https://westvillemethodist.co.za";
             $data['body']=$message;
             $data['email']=$recip->email;
-            if ($data['email']=='michael@westvillemethodist.co.za') {
-                //Mail::to($data['email'])->queue(new ChurchMail($data));
-                Mail::to($data['email'])->send(new ChurchMail($data));
-            }
+            Mail::to($data['email'])->queue(new ChurchMail($data));
         }
         Log::info('Check in email sent on ' . date('Y-m-d H:i'));
     }

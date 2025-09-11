@@ -29,14 +29,9 @@ class EditService extends EditRecord
         return [
             Actions\Action::make('Copy service')
                 ->disabled(function () {
-                    $services=setting('general.services');
-                    $existingservices=Service::where('servicedate',$this->record->servicedate)->get();
-                    foreach($existingservices as $es){
-                        $searchndx=array_search($es->servicetime,$services);
-                        if ($searchndx===true){
-                            unset($services[$searchndx]);
-                        }
-                    }
+                    $setting=setting('general.services');
+                    $servicetimes=Service::where('servicedate',$this->record->servicedate)->get()->pluck('servicetime')->toArray();
+                    $services=array_diff($setting, $servicetimes);
                     if (!count($services)){
                         return true;
                     } else {
@@ -78,7 +73,6 @@ class EditService extends EditRecord
     }
 
     private function copyService($data){
-        //$data['service']
         $set=Service::with(['setitems' => function($q) { $q->orderBy('sortorder', 'asc'); }])->where('id',$this->record->id)->first();
         $newset = Service::create([
             'servicedate'=>$set->servicedate,
@@ -98,5 +92,6 @@ class EditService extends EditRecord
             $newset->setitems()->save($newitem);
         }
         Notification::make('Service created')->title('Duplicate set has been created at ' . $data['service'])->send();
+        return redirect()->route('filament.admin.worship.resources.services.edit', ['record' => $newset->id]);
     }
 }

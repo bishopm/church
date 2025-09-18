@@ -24,13 +24,7 @@ class Diary extends Widget
         $today = date('Y-m-d');
         $nextweek = date('Y-m-d',strtotime('+10 days'));
         $this->widgetdata['plans']=Plan::with('person')->whereIn('service_id',array_keys($this->widgetdata['services']))->where('servicedate','>=',$today)->where('servicedate','<=',$nextweek)->orderBy('servicedate','ASC')->get();
-        $this->widgetdata['events']=[];
-        $events=Event::where('eventdate','>=',$today)->where('eventdate','<=',$nextweek)->orderBy('eventdate','ASC')->get();
-        foreach ($events as $event){
-            $event->dayofweek=Carbon::parse($event->startdate)->format('D');
-            $event->starttime=Carbon::parse($event->starttime)->format('H:i');
-            $this->widgetdata['events'][]=$event;
-        }
+        $this->widgetdata['events']=Event::where('eventdate','>=',$today)->where('eventdate','<=',$nextweek)->orderBy('eventdate','ASC')->get();
     }
 
     public static function canView(): bool 

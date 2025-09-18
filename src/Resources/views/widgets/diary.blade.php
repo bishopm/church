@@ -10,12 +10,16 @@
         </x-filament::tabs>
         <div x-show="tab === 'tab1'">
             <x-filament::section>
-                <table>
-                    <tr><td><b>Date</b></td><td style="padding-left:10px; padding-right:10px;"><b>Time</b></td><td><b>Event</b></td></tr>
-                    @foreach ($widgetdata['events'] as $event)
-                        <tr><td>{{$event['date']}}</td><td style="padding-left:10px; padding-right:10px;">{{$event['time']}}</td><td>{{$event['name']}}</td></tr>
-                    @endforeach
-                </table>
+                @if (count($widgetdata['events']))
+                    <table>
+                        <tr><td><b>Date</b></td><td style="padding-left:10px; padding-right:10px;"><b>Time</b></td><td><b>Event</b></td></tr>
+                        @foreach ($widgetdata['events'] as $event)
+                            <tr><td>{{$event['date']}}</td><td style="padding-left:10px; padding-right:10px;">{{$event['time']}}</td><td>{{$event['name']}}</td></tr>
+                        @endforeach
+                    </table>
+                @else
+                    No upcoming events
+                @endif
             </x-filament::section>
         </div>
         <div x-show="tab === 'tab2'">

@@ -8,6 +8,7 @@ use Bishopm\Church\Models\Person;
 use Bishopm\Church\Models\Service;
 use Bishopm\Church\Models\Song;
 use Bishopm\Church\Models\Prayer;
+use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Setitem;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -103,6 +104,10 @@ class ServiceResource extends Resource
                         Forms\Components\Select::make('series_id')
                             ->placeholder('')
                             ->relationship(name: 'series', titleAttribute: 'series')
+                            ->options(function () {
+                                $serieses=Series::orderBy('startingdate','desc')->get()->pluck('series','id')->toArray();
+                                return $serieses;
+                            })
                             ->default(function (Get $get) {
                                 $sd=substr($get('servicedate'),0,10);
                                 $service = Service::where('servicedate',$sd)->first();

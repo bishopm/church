@@ -24,6 +24,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
+use Guava\Calendar\Actions\EditAction;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -122,7 +123,26 @@ class ChurchCalendarWidget extends CalendarWidget
     public function getEventClickContextMenuActions(): array
     {
         return [
-            $this->editAction(),
+             EditAction::make('ctxEditDiaryentry')
+                ->model(Diaryentry::class)
+                ->modelLabel('Booking')
+                ->icon('heroicon-o-pencil')
+                ->using(function (Diaryentry $record, array $data) {
+                    // If venue_id is an array, store only the first value
+                    if (isset($data['venue_id']) && is_array($data['venue_id'])) {
+                        $data['venue_id'] = $data['venue_id'][0] ?? null;
+                    }
+                    $record->update($data);
+                })
+                ->mountUsing(function (Form $form, Diaryentry $record) {
+                    $data = $record->toArray();
+
+                    // Wrap single venue_id in array so form fills correctly
+                    if (isset($data['venue_id']) && !is_array($data['venue_id'])) {
+                        $data['venue_id'] = [$data['venue_id']];
+                    }
+                    $form->fill($data);
+            }),
             $this->deleteAction(),
         ];
     }
@@ -132,12 +152,39 @@ class ChurchCalendarWidget extends CalendarWidget
         return [
             CreateAction::make('ctxCreateDiaryentry')
                 ->model(Diaryentry::class)->modelLabel('Booking')
+                ->using(function (array $data) {
+                    // Ensure venue_id is always treated as an array
+                    $venues = (array) $data['venue_id'];
+                    $count = 0;
+                    foreach ($venues as $venueId) {
+                        for ($i = 0; $i <= $data['repeats']; $i++) {
+                            $newtime = date(
+                                'Y-m-d H:i',
+                                strtotime($data['diarydatetime'] . ' + ' . $i * $data['interval'] . ' days')
+                            );
+                            Diaryentry::create([
+                                'diarisable_id'   => $data['diarisable_id'],
+                                'diarisable_type' => $data['diarisable_type'] ?? 'tenant',
+                                'venue_id'        => $venueId,
+                                'details'         => $data['details'],
+                                'calendar'        => $data['calendar'] ?? 0,
+                                'diarydatetime'   => $newtime,
+                                'endtime'         => $data['endtime'],
+                            ]);
+                            $count++;
+                        }
+                    }
+                    Notification::make()
+                        ->title("{$count} booking(s) created successfully")
+                        ->success()
+                        ->send();
+                })
                 ->mountUsing(function (Form $form, array $arguments) {
-                    $getvenue=data_get($arguments, 'resource');
-                    if ($getvenue){
-                        $venue=$getvenue['id'];
+                    $getvenue = data_get($arguments, 'resource');
+                    if ($getvenue) {
+                        $venues = [$getvenue['id']]; // Wrap in array
                     } else {
-                        $venue=$this->record->id;
+                        $venues = $this->record ? [$this->record->id] : [];
                     }
                     $tenant = data_get($arguments, 'diarisable_id');
                     $utype = data_get($arguments, 'diarisable_type');
@@ -152,7 +199,7 @@ class ChurchCalendarWidget extends CalendarWidget
                             'diarisable_type' => $utype,
                             'diarydatetime' => Carbon::make($diarydatetime),
                             'endtime' => Carbon::make($endtime),
-                            'venue_id' => $venue
+                            'venue_id' => $venues
                         ]);
                     }
                 }),
@@ -283,14 +330,12 @@ class ChurchCalendarWidget extends CalendarWidget
             }
             return true;
         }
-
         return false;
     }
 
     public function onEventResize(array $info = []): bool
     {
         parent::onEventResize($info);
-
         if ($this->getEventModel() === Diaryentry::class) {
             $record = $this->getEventRecord();
             if ($delta = data_get($info, 'endDelta')) {
@@ -300,17 +345,13 @@ class ChurchCalendarWidget extends CalendarWidget
                     'endtime' => $endsAt,
                 ]);
             }
-
             Notification::make()
                 ->title('Event duration changed!')
                 ->success()
                 ->send()
             ;
-
             return true;
-
         }
-
         Notification::make()
             ->title('Duration of this event cannot be changed!')
             ->danger()

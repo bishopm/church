@@ -24,6 +24,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
+use Guava\Calendar\Actions\EditAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -88,7 +89,26 @@ class ChurchVenuesWidget extends CalendarWidget
     public function getEventClickContextMenuActions(): array
     {
         return [
-            $this->editAction(),
+            EditAction::make('ctxEditDiaryentry')
+                ->model(Diaryentry::class)
+                ->modelLabel('Booking')
+                ->icon('heroicon-o-pencil')
+                ->using(function (Diaryentry $record, array $data) {
+                    // If venue_id is an array, store only the first value
+                    if (isset($data['venue_id']) && is_array($data['venue_id'])) {
+                        $data['venue_id'] = $data['venue_id'][0] ?? null;
+                    }
+                    $record->update($data);
+                })
+                ->mountUsing(function (Form $form, Diaryentry $record) {
+                    $data = $record->toArray();
+
+                    // Wrap single venue_id in array so form fills correctly
+                    if (isset($data['venue_id']) && !is_array($data['venue_id'])) {
+                        $data['venue_id'] = [$data['venue_id']];
+                    }
+                    $form->fill($data);
+            }),
             $this->deleteAction(),
         ];
     }
@@ -133,12 +153,6 @@ class ChurchVenuesWidget extends CalendarWidget
                         $venues = [$getvenue['id']]; // Wrap in array
                     } else {
                         $venues = $this->record ? [$this->record->id] : [];
-                    }
-                    $getvenue=data_get($arguments, 'resource');
-                    if ($getvenue){
-                        $venue=$getvenue['id'];
-                    } else {
-                        $venue=$this->record->id;
                     }
                     $tenant = data_get($arguments, 'diarisable_id');
                     $utype = data_get($arguments, 'diarisable_type');

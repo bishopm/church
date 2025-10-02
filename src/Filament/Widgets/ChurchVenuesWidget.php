@@ -18,15 +18,14 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Guava\Calendar\Actions\CreateAction;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 
 class ChurchVenuesWidget extends CalendarWidget
@@ -36,6 +35,8 @@ class ChurchVenuesWidget extends CalendarWidget
     protected bool $eventClickEnabled = true;
 
     protected bool $eventDragEnabled = true;
+
+    public ?Model $record = null;
 
     protected bool $eventResizeEnabled = true;
 
@@ -97,7 +98,42 @@ class ChurchVenuesWidget extends CalendarWidget
         return [
             CreateAction::make('ctxCreateDiaryentry')
                 ->model(Diaryentry::class)->modelLabel('Booking')
+                ->using(function (array $data) {
+                    // Ensure venue_id is always treated as an array
+                    $venues = (array) $data['venue_id'];
+                    $count = 0;
+
+                    foreach ($venues as $venueId) {
+                        for ($i = 0; $i <= $data['repeats']; $i++) {
+                            $newtime = date(
+                                'Y-m-d H:i',
+                                strtotime($data['diarydatetime'] . ' + ' . $i * $data['interval'] . ' days')
+                            );
+
+                            Diaryentry::create([
+                                'diarisable_id'   => $data['diarisable_id'],
+                                'diarisable_type' => $data['diarisable_type'] ?? 'tenant',
+                                'venue_id'        => $venueId,
+                                'details'         => $data['details'],
+                                'calendar'        => $data['calendar'] ?? 0,
+                                'diarydatetime'   => $newtime,
+                                'endtime'         => $data['endtime'],
+                            ]);
+                            $count++;
+                        }
+                    }
+                    Notification::make()
+                        ->title("{$count} booking(s) created successfully")
+                        ->success()
+                        ->send();
+                })
                 ->mountUsing(function (Form $form, array $arguments) {
+                    $getvenue = data_get($arguments, 'resource');
+                    if ($getvenue) {
+                        $venues = [$getvenue['id']]; // Wrap in array
+                    } else {
+                        $venues = $this->record ? [$this->record->id] : [];
+                    }
                     $getvenue=data_get($arguments, 'resource');
                     if ($getvenue){
                         $venue=$getvenue['id'];
@@ -117,7 +153,7 @@ class ChurchVenuesWidget extends CalendarWidget
                             'diarisable_type' => $utype,
                             'diarydatetime' => Carbon::make($diarydatetime),
                             'endtime' => Carbon::make($endtime),
-                            'venue_id' => $venue
+                            'venue_id' => $venues
                         ]);
                     }
                 }),
@@ -176,11 +212,10 @@ class ChurchVenuesWidget extends CalendarWidget
                         ->selectablePlaceholder(false)
                         ->default('tenant')
                 ])->columns(),
-                Select::make('venue_id')
-                    ->label('Venue')
+                Select::make('venue_id')->label('Venue')
                     ->options(Venue::orderBy('venue')->get()->pluck('venue', 'id'))
-                    ->searchable()
-                    ->required(),
+                    ->multiple()
+                    ->searchable(),
                 Textarea::make('details')
                     ->rows(5),
                 Group::make([

@@ -18,7 +18,6 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -94,21 +93,28 @@ class ChurchCalendarWidget extends CalendarWidget
                     redirect()->route('reports.venue', ['id' => $this->record, 'reportdate'=>$data['reportdate'], 'header'=>$data['header']]);
                 }),
                 CreateAction::make('createDiaryentry')->label('Add a booking')
+                    ->modelLabel('Booking')
                     ->icon('heroicon-o-calendar-days')
-                    ->model(Diaryentry::class)
-                    ->before(function (array $data){
-                        for ($i=1;$i<$data['repeats']+1;$i++){
-                            $newtime=date('Y-m-d H:i',strtotime($data['diarydatetime'] . ' + ' . $i*$data['interval'] . ' days'));
-                            Diaryentry::create([
-                                'diarisable_id' => $data['diarisable_id'],
-                                'diarisable_type' => 'tenant',
-                                'venue_id' => $data['venue_id'],
-                                'details' => $data['details'],
-                                'diarydatetime' => $newtime,
-                                'endtime' => $data['endtime']
-                            ]);
+                    ->using(function (array $data) {
+                        // Make sure venue_id is always treated as an array
+                        $venues = (array) $data['venue_id'];
+                        foreach ($venues as $venueId) {
+                            // Loop over repeats
+                            for ($i = 0; $i <= $data['repeats']; $i++) {
+                                $newtime = date(
+                                    'Y-m-d H:i',
+                                    strtotime($data['diarydatetime'] . ' + ' . $i * $data['interval'] . ' days')
+                                );
+                                Diaryentry::create([
+                                    'diarisable_id'   => $data['diarisable_id'],
+                                    'diarisable_type' => $data['diarisable_type'],
+                                    'venue_id'        => $venueId,
+                                    'details'         => $data['details'],
+                                    'diarydatetime'   => $newtime,
+                                    'endtime'         => $data['endtime'],
+                                ]);
+                            }
                         }
-                        return $data;
                     })
         ];
     }
@@ -207,8 +213,9 @@ class ChurchCalendarWidget extends CalendarWidget
                 ])->columns(),
                 Select::make('venue_id')->label('Venue')
                     ->options(Venue::orderBy('venue')->get()->pluck('venue', 'id'))
+                    ->multiple()
                     ->searchable()
-                    ->default($this->record->id),
+                    ->default([$this->record->id]),
                 Textarea::make('details')
                     ->rows(5),
                 Group::make([

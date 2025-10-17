@@ -52,6 +52,9 @@ class Settings extends BaseSettings
                             Select::make('admin.church_secretary')->label('Church secretary')
                                 ->options(Individual::all()->sortBy('surname')->pluck('fullname', 'id'))
                                 ->searchable(),
+                            Select::make('admin.group_leaders')->label('Group leaders group')
+                                ->options(Group::all()->sortBy('groupname')->pluck('groupname', 'id'))
+                                ->searchable(),
                         ]),
                     Tabs\Tab::make('Automation')
                         ->columns(2)

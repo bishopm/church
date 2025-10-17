@@ -2,12 +2,22 @@
 
 namespace Bishopm\Church\Filament\Widgets;
 
+use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Measure;
 use Filament\Widgets\ChartWidget;
 
 class MeasuresChart extends ChartWidget
 {
     protected static ?string $heading = 'Growth measures';
+
+    public function getDescription(): ?string
+    {
+        $total = Individual::count();
+        $withGroupLeader = Individual::whereNotNull('groupleader')->count();
+        $percentage = $total > 0 ? round(($withGroupLeader / $total) * 100, 1) : 0;
+
+        return "{$percentage}% of individuals have a group leader (" . $withGroupLeader . "/" . $total . ")";
+    }
 
     protected function getData(): array
     {

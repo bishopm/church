@@ -22,6 +22,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
 use Bishopm\Church\Mail\ChurchMail;
 use Bishopm\Church\Models\Anniversary;
+use Bishopm\Church\Models\Group as GroupModel;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
@@ -171,6 +172,23 @@ class IndividualResource extends Resource
                     ]),
                     Tab::make('Pastoral')->hiddenOn('create')
                         ->schema([
+                        Forms\Components\Select::make('groupleader')
+                            ->options(function (){
+                                $group_id = setting('admin.group_leaders');
+                                $grouparray=[];
+                                if ($group_id){
+                                    $groupmodel= GroupModel::with('individuals')->where('id',$group_id)->get();
+                                    foreach ($groupmodel as $group){
+                                        foreach ($group->individuals as $member){
+                                            $grouparray[$member->id] = $member->fullname;
+                                        }
+                                    }
+                                }
+                                asort($grouparray);
+                                return $grouparray;
+                            })
+                            ->searchable()
+                            ->label('Group leader'),                        
                         Forms\Components\Placeholder::make('pastoraltext')
                             ->content(function (Individual $record){
                                 $anniversaries = Anniversary::where('household_id',$record->household_id)->get();

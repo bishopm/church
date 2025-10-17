@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image', 255)->nullable();
             $table->string('memberstatus', 255)->nullable();
             $table->integer('household_id');
+            $table->integer('groupleader')->nullable();
             $table->string('giving', 255)->nullable();
             $table->string('officephone', 255)->nullable();
             $table->string('cellphone', 255)->nullable();

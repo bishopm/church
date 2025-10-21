@@ -328,14 +328,32 @@ class IndividualResource extends Resource
                 Tables\Columns\TextColumn::make('firstname')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('household.addressee'),
                 Tables\Columns\TextColumn::make('cellphone')
                     ->searchable(),
+                Tables\Columns\SelectColumn::make('groupleader')
+                    ->label('Group leader')
+                ->options(function (){
+                    $group_id = setting('admin.group_leaders');
+                    $grouparray=[];
+                    if ($group_id){
+                        $groupmodel= GroupModel::with('individuals')->where('id',$group_id)->get();
+                        foreach ($groupmodel as $group){
+                            foreach ($group->individuals as $member){
+                                $grouparray[$member->id] = $member->fullname;
+                            }
+                        }
+                    }
+                    asort($grouparray);
+                    return $grouparray;
+                }),
                 Tables\Columns\TextColumn::make('lastseen')->label('Last seen'),
             ])
             ->filters([
                 Filter::make('hide_deleted')
                     ->query(fn (Builder $query): Builder => $query->whereNull('deleted_at'))
+                    ->default(),
+                Filter::make('hide_members_with_leaders')
+                    ->query(fn (Builder $query): Builder => $query->whereNull('groupleader'))
                     ->default()
             ])
             ->actions([

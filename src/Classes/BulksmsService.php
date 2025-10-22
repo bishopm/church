@@ -1,5 +1,4 @@
 <?php
-
 namespace Bishopm\Church\Classes;
 
 use Illuminate\Support\Facades\Http;

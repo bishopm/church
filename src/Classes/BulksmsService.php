@@ -1,13 +1,16 @@
 <?php
+
 namespace Bishopm\Church\Classes;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Livewire\Wireable;
 
 class BulksmsService implements Wireable
 {
-
-    public $username, $password;
+    public $username;
+    public $password;
+    protected $baseUrl = 'https://api.bulksms.com/v1/';
 
     public function __construct($username, $password)
     {
@@ -22,72 +25,76 @@ class BulksmsService implements Wireable
             'password' => $this->password,
         ];
     }
- 
+
     public static function fromLivewire($value)
     {
-        $password = $value['password'];
-        $username = $value['username'];
- 
-        return new static($username, $password);
+        return new static($value['username'], $value['password']);
     }
- 
+
     public function checkcell($cell)
     {
-        if (strlen($cell) !== 10) {
+        return strlen($cell) === 10 && preg_match("/^[0-9]+$/", $cell);
+    }
+
+    protected function client()
+    {
+        return Http::withBasicAuth($this->username, $this->password)
+            ->timeout(20)
+            ->connectTimeout(10)
+            ->acceptJson()
+            ->baseUrl($this->baseUrl);
+    }
+
+    public function send_message($messages)
+    {
+        if (!is_array($messages) || !isset($messages[0])) {
+            $messages = [$messages];
+        }
+
+        try {
+            Log::info('Sending SMS via BulkSMS', ['messages' => $messages]);
+
+            $response = $this->client()
+                ->throw()
+                ->post('messages?auto-unicode=true&longMessageMaxParts=30', $messages);
+
+            Log::info('BulkSMS response', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            return $response->json();
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            Log::error('BulkSMS request failed', [
+                'message' => $e->getMessage(),
+                'response' => optional($e->response)->body(),
+            ]);
             return false;
-        } else {
-            if (preg_match("/^[0-9]+$/", $cell)) {
-                return true;
-            } else {
-                return false;
+        } catch (\Throwable $e) {
+            Log::error('Unexpected BulkSMS exception', [
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
+    }
+
+    public function get_credits()
+    {
+        try {
+            $response = $this->client()->get('profile');
+
+            if ($response->failed()) {
+                Log::error('Error fetching credits', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                return null;
             }
+
+            return data_get($response->json(), 'credits.balance');
+        } catch (\Throwable $e) {
+            Log::error('Exception fetching credits: ' . $e->getMessage());
+            return null;
         }
     }
-
-    public function send_message ($messages) {
-        $ch = curl_init( );
-        $headers = array(
-            'Content-Type:application/json',
-            'Authorization:Basic '. base64_encode("$this->username:$this->password")
-        );
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt ( $ch, CURLOPT_URL, 'https://api.bulksms.com/v1/' . 'messages' );
-        curl_setopt ( $ch, CURLOPT_POST, 1 );
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($messages) );
-        // Allow cUrl functions 20 seconds to execute
-        curl_setopt ( $ch, CURLOPT_TIMEOUT, 20 );
-        // Wait 10 seconds while trying to connect
-        curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, 10 );
-        $output = array();
-        $output['server_response'] = curl_exec( $ch );
-        $curl_info = curl_getinfo( $ch );
-        $output['http_status'] = $curl_info[ 'http_code' ];
-        curl_close( $ch );
-        if ($output['http_status'] != 201) {
-            Log::info("Error sending.  HTTP status " . $output['http_status'] . " Response was " .$output['server_response']);
-        } else {
-            Log::info("Messages sent");
-            // Use json_decode($output['server_response']) to work with the response further
-        }
-    }
-
-    public function get_credits () {
-        $ch = curl_init( );
-        $headers = array(
-            'Content-Type:application/json',
-            'Authorization:Basic '. base64_encode("$this->username:$this->password")
-        );
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt ( $ch, CURLOPT_URL, 'https://api.bulksms.com/v1/' . 'profile' );
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-        // Allow cUrl functions 20 seconds to execute
-        curl_setopt ( $ch, CURLOPT_TIMEOUT, 20 );
-        // Wait 10 seconds while trying to connect
-        curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, 10 );
-        $output = array();
-        $output = curl_exec( $ch );
-        curl_close( $ch );
-        return json_decode($output)->credits->balance;
-      }
 }

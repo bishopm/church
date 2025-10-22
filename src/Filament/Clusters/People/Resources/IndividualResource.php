@@ -2,6 +2,7 @@
 
 namespace Bishopm\Church\Filament\Clusters\People\Resources;
 
+use Bishopm\Church\Classes\BulksmsService;
 use Bishopm\Church\Filament\Clusters\People\Resources\IndividualResource\Pages;
 use Bishopm\Church\Filament\Clusters\People;
 use Bishopm\Church\Jobs\SendEmail;
@@ -123,7 +124,13 @@ class IndividualResource extends Resource
                                         ->required(),
                                 ])
                                 ->action(function (array $data, Individual $record): void {
-                                    //dd($record);
+                                    $phone = '+27' . substr($record->cellphone, 1);
+                                    $service = new BulksmsService(setting('services.bulksms_clientid'), setting('services.bulksms_api_secret'));
+                                    $message = [
+                                        'to' => [$phone],
+                                        'body' => $data['smsMessage'],
+                                    ];
+                                    $response = $service->send_message($message);
                                 })),
                         Forms\Components\TextInput::make('officephone')
                             ->label('Office phone')

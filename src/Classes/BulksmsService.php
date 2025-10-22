@@ -52,17 +52,13 @@ class BulksmsService implements Wireable
         }
 
         try {
-            Log::info('Sending SMS via BulkSMS', ['messages' => $messages]);
+            // Log::info('Sending SMS via BulkSMS', ['messages' => $messages]);
 
             $response = $this->client()
                 ->throw()
                 ->post('messages?auto-unicode=true&longMessageMaxParts=30', $messages);
 
-            Log::info('BulkSMS response', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
+            // Log::info('BulkSMS response', ['status' => $response->status(),'body' => $response->body()]);
             return $response->json();
         } catch (\Illuminate\Http\Client\RequestException $e) {
             Log::error('BulkSMS request failed', [

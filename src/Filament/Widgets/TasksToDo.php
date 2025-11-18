@@ -31,8 +31,8 @@ class TasksToDo extends Widget implements HasForms, HasActions
 
     function mount() {
         $indiv = Individual::where('user_id',Auth::user()->id)->first();
-        $this->individual_id=$indiv->id;
         if ($indiv){
+            $this->individual_id=$indiv->id;
             $this->getTasks();
         } else {
             $this->tasks=array();

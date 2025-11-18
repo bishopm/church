@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Individual extends Model
 {
+    use SoftDeletes;
+
     protected $dates = ['deleted_at'];
     public $table = 'individuals';
     protected $guarded = ['id'];

@@ -40,10 +40,16 @@ class CheckinEmail extends Command
         ];
         $sixWeeks  = now()->subWeeks(6);
         $sixMonths = now()->subMonths(6);
-        $individuals = Individual::where(function ($q) { $q->whereNull('nametag_exclude')->orWhere('nametag_exclude', '!=', 1); })
+        $individuals = Individual::query()
+            ->where(function ($q) {
+                $q->whereNull('nametag_exclude')
+                ->orWhere('nametag_exclude', '!=', 1);
+            })
+            ->whereNull('individuals.deleted_at') // guaranteed soft delete filter
             ->select('individuals.*')
             ->addSelect([
-                'last_attended' => Attendance::selectRaw('MAX(attendancedate)')
+                'last_attended' => Attendance::query()
+                    ->selectRaw('MAX(attendancedate)')
                     ->whereColumn('individual_id', 'individuals.id')
             ])
             ->orderBy('surname', 'ASC')

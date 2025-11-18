@@ -45,9 +45,13 @@ class CheckinEmail extends Command
                 $q->whereNull('nametag_exclude')
                 ->orWhere('nametag_exclude', '!=', 1);
             })
-            ->whereNull('individuals.deleted_at') // ensure soft-deleted rows are excluded
+            ->whereNull('individuals.deleted_at') // guaranteed soft delete filter
             ->select('individuals.*')
-            ->withMax('attendances', 'attendancedate as last_attended')
+            ->addSelect([
+                'last_attended' => Attendance::query()
+                    ->selectRaw('MAX(attendancedate)')
+                    ->whereColumn('individual_id', 'individuals.id')
+            ])
             ->orderBy('surname', 'ASC')
             ->get();
         foreach ($individuals as $individual) {

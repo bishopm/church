@@ -256,7 +256,9 @@ class IndividualResource extends Resource
                                                 $pastors = Pastor::with('individual')->get()->sortBy('individual.firstname');
                                                 $parray=[];
                                                 foreach ($pastors as $pastor){
-                                                    $parray[$pastor->id] = $pastor->individual->firstname . " " . $pastor->individual->surname;
+                                                    if (isset($pastor->individual)){
+                                                        $parray[$pastor->id] = $pastor->individual->firstname . " " . $pastor->individual->surname;
+                                                    }
                                                 }
                                                 return $parray;
                                             })

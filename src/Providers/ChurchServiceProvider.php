@@ -16,7 +16,6 @@ use Bishopm\Church\Livewire\PastoralNote;
 use Bishopm\Church\Models\Individual;
 use Bishopm\Church\Models\Pastor;
 use Bishopm\Church\Models\User;
-use Filament\Facades\Filament;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
@@ -199,14 +198,12 @@ class ChurchServiceProvider extends ServiceProvider
             $schedule->command('church:birthdayemail')->weeklyOn(intval(setting('automation.birthday_day')), '6:30');
             $schedule->command('church:maintenanceemail')->weeklyOn(intval(setting('automation.maintenance_day')), '6:00');
             $schedule->command('church:checkinemail')->weeklyOn(intval(setting('automation.followup_day')), '8:30');
+            $schedule->command('church:pastorsemail')->weeklyOn(intval(setting('automation.pastoral_coordinators_day')), '7:30');
             $schedule->command('church:monthlymeasures')->monthlyOn(1, '5:30');
             $schedule->command('church:givingemail')->dailyAt('9:00');
             $schedule->command('church:groupsemail')->monthlyOn(1, '8:30');
             $schedule->command('church:livemessages')->dailyAt('21:30');
             $schedule->command('church:recurringtasks')->dailyAt('5:00');
-        });
-        Filament::serving(function () {
-            Filament::registerTheme(asset('church/css/admintheme.css'));
         });
     }
 
@@ -267,6 +264,7 @@ class ChurchServiceProvider extends ServiceProvider
             'Bishopm\Church\Console\Commands\LiveMessages',
             'Bishopm\Church\Console\Commands\MaintenanceEmail',
             'Bishopm\Church\Console\Commands\MonthlyMeasures',
+            'Bishopm\Church\Console\Commands\PastorsEmail',
             'Bishopm\Church\Console\Commands\RecurringTasks'
         ]);
     }

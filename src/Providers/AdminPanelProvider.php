@@ -45,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
+            ->theme(asset('church/css/admintheme.css'))
             ->plugins([
                 FilamentSpatieRolesPermissionsPlugin::make(),
                 \Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin::make()

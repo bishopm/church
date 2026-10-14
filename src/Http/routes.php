@@ -10,7 +10,7 @@ use Spatie\Honeypot\ProtectAgainstSpam;
 //    return Route::post('/custom/livewire/update', $handle)->middleware(['web']);
 //});
 // App routes
-Route::domain('app.' . env('APP_URL'))->group(function() {
+Route::domain(env('PWA_DOMAIN'))->group(function() {
     Route::middleware(['web',CheckLogin::class])->controller('\Bishopm\Church\Http\Controllers\HomeController')->group(function () {
         Route::get('/', 'app')->name('app.home');
         Route::get('/blog/{year}/{month}/{slug}', 'blogpost')->name('app.blogpost');

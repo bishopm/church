@@ -260,7 +260,7 @@ class ManageRoster extends Page implements HasForms
         // Deal with midweek services and check if potential services have preachers before adding to this roster
         $servicetime=str_replace("h",":",$this->record->sundayservice);
         $service=DB::connection('methodist')->table('services')->where('society_id',setting('services.society_id'))->where('servicetime',$servicetime)->first();
-        $midweeks=Midweek::where('servicedate','>=',$firstofmonth)->where('servicedate','<',date('Y-m-d',strtotime($firstofmonth . ' + 1 month')))->get();
+        /*$midweeks=Midweek::where('servicedate','>=',$firstofmonth)->where('servicedate','<',date('Y-m-d',strtotime($firstofmonth . ' + 1 month')))->get();
         if (count($midweeks)){
             foreach ($midweeks as $mw){
                 if ($service){
@@ -271,6 +271,7 @@ class ManageRoster extends Page implements HasForms
                 }
             }
         }
+        */
         asort($weeks);
         $this->data['columns']=1+count($weeks);
         return array_values($weeks);

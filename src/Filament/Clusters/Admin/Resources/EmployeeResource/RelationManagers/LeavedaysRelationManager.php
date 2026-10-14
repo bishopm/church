@@ -46,10 +46,11 @@ class LeavedaysRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('startdate')
             ->columns([
-                Tables\Columns\TextColumn::make('startdate')->label('Start date'),
+                Tables\Columns\TextColumn::make('startdate')->label('Start date')->sortable(),
                 Tables\Columns\TextColumn::make('enddate')->label('End date'),
                 Tables\Columns\TextColumn::make('numberofdays')->label('Days')
             ])
+            ->defaultSort('startdate', 'desc')
             ->filters([
                 //
             ])

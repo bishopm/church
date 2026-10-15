@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-63;
 $ut=44;
-$ttffile='/var/www/church/packages/bishopm/church/src/Classes/font/unifont/DejaVuSans.ttf';
+$ttffile = __DIR__ . '/font/unifont/DejaVuSans.ttf';
 $originalsize=757076;
 $fontkey='dejavu';
 ?>

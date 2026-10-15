@@ -13,6 +13,7 @@ class EditEmployee extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('Leave report')->url(fn (): string => route('reports.leave', ['id' => $this->record])),
             Actions\DeleteAction::make(),
         ];
     }

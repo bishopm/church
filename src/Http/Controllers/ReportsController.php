@@ -18,6 +18,7 @@ use Bishopm\Church\Models\Rosteritem;
 use Bishopm\Church\Models\Series;
 use Bishopm\Church\Models\Venue;
 use Bishopm\Church\Classes\tFPDF;
+use Bishopm\Church\Models\Employee;
 use Bishopm\Church\Models\Form;
 use Bishopm\Church\Models\Gift;
 use Bishopm\Church\Models\Midweek;
@@ -792,6 +793,71 @@ class ReportsController extends Controller
         }
         $this->pdf->Output();
         exit;
+    }
+
+    public function leave($id)
+    {
+        $employee = Employee::with('leavedays')->find($id);
+        $this->pdf->AddPage('P');
+        $this->pdf->SetAutoPageBreak(true, 0);
+        $this->pdf->SetFont('DejaVu', 'B', 18);
+        $this->pdf->text(15, 16, setting('general.church_name'));
+        $this->pdf->SetFont('DejaVu', '', 16);
+        $employeename=$employee->firstname . " " . $employee->surname;
+        $this->pdf->text(15, 23, "Staff leave: " . $employeename);
+        $this->pdf->SetTitle("Staff leave: " . $employeename);
+        $this->pdf->SetFont('DejaVu', 'I', 12);
+        $this->pdf->text(170, 23, date('Y-m-d'));
+        $this->pdf->line(15, 26, 195, 26);
+        $this->pdf->text(15, 32, $employeename . " currently has " . $employee->carriedforward . " days of leave carried forward. Annual leave: " . $employee->leave);
+        $this->pdf->SetFont('DejaVu', '', 12);
+        $days=array();
+        foreach ($employee->leavedays as $leave){
+            $yr=substr($leave->startdate,0,4);
+            if (!isset($days[$yr])){
+                $days[$yr]['total']=0;
+                $days[$yr]['remaining']=$employee->leave;
+            }
+            $days[$yr]['total']+=$leave->numberofdays;
+            $days[$yr]['remaining']-=$leave->numberofdays;
+            $days[$yr]['days'][strtotime($leave->startdate)]=$leave;
+        }
+        $yy=40;
+        foreach ($days as $yr=>$data){
+            $this->pdf->SetFont('DejaVu', 'B', 12);
+            $this->pdf->text(15, $yy, "Year: " . $yr);
+            $this->pdf->text(50, $yy, "Leave taken: " . $data['total']);
+            $this->pdf->text(95, $yy, "Annual leave remaining: " . $data['remaining']);
+            $this->pdf->SetFont('DejaVu', '', 12);
+            $yy=$yy+2;
+            foreach ($data['days'] as $day){
+                $yy=$yy+5;
+                if ($day->numberofdays==1){
+                    $label="day";
+                } else {
+                    $label="days";
+                }
+                $this->pdf->text(18, $yy, $day->startdate . " - " . $day->enddate);
+                $this->pdf->text(105, $yy, $day->numberofdays);
+                $this->pdf->text(125, $yy, $day->category);
+            }
+            $yy=$yy+7;
+            if ($yy>250){
+                $this->pdf->AddPage('P');
+                $this->pdf->SetFont('DejaVu', 'B', 18);
+                $this->pdf->text(15, 16, setting('general.church_name'));
+                $this->pdf->SetFont('DejaVu', '', 16);
+                $this->pdf->text(15, 23, "Staff leave: " . $employeename);
+                $this->pdf->SetTitle("Staff leave: " . $employeename);
+                $this->pdf->SetFont('DejaVu', '', 12);
+                $this->pdf->text(170, 23, date('Y-m-d'));
+                $this->pdf->line(15, 26, 195, 26);
+                $yy=34;
+            }
+                
+        }
+
+        $this->pdf->Output();
     }
 
     public function meetings($id){
